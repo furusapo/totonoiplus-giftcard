@@ -419,6 +419,7 @@ const GAS_URL='https://script.google.com/macros/s/AKfycbxrRcaJSBI8QN1KWBogbD0MK2
 const CARD_PRICE=5000;
 const images={1:'images/giftcard1.png',2:'images/giftcard2.png',3:'images/giftcard3.png'};
 const designRows=document.getElementById('designRows');
+let stockBase={1:50,2:50,3:50};
 
 function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
 function options(v=1){let h='';for(let i=1;i<=10;i++)h+=`<option value="${i}" ${i===v?'selected':''}>${i}枚</option>`;return h}
@@ -470,9 +471,9 @@ function update(){
   });
 
   document.getElementById('dashIssueCount').textContent=total+'枚';
-  document.getElementById('dashStock1').textContent=(50-used[1])+'枚';
-  document.getElementById('dashStock2').textContent=(50-used[2])+'枚';
-  document.getElementById('dashStock3').textContent=(50-used[3])+'枚';
+  document.getElementById('dashStock1').textContent=Math.max(0, stockBase[1]-used[1])+'枚';
+  document.getElementById('dashStock2').textContent=Math.max(0, stockBase[2]-used[2])+'枚';
+  document.getElementById('dashStock3').textContent=Math.max(0, stockBase[3]-used[3])+'枚';
 
   const issueFee=total>0?500:0;
   const envelopeCount=Number(document.getElementById("envelopeCount")?.value||0);
@@ -488,6 +489,7 @@ function update(){
 document.getElementById('addRowBtn').onclick=()=>addDesignRow();
 document.getElementById("envelopeCount").onchange=update;
 addDesignRow(1,1);
+loadStock();
 
 document.getElementById('generateBtn').onclick=()=>{
   const staff=document.getElementById('staff').value;
@@ -519,6 +521,29 @@ document.getElementById('generateBtn').onclick=()=>{
 
 <script id="customer-auto-load">
 let customerData = [];
+
+
+function loadStock(){
+  const callbackName='stockCallback_'+Date.now();
+
+  window[callbackName]=function(res){
+    if(res && res.result==='success' && res.stock){
+      stockBase[1]=Number(res.stock[1] ?? 50);
+      stockBase[2]=Number(res.stock[2] ?? 50);
+      stockBase[3]=Number(res.stock[3] ?? 50);
+      update();
+    }
+    delete window[callbackName];
+  };
+
+  const script=document.createElement('script');
+  script.src=GAS_URL+'?action=stock&callback='+callbackName;
+  script.onerror=function(){
+    console.warn('残数取得に失敗しました');
+    delete window[callbackName];
+  };
+  document.body.appendChild(script);
+}
 
 function normalizePhone(v){
   return String(v || "").replace(/[^0-9]/g,"");
