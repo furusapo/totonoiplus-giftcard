@@ -362,6 +362,43 @@ button{
 }
 </style>
 
+
+<style id="serial-preview-style">
+.serialPreviewBox{
+  margin-top:18px;
+  padding:18px 20px;
+  border-left:4px solid var(--gold);
+  background:rgba(255,255,255,.035);
+  border-radius:8px;
+}
+.serialPreviewTitle{
+  color:var(--gold2);
+  font-weight:800;
+  font-size:18px;
+  margin-bottom:10px;
+  font-family:"Noto Serif JP",serif;
+}
+.serialPreviewList{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.serialPreviewItem{
+  border:1px solid rgba(184,151,90,.45);
+  color:var(--gold2);
+  padding:8px 12px;
+  border-radius:999px;
+  font-family:"Noto Serif JP",serif;
+  font-size:17px;
+  letter-spacing:.05em;
+}
+.serialPreviewNote{
+  margin-top:8px;
+  color:#d8c8aa;
+  font-size:12px;
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
@@ -520,6 +557,39 @@ function getEntries(){
     design:Number(r.querySelector('.design-select').value),
     count:Number(r.querySelector('.count-select').value)
   }));
+}
+
+
+function formatSerial(n){
+  return 'TG-' + String(n).padStart(4,'0');
+}
+
+function updateSerialPreview(){
+  const box = document.getElementById('serialPreviewList');
+  if(!box) return;
+
+  const issued = {1:50-stockBase[1], 2:100-stockBase[2], 3:150-stockBase[3]};
+  const list = [];
+
+  document.querySelectorAll('.design-row').forEach(row=>{
+    const d = Number(row.querySelector('.design-select')?.value || 1);
+    const c = Number(row.querySelector('.count-select')?.value || 1);
+
+    for(let i=0;i<c;i++){
+      issued[d]++;
+      let serialNum = issued[d];
+
+      if(d === 1) serialNum = Math.min(serialNum, 50);
+      if(d === 2) serialNum = Math.min(serialNum, 100);
+      if(d === 3) serialNum = Math.min(serialNum, 150);
+
+      list.push(formatSerial(serialNum));
+    }
+  });
+
+  box.innerHTML = list.length
+    ? list.map(s=>`<span class="serialPreviewItem">${s}</span>`).join('')
+    : '<span class="serialPreviewItem">未選択</span>';
 }
 
 function update(){
