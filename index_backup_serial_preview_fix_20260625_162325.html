@@ -504,14 +504,6 @@ button{
 
         <div id="priceBreakdown">カード代：¥0<br>発行手数料：¥0<br>追加封筒：¥0</div>
 
-        <div id="serialPreviewBox" class="serialPreviewBox">
-          <div class="serialPreviewTitle">発行予定シリアル番号</div>
-          <div id="serialPreviewList" class="serialPreviewList">
-            <span class="serialPreviewItem">未選択</span>
-          </div>
-          <div class="serialPreviewNote">発行ボタンを押す前に、今回発行される番号を確認できます。</div>
-        </div>
-
         <div class="totalLine">
           <h2>合計金額</h2>
           <div class="totalPrice" id="grandTotal">¥0</div>
@@ -576,31 +568,27 @@ function updateSerialPreview(){
   const box = document.getElementById('serialPreviewList');
   if(!box) return;
 
-  const issued = {
-    1: 50 - Number(stockBase[1] || 50),
-    2: 100 - Number(stockBase[2] || 50),
-    3: 150 - Number(stockBase[3] || 50)
-  };
-
+  const issued = {1:50-stockBase[1], 2:100-stockBase[2], 3:150-stockBase[3]};
   const list = [];
 
-  document.querySelectorAll('.row').forEach(row => {
+  document.querySelectorAll('.design-row').forEach(row=>{
     const d = Number(row.querySelector('.design-select')?.value || 1);
     const c = Number(row.querySelector('.count-select')?.value || 1);
 
-    for(let i = 0; i < c; i++){
+    for(let i=0;i<c;i++){
       issued[d]++;
+      let serialNum = issued[d];
 
-      const min = d === 1 ? 1 : d === 2 ? 51 : 101;
-      const max = d === 1 ? 50 : d === 2 ? 100 : 150;
-      const serialNum = Math.max(min, Math.min(issued[d], max));
+      if(d === 1) serialNum = Math.min(serialNum, 50);
+      if(d === 2) serialNum = Math.min(serialNum, 100);
+      if(d === 3) serialNum = Math.min(serialNum, 150);
 
       list.push(formatSerial(serialNum));
     }
   });
 
   box.innerHTML = list.length
-    ? list.map(s => `<span class="serialPreviewItem">${s}</span>`).join('')
+    ? list.map(s=>`<span class="serialPreviewItem">${s}</span>`).join('')
     : '<span class="serialPreviewItem">未選択</span>';
 }
 
@@ -630,7 +618,6 @@ function update(){
   document.getElementById("priceBreakdown").innerHTML=
     `カード代：${yen(cardTotal)}<br>発行手数料：${yen(issueFee)}<br>追加封筒：${yen(envelopeFee)}`;
   document.getElementById("grandTotal").textContent=yen(grandTotal);
-  updateSerialPreview();
 }
 
 document.getElementById('addRowBtn').onclick=()=>addDesignRow();
