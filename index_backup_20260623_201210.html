@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TOTONOI+ GIFT CARD SYSTEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#b8975a;--gold2:#d4b47a;--black:#080807;--panel:#151410;--cream:#f8f4ee}
+body{font-family:"Noto Sans JP",sans-serif;background:radial-gradient(circle at top left,rgba(184,151,90,.18),transparent 28%),linear-gradient(135deg,#050505,#1a1410 48%,#050505);color:var(--cream);padding:22px}
+.wrap{max-width:1240px;margin:auto}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.logo{font-family:"Noto Serif JP",serif;color:var(--gold2);font-size:34px;letter-spacing:.16em}
+.logo small{display:block;font-size:13px;letter-spacing:.28em}
+.title{color:var(--gold2);border-left:1px solid rgba(184,151,90,.5);padding-left:22px}
+.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.dash{background:rgba(21,20,16,.92);border:1px solid rgba(184,151,90,.4);border-radius:10px;padding:18px;display:flex;gap:16px;align-items:center}
+.dash img{width:130px;height:72px;object-fit:cover;border-radius:6px;border:1px solid rgba(184,151,90,.55)}
+.dashLabel{color:var(--gold2);font-weight:700;font-size:14px}
+.dashNum{font-family:"Noto Serif JP",serif;font-size:34px;color:var(--gold2)}
+.dashNote{font-size:13px;color:#d8c8aa}
+.main{display:grid;grid-template-columns:1fr 1.05fr;gap:16px}
+.card{background:rgba(21,20,16,.94);border:1px solid rgba(184,151,90,.4);border-radius:10px;padding:22px}
+.card.light{background:rgba(248,244,238,.98);color:#17130e}
+h2{font-size:20px;color:var(--gold2);margin-bottom:18px;font-family:"Noto Serif JP",serif}
+h2:after{content:"";display:block;width:60px;height:1px;background:var(--gold);margin-top:10px}
+.row{display:grid;grid-template-columns:44px 220px 150px 80px 34px;gap:14px;align-items:center;margin-bottom:12px}
+.num{border:1px solid var(--gold);color:var(--gold2);border-radius:6px;text-align:center;padding:10px;font-size:24px;font-weight:700}
+.preview{width:220px;height:96px;object-fit:cover;border-radius:6px;border:1px solid rgba(184,151,90,.45)}
+select,input{width:100%;padding:14px;border-radius:7px;border:1px solid rgba(184,151,90,.35);background:#14120f;color:#fff;font-size:16px}
+.light select,.light input{background:#fff;color:#111}
+.price{color:var(--gold2);font-size:18px;text-align:right}
+.remove{background:transparent;color:#bfa980;border:none;font-size:26px;cursor:pointer}
+.add{width:100%;padding:13px;border:1px dashed var(--gold);background:transparent;color:var(--gold2);border-radius:7px;font-size:16px;margin:8px 0 18px}
+.infoBox{border:1px solid rgba(184,151,90,.35);padding:16px;border-radius:8px;color:#f5ead5;line-height:1.8}
+.formGrid{display:grid;grid-template-columns:1fr;gap:16px}
+label{display:block;margin-bottom:7px;color:#d4b47a;font-weight:700}
+.totalBox{margin-top:18px;border:1px solid rgba(184,151,90,.4);border-radius:10px;padding:22px}
+.totalLine{display:flex;justify-content:space-between;align-items:center}
+.totalPrice{font-size:42px;font-family:"Noto Serif JP",serif;color:var(--gold2)}
+.issueBtn{width:100%;padding:20px;margin-top:20px;border:none;border-radius:7px;background:linear-gradient(135deg,#d4b47a,#8a6e3a);color:#111;font-size:24px;font-weight:700;cursor:pointer}
+.resultCard{display:grid;grid-template-columns:220px 1fr;gap:18px;border:1px solid rgba(184,151,90,.35);border-radius:8px;padding:14px;margin-bottom:12px}
+.resultCard img{width:220px;height:120px;object-fit:cover;border-radius:6px}
+.serial{font-family:"Noto Serif JP",serif;font-size:30px;color:var(--gold2);letter-spacing:.08em}
+.detail{line-height:1.7;color:#eee}
+@media(max-width:900px){.dashboard,.main{grid-template-columns:1fr}.row{grid-template-columns:38px 1fr}.preview{width:100%}.price,.remove{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="header">
+  <div class="logo">TOTONOI+<small>GIFT CARD SYSTEM</small></div>
+  <div class="title">ギフトカード発行システム</div>
+</div>
+
+<div class="dashboard">
+  <div class="dash"><div><div class="dashLabel">発行予定</div><div class="dashNum" id="dashIssueCount">0枚</div><div class="dashNote">今回発行する枚数</div></div></div>
+  <div class="dash"><img src="images/giftcard1.png"><div><div class="dashLabel">Design 01 残数目安</div><div class="dashNum" id="dashStock1">50枚</div><div class="dashNote">TG-0001〜0050</div></div></div>
+  <div class="dash"><img src="images/giftcard2.png"><div><div class="dashLabel">Design 02 残数目安</div><div class="dashNum" id="dashStock2">50枚</div><div class="dashNote">TG-0051〜0100</div></div></div>
+  <div class="dash"><img src="images/giftcard3.png"><div><div class="dashLabel">Design 03 残数目安</div><div class="dashNum" id="dashStock3">50枚</div><div class="dashNote">TG-0101〜0150</div></div></div>
+</div>
+
+<div class="main">
+  <div>
+    <div class="card">
+      <h2>発行するカードを選択</h2>
+      <div id="designRows"></div>
+      <button class="add" id="addRowBtn">＋ 行を追加</button>
+      <div class="infoBox">ギフトカードはサウナ・コワーキング・会議室・ドリンクなど館内サービス全般に利用可能。有効期限は発行日より1年間です。</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h2>お客様情報</h2>
+      <div class="formGrid">
+        <div><label>発行担当者</label><select id="staff">
+          <option value="">スタッフを選択してください</option>
+          <option>土屋</option><option>四ツ谷</option><option>絹果</option><option>ユミ・専務</option><option>高橋</option><option>佐藤</option><option>望</option><option>東江</option><option>渡邊</option><option>柳瀬</option><option>琴音</option><option>高田</option><option>細川</option>
+        </select></div>
+        <div><label>電話番号（任意）</label><input id="phone" type="tel" placeholder="例）090-1234-5678"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="margin-bottom:15px;"><label>追加封筒</label><select id="envelopeCount"><option value="0">0枚</option><option value="1">1枚</option><option value="2">2枚</option><option value="3">3枚</option><option value="4">4枚</option><option value="5">5枚</option><option value="10">10枚</option></select></div><div id="priceBreakdown" style="color:#d8c8aa;margin-bottom:15px;">カード代：¥0<br>発行手数料：¥0<br>追加封筒：¥0</div><div class="totalLine"><h2>合計金額</h2><div class="totalPrice" id="grandTotal">¥0</div></div>
+      <button id="generateBtn" class="issueBtn">カードを発行する</button>
+    </div>
+
+    <div class="card">
+      <h2>発行されるギフトカード一覧</h2>
+      <div id="result" style="color:#d8c8aa;text-align:center;padding:40px 0;">発行ボタンを押すと、ここに表示されます</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const GAS_URL='https://script.google.com/macros/s/AKfycbxrRcaJSBI8QN1KWBogbD0MK222FtVBDvlmSnRN2nsEaSwrOyv7xqxtosK_Yk6nHnx8/exec';
+const CARD_PRICE=5000;
+const images={1:'images/giftcard1.png',2:'images/giftcard2.png',3:'images/giftcard3.png'};
+const designRows=document.getElementById('designRows');
+
+function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
+function options(v=1){let h='';for(let i=1;i<=10;i++)h+=`<option value="${i}" ${i===v?'selected':''}>${i}枚</option>`;return h}
+function addDesignRow(design=1,count=1){
+  const row=document.createElement('div');row.className='row';
+  row.innerHTML=`<div class="num">${design}</div><img class="preview" src="${images[design]}"><select class="design-select"><option value="1">デザイン1</option><option value="2">デザイン2</option><option value="3">デザイン3</option></select><select class="count-select">${options(count)}</select><div class="price">¥0</div><button class="remove">×</button>`;
+  row.querySelector('.design-select').value=design;
+  row.querySelector('.design-select').onchange=()=>{const d=Number(row.querySelector('.design-select').value);row.querySelector('.num').textContent=d;row.querySelector('.preview').src=images[d];update()};
+  row.querySelector('.count-select').onchange=update;
+  row.querySelector('.remove').onclick=()=>{row.remove();update()};
+  designRows.appendChild(row);update();
+}
+function getEntries(){return [...document.querySelectorAll('.row')].map(r=>({design:Number(r.querySelector('.design-select').value),count:Number(r.querySelector('.count-select').value)}))}
+function update(){
+  const used={1:0,2:0,3:0};let total=0;
+  document.querySelectorAll('.row').forEach(r=>{const d=Number(r.querySelector('.design-select').value),c=Number(r.querySelector('.count-select').value);used[d]+=c;total+=c;r.querySelector('.price').textContent=yen(c*CARD_PRICE)});
+  document.getElementById('dashIssueCount').textContent=total+'枚';
+  document.getElementById('dashStock1').textContent=(50-used[1])+'枚';
+  document.getElementById('dashStock2').textContent=(50-used[2])+'枚';
+  document.getElementById('dashStock3').textContent=(50-used[3])+'枚';
+  document.getElementById('grandTotal').textContent=yen(total*CARD_PRICE);
+}
+document.getElementById('addRowBtn').onclick=()=>addDesignRow();
+addDesignRow(1,1);
+
+document.getElementById('generateBtn').onclick=()=>{
+  const staff=document.getElementById('staff').value;
+  const phone=document.getElementById('phone').value||'未入力';
+  if(!staff){alert('発行担当者を選択してください');return}
+  const today=new Date();const issueDate=today.toLocaleDateString('ja-JP');const ex=new Date(today);ex.setFullYear(ex.getFullYear()+1);const expireDate=ex.toLocaleDateString('ja-JP');
+  const callbackName='giftCallback_'+Date.now();
+  window[callbackName]=res=>{
+    let html='';
+    res.cards.forEach(card=>{
+      const d=card.design.replace('デザイン','');
+      html+=`<div class="resultCard"><img src="${images[d]}"><div><div class="serial">${card.serial}</div><div class="detail">${card.design}<br>発行日：${card.issueDate}<br>有効期限：${card.expireDate}<br>電話番号：${card.phone}<br>発行担当者：${card.staff}<br>状態：未使用</div></div></div>`;
+    });
+    document.getElementById('result').innerHTML=html;
+    alert('スプレッドシートへ保存しました');
+    delete window[callbackName];script.remove();
+  };
+  const payload={phone,staff,issueDate,expireDate,requests:getEntries()};
+  const script=document.createElement('script');
+  script.src=GAS_URL+'?callback='+callbackName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  document.body.appendChild(script);
+};
+</script>
+</body>
+</html>

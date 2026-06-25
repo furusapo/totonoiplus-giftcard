@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>顧客管理</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Hiragino Maru Gothic ProN","Zen Maru Gothic",sans-serif;
+}
+
+body{
+  background:#f5f7fb;
+  padding:20px;
+  color:#333;
+}
+
+.container{
+  max-width:1400px;
+  margin:0 auto;
+}
+
+header{
+  background:#2e7d32;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:12px;
+  margin-bottom:16px;
+}
+
+h1{
+  font-size:22px;
+}
+
+.card{
+  background:#fff;
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:20px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+
+input,textarea,button{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:14px;
+}
+
+button{
+  background:#2e7d32;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:.9;
+}
+
+.table-wrap{
+  overflow:auto;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+  text-align:left;
+}
+
+th{
+  background:#d9ead3;
+  position:sticky;
+  top:0;
+}
+
+@media(max-width:768px){
+
+  body{
+    padding:12px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <h1>👤 顧客管理</h1>
+</header>
+
+<div class="card">
+
+  <div class="form-grid">
+
+    <input type="text" id="name" placeholder="氏名">
+
+    <input type="tel" id="phone" placeholder="電話番号">
+
+    <input type="text" id="line" placeholder="LINE名">
+
+    <input type="date" id="birthday">
+
+  </div>
+
+  <br>
+
+  <textarea id="memo" rows="3" placeholder="備考"></textarea>
+
+  <br><br>
+
+  <button onclick="saveCustomer()">顧客登録</button>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+  <th>顧客ID</th>
+  <th>氏名</th>
+  <th>電話番号</th>
+  <th>LINE名</th>
+  <th>誕生日</th>
+  <th>備考</th>
+</tr>
+</thead>
+
+<tbody id="customerTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+const STORAGE_KEY = 'gift_customers';
+
+function getCustomers(){
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+}
+
+function saveCustomers(data){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function renderCustomers(){
+
+  const customers = getCustomers();
+  const tbody = document.getElementById('customerTable');
+
+  tbody.innerHTML = '';
+
+  customers.forEach(customer => {
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${customer.id}</td>
+        <td>${customer.name}</td>
+        <td>${customer.phone}</td>
+        <td>${customer.line}</td>
+        <td>${customer.birthday}</td>
+        <td>${customer.memo}</td>
+      </tr>
+    `;
+
+  });
+}
+
+function saveCustomer(){
+
+  const customers = getCustomers();
+
+  const customer = {
+    id: `C-${String(customers.length + 1).padStart(4,'0')}`,
+    name: document.getElementById('name').value,
+    phone: document.getElementById('phone').value,
+    line: document.getElementById('line').value,
+    birthday: document.getElementById('birthday').value,
+    memo: document.getElementById('memo').value
+  };
+
+  if(!customer.name){
+    alert('氏名を入力してください');
+    return;
+  }
+
+  customers.push(customer);
+
+  saveCustomers(customers);
+
+  document.getElementById('name').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('line').value = '';
+  document.getElementById('birthday').value = '';
+  document.getElementById('memo').value = '';
+
+  renderCustomers();
+
+}
+
+renderCustomers();
+
+</script>
+
+</body>
+</html>

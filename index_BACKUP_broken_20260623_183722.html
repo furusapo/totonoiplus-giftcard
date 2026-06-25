@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ギフトカード管理システム</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:
+    "Hiragino Maru Gothic ProN",
+    "ヒラギノ丸ゴ ProN W4",
+    "Zen Maru Gothic",
+    sans-serif;
+}
+
+body{
+  background:#f5f7fb;
+  padding:16px;
+  color:#333;
+}
+
+.container{
+  max-width:900px;
+  margin:0 auto;
+}
+
+header{
+  background:#2e7d32;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:14px;
+  margin-bottom:16px;
+}
+
+h1{
+  font-size:20px;
+}
+
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+}
+
+label{
+  display:block;
+  font-size:12px;
+  margin-bottom:6px;
+  color:#666;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:15px;
+}
+
+button{
+  width:100%;
+  background:#2e7d32;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:14px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:18px;
+}
+
+.result{
+  margin-top:20px;
+}
+
+.serial-card{
+  background:#eef7ee;
+  border-left:5px solid #2e7d32;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:10px;
+}
+
+.serial{
+  font-size:18px;
+  font-weight:700;
+}
+
+.info{
+  font-size:13px;
+  color:#666;
+  margin-top:6px;
+}
+
+.customer-preview{
+  background:#f5f5f5;
+  border-radius:10px;
+  padding:10px;
+  margin-top:8px;
+  font-size:13px;
+  color:#666;
+}
+
+/* ===== デザイン・枚数 行 ===== */
+.design-rows-section{
+  margin-top:18px;
+}
+
+.design-rows-section > label{
+  font-size:13px;
+  font-weight:700;
+  color:#333;
+  margin-bottom:10px;
+}
+
+.design-row{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:10px;
+  align-items:end;
+  margin-bottom:10px;
+}
+
+.design-row .field label{
+  font-size:11px;
+  color:#888;
+}
+
+.remove-row-btn{
+  width:44px;
+  height:44px;
+  margin-top:0;
+  background:#fff;
+  color:#c62828;
+  border:1px solid #f1c4c4;
+  border-radius:10px;
+  font-size:18px;
+  font-weight:700;
+  padding:0;
+  cursor:pointer;
+}
+
+.remove-row-btn:disabled{
+  visibility:hidden;
+}
+
+.add-row-btn{
+  width:100%;
+  background:#fff;
+  color:#2e7d32;
+  border:2px dashed #b6dcb8;
+  border-radius:12px;
+  padding:12px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:4px;
+}
+
+/* ===== 封筒 ===== */
+.envelope-field{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+.checkbox-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:15px;
+  color:#333;
+  cursor:pointer;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  background:#fafafa;
+  min-height:48px;
+}
+
+.checkbox-label input[type="checkbox"]{
+  width:20px;
+  height:20px;
+  flex-shrink:0;
+  accent-color:#2e7d32;
+}
+
+.envelope-count-wrap{
+  margin-top:8px;
+}
+
+.envelope-count-wrap label{
+  font-size:11px;
+  color:#888;
+  margin-bottom:4px;
+}
+
+.price-summary{
+  margin-top:16px;
+  padding:14px;
+  background:#fff8e1;
+  border:1px solid #ffe082;
+  border-radius:12px;
+  font-size:14px;
+}
+
+.price-summary .row{
+  display:flex;
+  justify-content:space-between;
+  padding:4px 0;
+}
+
+.price-summary .total{
+  font-weight:700;
+  font-size:18px;
+  border-top:1px solid #ffe082;
+  margin-top:6px;
+  padding-top:8px;
+}
+
+@media(max-width:768px){
+  body{
+    padding:10px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  input,select{
+    font-size:16px;
+    padding:14px;
+  }
+
+  .checkbox-label{
+    font-size:16px;
+    min-height:52px;
+  }
+
+  button{
+    padding:16px;
+    font-size:17px;
+  }
+
+  .design-row{
+    grid-template-columns:1fr 1fr auto;
+  }
+
+  .remove-row-btn{
+    width:48px;
+    height:48px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <h1>🎁 ギフトカード発行</h1>
+</header>
+
+<div class="card">
+
+  <div class="grid">
+
+    <div>
+      <label>電話番号</label>
+      <input type="tel" id="phone" placeholder="09012345678">
+      <div class="customer-preview">
+        顧客情報：未登録
+      </div>
+    </div>
+
+    <div>
+      <label>発行担当者</label>
+      <select id="staff">
+        <option value="">選択してください</option>
+        <option>佐藤</option>
+        <option>土屋</option>
+        <option>高田</option>
+        <option>高橋</option>
+      </select>
+    </div>
+
+    <div class="envelope-field">
+      <label>封筒</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="envelopeCheck">
+        封筒を追加する
+      </label>
+
+      <div id="envelopeCountWrap" class="envelope-count-wrap" style="display:none;">
+        <label>枚数（1枚目無料／2枚目以降380円）</label>
+        <input type="number" id="envelopeCount" min="1" value="1">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="design-rows-section">
+    <label>デザイン・枚数（複数指定できます）</label>
+    <div id="designRows"></div>
+    <button type="button" id="addRowBtn" class="add-row-btn">＋ デザインを追加</button>
+  </div>
+
+  <button id="generateBtn">
+    ギフトカード発行
+  </button>
+
+  <div id="result" class="result"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const ISSUE_FEE = 500;        // 1回の発行につき500円（行数・枚数に関係なく固定）
+const ENVELOPE_FEE = 380;     // 封筒2枚目以降1枚あたり380円（1枚目は無料）
+
+const serialStart = {
+  1: 1,
+  2: 51,
+  3: 101
+};
+
+/* ===== デザイン・枚数 行の管理 ===== */
+
+const designRowsWrap = document.getElementById('designRows');
+const addRowBtn = document.getElementById('addRowBtn');
+let rowIdCounter = 0;
+
+function buildCountOptions(selected){
+  let html = '';
+  for(let i = 1; i <= 10; i++){
+    html += `<option value="${i}" ${i === selected ? 'selected' : ''}>${i}</option>`;
+  }
+  return html;
+}
+
+function addDesignRow(designValue = 1, countValue = 1){
+  rowIdCounter++;
+  const rowId = `row-${rowIdCounter}`;
+
+  const row = document.createElement('div');
+  row.className = 'design-row';
+  row.dataset.rowId = rowId;
+
+  row.innerHTML = `
+    <div class="field">
+      <label>デザイン</label>
+      <select class="design-select">
+        <option value="1" ${designValue === 1 ? 'selected' : ''}>デザイン1</option>
+        <option value="2" ${designValue === 2 ? 'selected' : ''}>デザイン2</option>
+        <option value="3" ${designValue === 3 ? 'selected' : ''}>デザイン3</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>枚数</label>
+      <select class="count-select">
+        ${buildCountOptions(countValue)}
+      </select>
+    </div>
+    <button type="button" class="remove-row-btn" title="この行を削除">×</button>
+  `;
+
+  row.querySelector('.remove-row-btn').addEventListener('click', () => {
+    row.remove();
+    updateRemoveButtons();
+  });
+
+  designRowsWrap.appendChild(row);
+  updateRemoveButtons();
+}
+
+function updateRemoveButtons(){
+  const rows = designRowsWrap.querySelectorAll('.design-row');
+  rows.forEach(r => {
+    const btn = r.querySelector('.remove-row-btn');
+    btn.disabled = rows.length <= 1;
+  });
+}
+
+addRowBtn.addEventListener('click', () => addDesignRow());
+
+// 初期表示は1行
+addDesignRow();
+
+/* ===== 封筒チェックボックス ===== */
+
+const envelopeCheck = document.getElementById('envelopeCheck');
+const envelopeCountWrap = document.getElementById('envelopeCountWrap');
+const envelopeCountInput = document.getElementById('envelopeCount');
+
+envelopeCheck.addEventListener('change', () => {
+  envelopeCountWrap.style.display = envelopeCheck.checked ? 'block' : 'none';
+});
+
+function calcEnvelopeFee(){
+  if(!envelopeCheck.checked) return 0;
+  const num = Math.max(1, Number(envelopeCountInput.value) || 1);
+  // 1枚目無料、2枚目以降380円
+  return Math.max(0, num - 1) * ENVELOPE_FEE;
+}
+
+/* ===== 発行処理 ===== */
+
+document.getElementById('generateBtn').addEventListener('click', () => {
+
+  const staff = document.getElementById('staff').value;
+
+  if(!staff){
+    alert('発行担当者を選択してください');
+    return;
+  }
+
+  // 各行からデザイン・枚数を取得
+  const rows = Array.from(designRowsWrap.querySelectorAll('.design-row'));
+  const entries = rows.map(r => ({
+    design: Number(r.querySelector('.design-select').value),
+    count: Number(r.querySelector('.count-select').value)
+  }));
+
+  if(entries.length === 0){
+    alert('デザインを1つ以上追加してください');
+    return;
+  }
+
+  const today = new Date();
+  const issueDate = today.toLocaleDateString('ja-JP');
+
+  const expire = new Date(today);
+  expire.setFullYear(expire.getFullYear() + 1);
+  const expireDate = expire.toLocaleDateString('ja-JP');
+
+  const result = document.getElementById('result');
+  result.innerHTML = '';
+
+  // 同じデザインが複数行にあっても番号が重複しないようオフセットを管理
+  const designOffset = {};
+  let totalCards = 0;
+
+  entries.forEach(({design, count}) => {
+    const start = serialStart[design];
+    const offset = designOffset[design] || 0;
+
+    for(let i = 0; i < count; i++){
+      const serial = `TG-${String(start + offset + i).padStart(4,'0')}`;
+
+      result.innerHTML += `
+        <div class="serial-card">
+          <div class="serial">${serial}</div>
+          <div class="info">
+            デザイン${design}<br>
+            発行日：${issueDate}<br>cd ~/gift-card-system
+cat > index.html << 'GIFTCARD_EOF'
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ギフトカード管理システム</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:
+    "Hiragino Maru Gothic ProN",
+    "ヒラギノ丸ゴ ProN W4",
+    "Zen Maru Gothic",
+    sans-serif;
+}
+
+body{
+  background:#f5f7fb;
+  padding:16px;
+  color:#333;
+}
+
+.container{
+  max-width:900px;
+  margin:0 auto;
+}
+
+header{
+  background:#2e7d32;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:14px;
+  margin-bottom:16px;
+}
+
+h1{
+  font-size:20px;
+}
+
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+}
+
+label{
+  display:block;
+  font-size:12px;
+  margin-bottom:6px;
+  color:#666;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:15px;
+}
+
+button{
+  width:100%;
+  background:#2e7d32;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:14px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:18px;
+}
+
+.result{
+  margin-top:20px;
+}
+
+.serial-card{
+  background:#eef7ee;
+  border-left:5px solid #2e7d32;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:10px;
+}
+
+.serial{
+  font-size:18px;
+  font-weight:700;
+}
+
+.info{
+  font-size:13px;
+  color:#666;
+  margin-top:6px;
+}
+
+.customer-preview{
+  background:#f5f5f5;
+  border-radius:10px;
+  padding:10px;
+  margin-top:8px;
+  font-size:13px;
+  color:#666;
+}
+
+/* ===== デザイン・枚数 行 ===== */
+.design-rows-section{
+  margin-top:18px;
+}
+
+.design-rows-section > label{
+  font-size:13px;
+  font-weight:700;
+  color:#333;
+  margin-bottom:10px;
+}
+
+.design-row{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:10px;
+  align-items:end;
+  margin-bottom:10px;
+}
+
+.design-row .field label{
+  font-size:11px;
+  color:#888;
+}
+
+.remove-row-btn{
+  width:44px;
+  height:44px;
+  margin-top:0;
+  background:#fff;
+  color:#c62828;
+  border:1px solid #f1c4c4;
+  border-radius:10px;
+  font-size:18px;
+  font-weight:700;
+  padding:0;
+  cursor:pointer;
+}
+
+.remove-row-btn:disabled{
+  visibility:hidden;
+}
+
+.add-row-btn{
+  width:100%;
+  background:#fff;
+  color:#2e7d32;
+  border:2px dashed #b6dcb8;
+  border-radius:12px;
+  padding:12px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:4px;
+}
+
+/* ===== 封筒 ===== */
+.envelope-field{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+.checkbox-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:15px;
+  color:#333;
+  cursor:pointer;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  background:#fafafa;
+  min-height:48px;
+}
+
+.checkbox-label input[type="checkbox"]{
+  width:20px;
+  height:20px;
+  flex-shrink:0;
+  accent-color:#2e7d32;
+}
+
+.envelope-count-wrap{
+  margin-top:8px;
+}
+
+.envelope-count-wrap label{
+  font-size:11px;
+  color:#888;
+  margin-bottom:4px;
+}
+
+.price-summary{
+  margin-top:16px;
+  padding:14px;
+  background:#fff8e1;
+  border:1px solid #ffe082;
+  border-radius:12px;
+  font-size:14px;
+}
+
+.price-summary .row{
+  display:flex;
+  justify-content:space-between;
+  padding:4px 0;
+}
+
+.price-summary .total{
+  font-weight:700;
+  font-size:18px;
+  border-top:1px solid #ffe082;
+  margin-top:6px;
+  padding-top:8px;
+}
+
+@media(max-width:768px){
+  body{
+    padding:10px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  input,select{
+    font-size:16px;
+    padding:14px;
+  }
+
+  .checkbox-label{
+    font-size:16px;
+    min-height:52px;
+  }
+
+  button{
+    padding:16px;
+    font-size:17px;
+  }
+
+  .design-row{
+    grid-template-columns:1fr 1fr auto;
+  }
+
+  .remove-row-btn{
+    width:48px;
+    height:48px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <h1>🎁 ギフトカード発行</h1>
+</header>
+
+<div class="card">
+
+  <div class="grid">
+
+    <div>
+      <label>電話番号</label>
+      <input type="tel" id="phone" placeholder="09012345678">
+      <div class="customer-preview">
+        顧客情報：未登録
+      </div>
+    </div>
+
+    <div>
+      <label>発行担当者</label>
+      <select id="staff">
+        <option value="">選択してください</option>
+        <option>佐藤</option>
+        <option>土屋</option>
+        <option>高田</option>
+        <option>高橋</option>
+      </select>
+    </div>
+
+    <div class="envelope-field">
+      <label>封筒</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="envelopeCheck">
+        封筒を追加する
+      </label>
+
+      <div id="envelopeCountWrap" class="envelope-count-wrap" style="display:none;">
+        <label>枚数（1枚目無料／2枚目以降380円）</label>
+        <input type="number" id="envelopeCount" min="1" value="1">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="design-rows-section">
+    <label>デザイン・枚数（複数指定できます）</label>
+    <div id="designRows"></div>
+    <button type="button" id="addRowBtn" class="add-row-btn">＋ デザインを追加</button>
+  </div>
+
+  <button id="generateBtn">
+    ギフトカード発行
+  </button>
+
+  <div id="result" class="result"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const ISSUE_FEE = 500;        // 1回の発行につき500円（行数・枚数に関係なく固定）
+const ENVELOPE_FEE = 380;     // 封筒2枚目以降1枚あたり380円（1枚目は無料）
+
+const serialStart = {
+  1: 1,
+  2: 51,
+  3: 101
+};
+
+/* ===== デザイン・枚数 行の管理 ===== */
+
+const designRowsWrap = document.getElementById('designRows');
+const addRowBtn = document.getElementById('addRowBtn');
+let rowIdCounter = 0;
+
+function buildCountOptions(selected){
+  let html = '';
+  for(let i = 1; i <= 10; i++){
+    html += `<option value="${i}" ${i === selected ? 'selected' : ''}>${i}</option>`;
+  }
+  return html;
+}
+
+function addDesignRow(designValue = 1, countValue = 1){
+  rowIdCounter++;
+  const rowId = `row-${rowIdCounter}`;
+
+  const row = document.createElement('div');
+  row.className = 'design-row';
+  row.dataset.rowId = rowId;
+
+  row.innerHTML = `
+    <div class="field">
+      <label>デザイン</label>
+      <select class="design-select">
+        <option value="1" ${designValue === 1 ? 'selected' : ''}>デザイン1</option>
+        <option value="2" ${designValue === 2 ? 'selected' : ''}>デザイン2</option>
+        <option value="3" ${designValue === 3 ? 'selected' : ''}>デザイン3</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>枚数</label>
+      <select class="count-select">
+        ${buildCountOptions(countValue)}
+      </select>
+    </div>
+    <button type="button" class="remove-row-btn" title="この行を削除">×</button>
+  `;
+
+  row.querySelector('.remove-row-btn').addEventListener('click', () => {
+    row.remove();
+    updateRemoveButtons();
+  });
+
+  designRowsWrap.appendChild(row);
+  updateRemoveButtons();
+}
+
+function updateRemoveButtons(){
+  const rows = designRowsWrap.querySelectorAll('.design-row');
+  rows.forEach(r => {
+    const btn = r.querySelector('.remove-row-btn');
+    btn.disabled = rows.length <= 1;
+  });
+}
+
+addRowBtn.addEventListener('click', () => addDesignRow());
+
+// 初期表示は1行
+addDesignRow();
+
+/* ===== 封筒チェックボックス ===== */
+
+const envelopeCheck = document.getElementById('envelopeCheck');
+const envelopeCountWrap = document.getElementById('envelopeCountWrap');
+const envelopeCountInput = document.getElementById('envelopeCount');
+
+envelopeCheck.addEventListener('change', () => {
+  envelopeCountWrap.style.display = envelopeCheck.checked ? 'block' : 'none';
+});
+
+function calcEnvelopeFee(){
+  if(!envelopeCheck.checked) return 0;
+  const num = Math.max(1, Number(envelopeCountInput.value) || 1);
+  // 1枚目無料、2枚目以降380円
+  return Math.max(0, num - 1) * ENVELOPE_FEE;
+}
+
+/* ===== 発行処理 ===== */
+
+document.getElementById('generateBtn').addEventListener('click', () => {
+
+  const staff = document.getElementById('staff').value;
+
+  if(!staff){
+    alert('発行担当者を選択してください');
+    return;
+  }
+
+  // 各行からデザイン・枚数を取得
+  const rows = Array.from(designRowsWrap.querySelectorAll('.design-row'));
+  const entries = rows.map(r => ({
+    design: Number(r.querySelector('.design-select').value),
+    count: Number(r.querySelector('.count-select').value)
+  }));
+
+  if(entries.length === 0){
+    alert('デザインを1つ以上追加してください');
+    return;
+  }
+
+  const today = new Date();
+  const issueDate = today.toLocaleDateString('ja-JP');
+
+  const expire = new Date(today);
+  expire.setFullYear(expire.getFullYear() + 1);
+  const expireDate = expire.toLocaleDateString('ja-JP');
+
+  const result = document.getElementById('result');
+  result.innerHTML = '';
+
+  // 同じデザインが複数行にあっても番号が重複しないようオフセットを管理
+  const designOffset = {};
+  let totalCards = 0;
+
+  entries.forEach(({design, count}) => {
+    const start = serialStart[design];
+    const offset = designOffset[design] || 0;
+
+    for(let i = 0; i < count; i++){
+      const serial = `TG-${String(start + offset + i).padStart(4,'0')}`;
+
+      result.innerHTML += `
+        <div class="serial-card">
+          <div class="serial">${serial}</div>
+          <div class="info">
+            デザイン${design}<br>
+            発行日：${issueDate}<br>
+cd ~/gift-card-system
+cat > index.html << 'GIFTCARD_EOF'
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ギフトカード管理システム</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:
+    "Hiragino Maru Gothic ProN",
+    "ヒラギノ丸ゴ ProN W4",
+    "Zen Maru Gothic",
+    sans-serif;
+}
+
+body{
+  background:#f5f7fb;
+  padding:16px;
+  color:#333;
+}
+
+.container{
+  max-width:900px;
+  margin:0 auto;
+}
+
+header{
+  background:#2e7d32;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:14px;
+  margin-bottom:16px;
+}
+
+h1{
+  font-size:20px;
+}
+
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:14px;
+}
+
+label{
+  display:block;
+  font-size:12px;
+  margin-bottom:6px;
+  color:#666;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:15px;
+}
+
+button{
+  width:100%;
+  background:#2e7d32;
+  color:#fff;
+  border:none;
+  border-radius:12px;
+  padding:14px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:18px;
+}
+
+.result{
+  margin-top:20px;
+}
+
+.serial-card{
+  background:#eef7ee;
+  border-left:5px solid #2e7d32;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:10px;
+}
+
+.serial{
+  font-size:18px;
+  font-weight:700;
+}
+
+.info{
+  font-size:13px;
+  color:#666;
+  margin-top:6px;
+}
+
+.customer-preview{
+  background:#f5f5f5;
+  border-radius:10px;
+  padding:10px;
+  margin-top:8px;
+  font-size:13px;
+  color:#666;
+}
+
+/* ===== デザイン・枚数 行 ===== */
+.design-rows-section{
+  margin-top:18px;
+}
+
+.design-rows-section > label{
+  font-size:13px;
+  font-weight:700;
+  color:#333;
+  margin-bottom:10px;
+}
+
+.design-row{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:10px;
+  align-items:end;
+  margin-bottom:10px;
+}
+
+.design-row .field label{
+  font-size:11px;
+  color:#888;
+}
+
+.remove-row-btn{
+  width:44px;
+  height:44px;
+  margin-top:0;
+  background:#fff;
+  color:#c62828;
+  border:1px solid #f1c4c4;
+  border-radius:10px;
+  font-size:18px;
+  font-weight:700;
+  padding:0;
+  cursor:pointer;
+}
+
+.remove-row-btn:disabled{
+  visibility:hidden;
+}
+
+.add-row-btn{
+  width:100%;
+  background:#fff;
+  color:#2e7d32;
+  border:2px dashed #b6dcb8;
+  border-radius:12px;
+  padding:12px;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:4px;
+}
+
+/* ===== 封筒 ===== */
+.envelope-field{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+.checkbox-label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:15px;
+  color:#333;
+  cursor:pointer;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  background:#fafafa;
+  min-height:48px;
+}
+
+.checkbox-label input[type="checkbox"]{
+  width:20px;
+  height:20px;
+  flex-shrink:0;
+  accent-color:#2e7d32;
+}
+
+.envelope-count-wrap{
+  margin-top:8px;
+}
+
+.envelope-count-wrap label{
+  font-size:11px;
+  color:#888;
+  margin-bottom:4px;
+}
+
+.price-summary{
+  margin-top:16px;
+  padding:14px;
+  background:#fff8e1;
+  border:1px solid #ffe082;
+  border-radius:12px;
+  font-size:14px;
+}
+
+.price-summary .row{
+  display:flex;
+  justify-content:space-between;
+  padding:4px 0;
+}
+
+.price-summary .total{
+  font-weight:700;
+  font-size:18px;
+  border-top:1px solid #ffe082;
+  margin-top:6px;
+  padding-top:8px;
+}
+
+@media(max-width:768px){
+  body{
+    padding:10px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  input,select{
+    font-size:16px;
+    padding:14px;
+  }
+
+  .checkbox-label{
+    font-size:16px;
+    min-height:52px;
+  }
+
+  button{
+    padding:16px;
+    font-size:17px;
+  }
+
+  .design-row{
+    grid-template-columns:1fr 1fr auto;
+  }
+
+  .remove-row-btn{
+    width:48px;
+    height:48px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+  <h1>🎁 ギフトカード発行</h1>
+</header>
+
+<div class="card">
+
+  <div class="grid">
+
+    <div>
+      <label>電話番号</label>
+      <input type="tel" id="phone" placeholder="09012345678">
+      <div class="customer-preview">
+        顧客情報：未登録
+      </div>
+    </div>
+
+    <div>
+      <label>発行担当者</label>
+      <select id="staff">
+        <option value="">選択してください</option>
+        <option>佐藤</option>
+        <option>土屋</option>
+        <option>高田</option>
+        <option>高橋</option>
+      </select>
+    </div>
+
+    <div class="envelope-field">
+      <label>封筒</label>
+      <label class="checkbox-label">
+        <input type="checkbox" id="envelopeCheck">
+        封筒を追加する
+      </label>
+
+      <div id="envelopeCountWrap" class="envelope-count-wrap" style="display:none;">
+        <label>枚数（1枚目無料／2枚目以降380円）</label>
+        <input type="number" id="envelopeCount" min="1" value="1">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="design-rows-section">
+    <label>デザイン・枚数（複数指定できます）</label>
+    <div id="designRows"></div>
+    <button type="button" id="addRowBtn" class="add-row-btn">＋ デザインを追加</button>
+  </div>
+
+  <button id="generateBtn">
+    ギフトカード発行
+  </button>
+
+  <div id="result" class="result"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const ISSUE_FEE = 500;        // 1回の発行につき500円（行数・枚数に関係なく固定）
+const ENVELOPE_FEE = 380;     // 封筒2枚目以降1枚あたり380円（1枚目は無料）
+
+const serialStart = {
+  1: 1,
+  2: 51,
+  3: 101
+};
+
+/* ===== デザイン・枚数 行の管理 ===== */
+
+const designRowsWrap = document.getElementById('designRows');
+const addRowBtn = document.getElementById('addRowBtn');
+let rowIdCounter = 0;
+
+function buildCountOptions(selected){
+  let html = '';
+  for(let i = 1; i <= 10; i++){
+    html += `<option value="${i}" ${i === selected ? 'selected' : ''}>${i}</option>`;
+  }
+  return html;
+}
+
+function addDesignRow(designValue = 1, countValue = 1){
+  rowIdCounter++;
+  const rowId = `row-${rowIdCounter}`;
+
+  const row = document.createElement('div');
+  row.className = 'design-row';
+  row.dataset.rowId = rowId;
+
+  row.innerHTML = `
+    <div class="field">
+      <label>デザイン</label>
+      <select class="design-select">
+        <option value="1" ${designValue === 1 ? 'selected' : ''}>デザイン1</option>
+        <option value="2" ${designValue === 2 ? 'selected' : ''}>デザイン2</option>
+        <option value="3" ${designValue === 3 ? 'selected' : ''}>デザイン3</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>枚数</label>
+      <select class="count-select">
+        ${buildCountOptions(countValue)}
+      </select>
+    </div>
+    <button type="button" class="remove-row-btn" title="この行を削除">×</button>
+  `;
+
+  row.querySelector('.remove-row-btn').addEventListener('click', () => {
+    row.remove();
+    updateRemoveButtons();
+  });
+
+  designRowsWrap.appendChild(row);
+  updateRemoveButtons();
+}
+
+function updateRemoveButtons(){
+  const rows = designRowsWrap.querySelectorAll('.design-row');
+  rows.forEach(r => {
+    const btn = r.querySelector('.remove-row-btn');
+    btn.disabled = rows.length <= 1;
+  });
+}
+
+addRowBtn.addEventListener('click', () => addDesignRow());
+
+// 初期表示は1行
+addDesignRow();
+
+/* ===== 封筒チェックボックス ===== */
+
+const envelopeCheck = document.getElementById('envelopeCheck');
+const envelopeCountWrap = document.getElementById('envelopeCountWrap');
+const envelopeCountInput = document.getElementById('envelopeCount');
+
+envelopeCheck.addEventListener('change', () => {
+  envelopeCountWrap.style.display = envelopeCheck.checked ? 'block' : 'none';
+});
+
+function calcEnvelopeFee(){
+  if(!envelopeCheck.checked) return 0;
+  const num = Math.max(1, Number(envelopeCountInput.value) || 1);
+  // 1枚目無料、2枚目以降380円
+  return Math.max(0, num - 1) * ENVELOPE_FEE;
+}
+
+/* ===== 発行処理 ===== */
+
+document.getElementById('generateBtn').addEventListener('click', () => {
+
+  const staff = document.getElementById('staff').value;
+
+  if(!staff){
+    alert('発行担当者を選択してください');
+    return;
+  }
+
+  // 各行からデザイン・枚数を取得
+  const rows = Array.from(designRowsWrap.querySelectorAll('.design-row'));
+  const entries = rows.map(r => ({
+    design: Number(r.querySelector('.design-select').value),
+    count: Number(r.querySelector('.count-select').value)
+  }));
+
+  if(entries.length === 0){
+    alert('デザインを1つ以上追加してください');
+    return;
+  }
+
+  const today = new Date();
+  const issueDate = today.toLocaleDateString('ja-JP');
+
+  const expire = new Date(today);
+  expire.setFullYear(expire.getFullYear() + 1);
+  const expireDate = expire.toLocaleDateString('ja-JP');
+
+  const result = document.getElementById('result');
+  result.innerHTML = '';
+
+  // 同じデザインが複数行にあっても番号が重複しないようオフセットを管理
+  const designOffset = {};
+  let totalCards = 0;
+
+  entries.forEach(({design, count}) => {
+    const start = serialStart[design];
+    const offset = designOffset[design] || 0;
+
+    for(let i = 0; i < count; i++){
+      const serial = `TG-${String(start + offset + i).padStart(4,'0')}`;
+
+      result.innerHTML += `
+        <div class="serial-card">
+          <div class="serial">${serial}</div>
+          <div class="info">
+            デザイン${design}<br>
+            発行日：${issueDate}<br>
+            有効期限：${expireDate}<br>
+            発行担当：${staff}
+          </div>
+        </div>
+      `;
+    }
+
+    designOffset[design] = offset + count;
+    totalCards += count;
+  });
+
+  // 料金計算
+  const envelopeFee = calcEnvelopeFee();
+  const envelopeUsed = envelopeCheck.checked;
+  const envelopeNum = envelopeUsed ? Math.max(1, Number(envelopeCountInput.value) || 1) : 0;
+  const total = ISSUE_FEE + envelopeFee;
+
+  let envelopeRow = '';
+  if(envelopeUsed){
+    envelopeRow = `
+      <div class="row">
+        <span>封筒（${envelopeNum}枚／1枚目無料）</span>
+        <span>${envelopeFee.toLocaleString()}円</span>
+      </div>
+    `;
+  }
+
+  result.innerHTML += `
+    <div class="price-summary">
+      <div class="row">
+        <span>発行枚数合計</span>
+        <span>${totalCards}枚</span>
+      </div>
+      <div class="row">
+        <span>発行手数料</span>
+        <span>${ISSUE_FEE.toLocaleString()}円</span>
+      </div>
+      ${envelopeRow}
+      <div class="row total">
+        <span>合計</span>
+        <span>${total.toLocaleString()}円</span>
+      </div>
+    </div>
+  `;
+
+});
+
+</script>
+
+</body>
+</html>
