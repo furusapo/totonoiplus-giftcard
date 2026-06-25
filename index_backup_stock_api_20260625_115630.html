@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TOTONOI+ GIFT CARD SYSTEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#b8975a;--gold2:#d4b47a;--black:#080807;--panel:#151410;--cream:#f8f4ee}
+html,body{min-height:100%;overflow:auto}
+body{
+  font-family:"Noto Sans JP",sans-serif;
+  background:radial-gradient(circle at top left,rgba(184,151,90,.16),transparent 30%),linear-gradient(135deg,#050505,#1a1410 48%,#050505);
+  color:var(--cream);
+  padding:14px;
+}
+.wrap{min-height:calc(100vh - 28px);max-width:1500px;margin:auto;display:grid;grid-template-rows:auto 1fr;gap:12px}
+.top{display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:stretch}
+.logoBox{display:flex;align-items:center;padding:18px;border:1px solid rgba(184,151,90,.45);border-radius:12px;background:rgba(21,20,16,.88)}
+.logo{font-family:"Noto Serif JP",serif;color:var(--gold2);font-size:27px;letter-spacing:.13em;line-height:1.05}
+.logo small{display:block;font-size:12px;letter-spacing:.18em;margin-top:7px}
+
+.dashboard{display:grid;grid-template-columns:170px repeat(3,1fr);gap:10px}
+.dash{
+  background:rgba(21,20,16,.9);
+  border:1px solid rgba(184,151,90,.42);
+  border-radius:12px;
+  padding:12px 14px;
+  display:flex;
+  gap:14px;
+  align-items:center;
+  min-height:118px;
+}
+.dash.first{display:block;padding:18px}
+.dash img{width:150px;height:78px;object-fit:cover;border-radius:7px;border:1px solid rgba(184,151,90,.48)}
+.dashLabel{color:var(--gold2);font-weight:700;font-size:13px;line-height:1.25}
+.dashNum{font-family:"Noto Serif JP",serif;font-size:38px;color:var(--gold2);line-height:1.05;margin:4px 0}
+.dashNote{font-size:12px;color:#d8c8aa;white-space:nowrap}
+
+.main{min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{
+  background:rgba(21,20,16,.93);
+  border:1px solid rgba(184,151,90,.42);
+  border-radius:12px;
+  padding:18px;
+}
+.left,.right{min-height:0;display:grid;gap:12px}
+.left{grid-template-rows:1fr}
+.right{grid-template-rows:auto 1fr}
+
+h2{font-size:18px;color:var(--gold2);margin-bottom:12px;font-family:"Noto Serif JP",serif}
+h2:after{content:"";display:block;width:52px;height:1px;background:var(--gold);margin-top:8px}
+label{display:block;margin-bottom:7px;color:#d4b47a;font-weight:700;font-size:14px}
+
+.customerAutoBox{
+  padding:14px 16px;
+  border:1px solid rgba(184,151,90,.32);
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(184,151,90,.08),rgba(255,255,255,.02));
+  margin-bottom:16px;
+}
+.customerAutoTitle{color:var(--gold2);font-weight:700;font-size:15px;margin-bottom:8px}
+.customerAutoContent{display:grid;gap:6px;color:#d8c8aa;font-size:13px}
+.customerAutoContent div{display:flex;justify-content:space-between;border-bottom:1px solid rgba(184,151,90,.14);padding-bottom:5px}
+.customerAutoContent div:last-child{border-bottom:none;padding-bottom:0}
+.customerAutoContent strong{color:#f1e4c8;text-align:right}
+
+.row{display:grid;grid-template-columns:42px 230px 140px 86px 72px 26px;gap:12px;align-items:center;margin-bottom:12px}
+.num{border:1px solid var(--gold);color:var(--gold2);border-radius:7px;text-align:center;padding:9px;font-size:24px;font-family:"Noto Serif JP",serif}
+.preview{width:230px;height:104px;object-fit:cover;border-radius:7px;border:1px solid rgba(184,151,90,.45)}
+select,input{width:100%;padding:12px;border-radius:7px;border:1px solid rgba(184,151,90,.35);background:#11100d;color:#fff;font-size:14px}
+.price{color:var(--gold2);font-size:15px;text-align:right;white-space:nowrap}
+.remove{background:transparent;color:#bfa980;border:none;font-size:22px;cursor:pointer}
+.add{width:100%;padding:12px;border:1px dashed var(--gold);background:transparent;color:var(--gold2);border-radius:7px;font-size:15px;margin:4px 0 14px}
+.infoBox{border:1px solid rgba(184,151,90,.35);padding:14px;border-radius:8px;color:#f5ead5;line-height:1.65;font-size:13px}
+
+.formGrid{display:grid;grid-template-columns:1fr;gap:12px}
+.customerCard{padding-bottom:16px}
+
+.issueCard{display:grid;grid-template-rows:auto auto auto auto auto;gap:10px}
+.envelopeGrid{
+  display:grid;
+  grid-template-columns:210px 1fr;
+  gap:24px;
+  align-items:center;
+  padding:12px;
+  border:1px solid rgba(184,151,90,.32);
+  border-radius:10px;
+  background:rgba(255,255,255,.018);
+}
+.envelopeGrid img{
+  width:210px;
+  border-radius:12px;
+  border:1px solid rgba(184,151,90,.35);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+.envelopeGrid select{height:52px;font-size:15px}
+
+#priceBreakdown{
+  padding:13px 16px;
+  border:1px solid rgba(184,151,90,.28);
+  border-radius:10px;
+  color:#e7dcc4;
+  line-height:1.7;
+  font-size:14px;
+  background:rgba(255,255,255,.022);
+}
+.totalLine{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  border-top:1px solid rgba(184,151,90,.32);
+  padding-top:12px;
+}
+.totalPrice{font-size:44px;font-family:"Noto Serif JP",serif;color:var(--gold2);line-height:.95;letter-spacing:.04em}
+.issueBtn{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:8px;
+  background:linear-gradient(135deg,#d4b47a,#8a6e3a);
+  color:#111;
+  font-size:22px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.resultCard{display:grid;grid-template-columns:160px 1fr;gap:14px;border:1px solid rgba(184,151,90,.35);border-radius:8px;padding:12px;margin-bottom:10px}
+.resultCard img{width:160px;height:88px;object-fit:cover;border-radius:6px}
+.serial{font-family:"Noto Serif JP",serif;font-size:26px;color:var(--gold2);letter-spacing:.08em}
+.detail{line-height:1.55;color:#eee;font-size:13px}
+
+@media(max-width:1180px){
+  html,body{overflow:auto;height:auto}
+  .wrap{height:auto}
+  .top,.main{grid-template-columns:1fr}
+  .dashboard{grid-template-columns:1fr 1fr}
+}
+</style>
+
+<style id="border-balance-fix">
+/* ===== 線の整理：囲いすぎを解消 ===== */
+
+/* 全体カードは外枠を少し薄く */
+.card,
+.logoBox,
+.dash{
+  border-color: rgba(184,151,90,.26) !important;
+  box-shadow: 0 12px 36px rgba(0,0,0,.18) !important;
+}
+
+/* 上部ダッシュボード：画像カード感は残す */
+.dash img,
+.preview,
+.envelopeGrid img{
+  border-color: rgba(184,151,90,.20) !important;
+}
+
+/* 顧客情報の内側の囲いは消して、背景だけで見せる */
+.customerAutoBox{
+  border: none !important;
+  background: linear-gradient(135deg,rgba(184,151,90,.10),rgba(255,255,255,.025)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04) !important;
+}
+
+/* 顧客情報の横線はかなり薄く */
+.customerAutoContent div{
+  border-bottom-color: rgba(184,151,90,.10) !important;
+}
+
+/* 追加封筒の囲いは消す */
+.envelopeGrid{
+  border: none !important;
+  background: linear-gradient(135deg,rgba(184,151,90,.08),rgba(255,255,255,.018)) !important;
+  border-radius: 12px !important;
+}
+
+/* 金額内訳は囲わず、左線だけで上品に */
+#priceBreakdown{
+  border: none !important;
+  border-left: 3px solid rgba(212,180,122,.55) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 8px 0 8px 16px !important;
+}
+
+/* 合計金額の上線は残すけど薄く */
+.totalLine{
+  border-top-color: rgba(184,151,90,.22) !important;
+}
+
+/* 行追加ボタンは点線が強いので薄く */
+.add{
+  border-color: rgba(184,151,90,.38) !important;
+  background: rgba(184,151,90,.035) !important;
+}
+
+/* 説明ボックスは囲いを消して控えめに */
+.infoBox{
+  border: none !important;
+  background: rgba(255,255,255,.025) !important;
+  border-left: 3px solid rgba(212,180,122,.45) !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+
+/* 入力欄は残す：操作場所だから必要 */
+select,
+input{
+  border-color: rgba(184,151,90,.34) !important;
+}
+
+/* 番号枠は残す：行の目印 */
+.num{
+  border-color: rgba(212,180,122,.55) !important;
+}
+
+/* h2下線は少し短く・薄く */
+h2:after{
+  width: 44px !important;
+  background: rgba(212,180,122,.55) !important;
+}
+
+/* 右側のカード間が重く見えないよう少し軽く */
+.customerCard,
+.issueCard{
+  background: rgba(21,20,16,.88) !important;
+}
+</style>
+
+
+<style id="logo-border-remove">
+.logoBox{
+  border:none !important;
+  box-shadow:none !important;
+  background:transparent !important;
+}
+</style>
+
+
+<style id="count-font-small">
+/* 枚数表示をスマートに小さく */
+.dashNum{
+  font-size: 30px !important;
+  line-height: 1 !important;
+}
+
+.dashLabel{
+  font-size: 11px !important;
+}
+
+.dashNote{
+  font-size: 10px !important;
+}
+
+.count-select{
+  font-size: 13px !important;
+  padding: 9px 10px !important;
+}
+
+.price{
+  font-size: 13px !important;
+}
+
+@media(max-width:1180px){
+  .dashNum{
+    font-size: 28px !important;
+  }
+}
+</style>
+
+
+<style id="envelope-border-remove">
+.envelopeGrid img{
+  border: none !important;
+  box-shadow: none !important;
+}
+</style>
+
+
+<style id="input-black-fix">
+/* 入力フォームを入力中も黒背景のままにする */
+input,
+input:focus,
+input:active,
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus{
+  background:#11100d !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  box-shadow:0 0 0 1000px #11100d inset !important;
+  caret-color:#fff !important;
+}
+
+input::placeholder{
+  color:rgba(255,255,255,.42) !important;
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logoBox">
+      <div class="logo">TOTONOI+<small>GIFT CARD SYSTEM</small></div>
+    </div>
+
+    <div class="dashboard">
+      <div class="dash first">
+        <div class="dashLabel">発行予定</div>
+        <div class="dashNum" id="dashIssueCount">0枚</div>
+        <div class="dashNote">今回発行する枚数</div>
+      </div>
+
+      <div class="dash">
+        <img src="images/giftcard1.png">
+        <div>
+          <div class="dashLabel">Design 01 残数目安</div>
+          <div class="dashNum" id="dashStock1">50枚</div>
+          <div class="dashNote">TG-0001〜0050</div>
+        </div>
+      </div>
+
+      <div class="dash">
+        <img src="images/giftcard2.png">
+        <div>
+          <div class="dashLabel">Design 02 残数目安</div>
+          <div class="dashNum" id="dashStock2">50枚</div>
+          <div class="dashNote">TG-0051〜0100</div>
+        </div>
+      </div>
+
+      <div class="dash">
+        <img src="images/giftcard3.png">
+        <div>
+          <div class="dashLabel">Design 03 残数目安</div>
+          <div class="dashNum" id="dashStock3">50枚</div>
+          <div class="dashNote">TG-0101〜0150</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="left">
+      <div class="card">
+        <h2>発行するカードを選択</h2>
+
+        <div id="customerAutoBox" class="customerAutoBox">
+          <div class="customerAutoTitle">顧客情報</div>
+          <div class="customerAutoContent">
+            <div><span>顧客名</span><strong id="autoCustomerName">電話番号入力後に自動表示</strong></div>
+            <div><span>購入履歴</span><strong id="autoCustomerHistory">未連携</strong></div>
+            <div><span>メモ</span><strong id="autoCustomerMemo">顧客台帳連携予定</strong></div>
+          </div>
+        </div>
+
+        <div id="designRows"></div>
+        <button class="add" id="addRowBtn">＋ 行を追加</button>
+
+        <div class="infoBox">
+          ギフトカードはサウナ・コワーキング・会議室・ドリンクなど館内サービス全般に利用可能。<br>
+          有効期限は発行日より1年間です。
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="card customerCard">
+        <h2>お客様情報</h2>
+        <div class="formGrid">
+          <div>
+            <label>お客様電話番号 <span style="color:#d4b47a;">必須</span></label>
+            <input id="phone" type="tel" required placeholder="例）090-1234-5678">
+          </div>
+          <div>
+            <label>発行担当者</label>
+            <select id="staff">
+              <option value="">スタッフを選択してください</option>
+              <option>土屋</option><option>四ツ谷</option><option>絹果</option><option>ユミ・専務</option><option>高橋</option><option>佐藤</option><option>望</option><option>東江</option><option>渡邊</option><option>柳瀬</option><option>琴音</option><option>高田</option><option>細川</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card issueCard">
+        <h2>追加封筒（発行時1枚無料）</h2>
+
+        <div class="envelopeGrid">
+          <img src="images/envelope.png">
+          <select id="envelopeCount">
+            <option value="0">追加なし</option>
+            <option value="1">1枚 (+380円)</option>
+            <option value="2">2枚 (+760円)</option>
+            <option value="3">3枚 (+1,140円)</option>
+            <option value="4">4枚 (+1,520円)</option>
+            <option value="5">5枚 (+1,900円)</option>
+            <option value="10">10枚 (+3,800円)</option>
+          </select>
+        </div>
+
+        <div id="priceBreakdown">カード代：¥0<br>発行手数料：¥0<br>追加封筒：¥0</div>
+
+        <div class="totalLine">
+          <h2>合計金額</h2>
+          <div class="totalPrice" id="grandTotal">¥0</div>
+        </div>
+
+        <button id="generateBtn" class="issueBtn">カードを発行する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS_URL='https://script.google.com/macros/s/AKfycbxrRcaJSBI8QN1KWBogbD0MK222FtVBDvlmSnRN2nsEaSwrOyv7xqxtosK_Yk6nHnx8/exec';
+const CARD_PRICE=5000;
+const images={1:'images/giftcard1.png',2:'images/giftcard2.png',3:'images/giftcard3.png'};
+const designRows=document.getElementById('designRows');
+
+function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
+function options(v=1){let h='';for(let i=1;i<=10;i++)h+=`<option value="${i}" ${i===v?'selected':''}>${i}枚</option>`;return h}
+
+function addDesignRow(design=1,count=1){
+  const row=document.createElement('div');
+  row.className='row';
+  row.innerHTML=`
+    <div class="num">${design}</div>
+    <img class="preview" src="${images[design]}">
+    <select class="design-select">
+      <option value="1">デザイン1</option>
+      <option value="2">デザイン2</option>
+      <option value="3">デザイン3</option>
+    </select>
+    <select class="count-select">${options(count)}</select>
+    <div class="price">¥0</div>
+    <button class="remove">×</button>`;
+  row.querySelector('.design-select').value=design;
+  row.querySelector('.design-select').onchange=()=>{
+    const d=Number(row.querySelector('.design-select').value);
+    row.querySelector('.num').textContent=d;
+    row.querySelector('.preview').src=images[d];
+    update();
+  };
+  row.querySelector('.count-select').onchange=update;
+  row.querySelector('.remove').onclick=()=>{row.remove();update()};
+  designRows.appendChild(row);
+  update();
+}
+
+function getEntries(){
+  return [...document.querySelectorAll('.row')].map(r=>({
+    design:Number(r.querySelector('.design-select').value),
+    count:Number(r.querySelector('.count-select').value)
+  }));
+}
+
+function update(){
+  const used={1:0,2:0,3:0};
+  let total=0;
+
+  document.querySelectorAll('.row').forEach(r=>{
+    const d=Number(r.querySelector('.design-select').value);
+    const c=Number(r.querySelector('.count-select').value);
+    used[d]+=c;
+    total+=c;
+    r.querySelector('.price').textContent=yen(c*CARD_PRICE);
+  });
+
+  document.getElementById('dashIssueCount').textContent=total+'枚';
+  document.getElementById('dashStock1').textContent=(50-used[1])+'枚';
+  document.getElementById('dashStock2').textContent=(50-used[2])+'枚';
+  document.getElementById('dashStock3').textContent=(50-used[3])+'枚';
+
+  const issueFee=total>0?500:0;
+  const envelopeCount=Number(document.getElementById("envelopeCount")?.value||0);
+  const envelopeFee=envelopeCount*380;
+  const cardTotal=total*CARD_PRICE;
+  const grandTotal=cardTotal+issueFee+envelopeFee;
+
+  document.getElementById("priceBreakdown").innerHTML=
+    `カード代：${yen(cardTotal)}<br>発行手数料：${yen(issueFee)}<br>追加封筒：${yen(envelopeFee)}`;
+  document.getElementById("grandTotal").textContent=yen(grandTotal);
+}
+
+document.getElementById('addRowBtn').onclick=()=>addDesignRow();
+document.getElementById("envelopeCount").onchange=update;
+addDesignRow(1,1);
+
+document.getElementById('generateBtn').onclick=()=>{
+  const staff=document.getElementById('staff').value;
+  const phone=document.getElementById('phone').value.trim();
+  if(!phone){alert('お客様電話番号を入力してください');return}
+  if(!staff){alert('発行担当者を選択してください');return}
+
+  const today=new Date();
+  const issueDate=today.toLocaleDateString('ja-JP');
+  const ex=new Date(today);
+  ex.setFullYear(ex.getFullYear()+1);
+  const expireDate=ex.toLocaleDateString('ja-JP');
+
+  const callbackName='giftCallback_'+Date.now();
+
+  window[callbackName]=res=>{
+    alert('スプレッドシートへ保存しました');
+    delete window[callbackName];
+    script.remove();
+  };
+
+  const payload={phone,staff,issueDate,expireDate,requests:getEntries()};
+  const script=document.createElement('script');
+  script.src=GAS_URL+'?callback='+callbackName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  document.body.appendChild(script);
+};
+</script>
+
+
+<script id="customer-auto-load">
+let customerData = [];
+
+function normalizePhone(v){
+  return String(v || "").replace(/[^0-9]/g,"");
+}
+
+function parseCSV(text){
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let inQuotes = false;
+
+  for(let i=0; i<text.length; i++){
+    const ch = text[i];
+    const next = text[i+1];
+
+    if(ch === '"' && next === '"'){
+      cell += '"';
+      i++;
+    }else if(ch === '"'){
+      inQuotes = !inQuotes;
+    }else if(ch === "," && !inQuotes){
+      row.push(cell);
+      cell = "";
+    }else if((ch === "\n" || ch === "\r") && !inQuotes){
+      if(ch === "\r" && next === "\n") i++;
+      row.push(cell);
+      if(row.some(v => String(v).trim() !== "")) rows.push(row);
+      row = [];
+      cell = "";
+    }else{
+      cell += ch;
+    }
+  }
+
+  if(cell || row.length){
+    row.push(cell);
+    rows.push(row);
+  }
+
+  const headers = rows.shift().map(h => h.replace(/^\uFEFF/, "").trim());
+
+  return rows.map(cols=>{
+    const obj = {};
+    headers.forEach((h,i)=>{
+      obj[h] = (cols[i] || "").trim();
+    });
+    return obj;
+  });
+}
+
+function getValue(obj, keys){
+  for(const key of keys){
+    if(obj[key] !== undefined && obj[key] !== "") return obj[key];
+  }
+  return "";
+}
+
+function showCustomer(customer){
+  const lastName = getValue(customer, ["顧客名（姓）","姓"]);
+  const firstName = getValue(customer, ["顧客名（名）","名"]);
+  const fullName = (lastName + " " + firstName).trim()
+    || getValue(customer, ["氏名","お名前","顧客名","名前"])
+    || "登録あり";
+
+  const count = getValue(customer, ["購入回数(通算)","購入回数","来店回数","利用回数"]) || "0";
+  const amountRaw = getValue(customer, ["利用金額(通算)","利用金額","累計利用額","購入金額"]) || "0";
+  const amount = Number(String(amountRaw).replace(/[^0-9]/g,"") || 0).toLocaleString("ja-JP");
+
+  const rank = getValue(customer, ["ランク","会員ランク"]) || "-";
+  const point = getValue(customer, ["有効ポイント","ポイント","保有ポイント"]) || "0";
+  const memo = getValue(customer, ["顧客メモ","メモ","備考"]) || "";
+  const member = getValue(customer, ["会員/非会員","会員区分"]) || "";
+
+  document.getElementById("autoCustomerName").textContent = fullName;
+  document.getElementById("autoCustomerHistory").textContent = `${member} ／ 来店 ${count}回 ／ 累計 ${amount}円`;
+  document.getElementById("autoCustomerMemo").textContent = memo ? `${memo} ／ ランク：${rank} ／ ポイント：${point}` : `ランク：${rank} ／ ポイント：${point}`;
+}
+
+function showNotFound(){
+  document.getElementById("autoCustomerName").textContent = "未登録";
+  document.getElementById("autoCustomerHistory").textContent = "新規顧客";
+  document.getElementById("autoCustomerMemo").textContent = "顧客データなし";
+}
+
+fetch("customers.csv?v=" + Date.now())
+  .then(r => {
+    if(!r.ok) throw new Error("customers.csv が読めません: " + r.status);
+    return r.text();
+  })
+  .then(text => {
+    customerData = parseCSV(text);
+    console.log("顧客CSV読込完了", customerData.length, customerData[0]);
+  })
+  .catch(err => {
+    console.error(err);
+    alert("顧客CSVを読み込めません。http://localhost:8000 で開いてください。");
+  });
+
+document.addEventListener("input", e => {
+  if(e.target.id !== "phone") return;
+
+  const inputPhone = normalizePhone(e.target.value);
+
+  if(inputPhone.length < 10){
+    showNotFound();
+    return;
+  }
+
+  const customer = customerData.find(c => {
+    const csvPhone = normalizePhone(getValue(c, ["電話番号","電話","携帯番号","TEL","tel","Phone"]));
+    return csvPhone === inputPhone;
+  });
+
+  if(customer){
+    showCustomer(customer);
+  }else{
+    showNotFound();
+  }
+});
+</script>
+
+
+</body>
+</html>
