@@ -528,9 +528,9 @@ function loadStock(){
 
   window[callbackName]=function(res){
     if(res && res.result==='success' && res.stock){
-      stockBase[1]=Number(res.stock[1] ?? 50);
-      stockBase[2]=Number(res.stock[2] ?? 50);
-      stockBase[3]=Number(res.stock[3] ?? 50);
+      stockBase[1]=Number(res.stock[1] || 50);
+      stockBase[2]=Number(res.stock[2] || 50);
+      stockBase[3]=Number(res.stock[3] || 50);
       update();
     }
     delete window[callbackName];
