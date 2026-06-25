@@ -489,7 +489,6 @@ function update(){
 document.getElementById('addRowBtn').onclick=()=>addDesignRow();
 document.getElementById("envelopeCount").onchange=update;
 addDesignRow(1,1);
-loadStock();
 
 document.getElementById('generateBtn').onclick=()=>{
   const staff=document.getElementById('staff').value;
@@ -516,6 +515,7 @@ document.getElementById('generateBtn').onclick=()=>{
   script.src=GAS_URL+'?callback='+callbackName+'&data='+encodeURIComponent(JSON.stringify(payload));
   document.body.appendChild(script);
 };
+loadStock();
 </script>
 
 
@@ -663,6 +663,7 @@ document.addEventListener("input", e => {
     showNotFound();
   }
 });
+loadStock();
 </script>
 
 
