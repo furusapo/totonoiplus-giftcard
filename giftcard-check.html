@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOTONOI+ ギフトカード有効期限確認</title>
+  <style>
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;background:#f7f4ef;color:#2b2b2b}
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{width:100%;max-width:440px;background:#fff;border-radius:24px;padding:28px;box-shadow:0 18px 45px rgba(0,0,0,.12)}
+    .brand{text-align:center;font-size:13px;letter-spacing:.16em;color:#9a7b52;font-weight:700;margin-bottom:8px}
+    h1{text-align:center;font-size:24px;margin:0 0 10px}
+    .lead{text-align:center;color:#666;font-size:14px;line-height:1.7;margin-bottom:24px}
+    label{display:block;font-weight:700;margin-bottom:8px}
+    input{width:100%;box-sizing:border-box;padding:15px 16px;border:1px solid #ddd;border-radius:14px;font-size:18px;letter-spacing:.08em;text-align:center}
+    button{width:100%;border:0;border-radius:16px;padding:15px 16px;margin-top:16px;background:linear-gradient(135deg,#b9925a,#8b6837);color:white;font-weight:800;font-size:16px;cursor:pointer}
+    .result{margin-top:20px;padding:18px;border-radius:18px;background:#faf7f1;border:1px solid #eadfce;display:none}
+    .result h2{font-size:18px;margin:0 0 12px}
+    .row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid #e7dccb}
+    .row:last-child{border-bottom:0}
+    .k{color:#777}.v{font-weight:800;text-align:right}
+    .ok{color:#167a3a}.used{color:#b3261e}.note{font-size:12px;color:#777;line-height:1.7;margin-top:18px;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="brand">TOTONOI+</div>
+      <h1>ギフトカード有効期限確認</h1>
+      <p class="lead">ギフトカードに記載されている<br>シリアル番号を入力してください。</p>
+
+      <label for="serial">シリアル番号</label>
+      <input id="serial" placeholder="例：TG-0001" autocomplete="off">
+      <button onclick="checkSerial()">確認する</button>
+
+      <div id="result" class="result"></div>
+
+      <p class="note">番号が確認できない場合は、店舗スタッフまでお問い合わせください。</p>
+    </div>
+  </div>
+
+<script>
+const GAS_URL = "ここにGASのウェブアプリURLを入れてください";
+
+async function checkSerial(){
+  const serial = document.getElementById("serial").value.trim().toUpperCase();
+  const result = document.getElementById("result");
+
+  if(!serial){
+    result.style.display="block";
+    result.innerHTML="<h2>シリアル番号を入力してください</h2>";
+    return;
+  }
+
+  result.style.display="block";
+  result.innerHTML="<h2>確認中です...</h2>";
+
+  try{
+    const res = await fetch(GAS_URL + "?mode=check&serial=" + encodeURIComponent(serial));
+    const data = await res.json();
+
+    if(!data.found){
+      result.innerHTML="<h2>該当するギフトカードが見つかりません</h2>";
+      return;
+    }
+
+    const statusClass = data.status === "使用済" ? "used" : "ok";
+
+    result.innerHTML = `
+      <h2>確認結果</h2>
+      <div class="row"><div class="k">シリアル番号</div><div class="v">${data.serial || serial}</div></div>
+      <div class="row"><div class="k">有効期限</div><div class="v">${data.expiry || "-"}</div></div>
+      <div class="row"><div class="k">状態</div><div class="v ${statusClass}">${data.status || "-"}</div></div>
+      <div class="row"><div class="k">デザイン</div><div class="v">${data.design || "-"}</div></div>
+    `;
+  }catch(e){
+    result.innerHTML="<h2>確認できませんでした</h2><p>時間をおいて再度お試しください。</p>";
+  }
+}
+</script>
+</body>
+</html>
