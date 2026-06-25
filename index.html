@@ -298,6 +298,70 @@ input::placeholder{
 }
 </style>
 
+
+<style id="compact-height-fix">
+/* 画面の天地を少し短くして、見切れを減らす */
+body{
+  zoom: .88;
+}
+
+.container,
+.wrapper,
+main{
+  max-height: none;
+}
+
+section,
+.card,
+.panel{
+  padding-top: 18px !important;
+  padding-bottom: 18px !important;
+}
+
+.dashboard{
+  margin-bottom: 14px !important;
+}
+
+.dash{
+  min-height: auto !important;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+.dash img{
+  height: 66px !important;
+}
+
+h1{
+  font-size: 28px !important;
+}
+
+h2{
+  margin-bottom: 8px !important;
+}
+
+input,
+select,
+button{
+  min-height: 42px !important;
+}
+
+.gift-row,
+.row{
+  margin-bottom: 10px !important;
+}
+
+.totalPrice{
+  font-size: 38px !important;
+}
+
+@media (max-width: 900px){
+  body{
+    zoom: 1;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="wrap">
