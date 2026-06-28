@@ -153,6 +153,73 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 }
 </style>
 
+
+<style id="logo-gradient-stock-color-fix">
+/* 赤丸：ロゴを上品な金グラデーションに */
+.logo{
+  background:linear-gradient(135deg,#fff4cf 0%,#d4b47a 32%,#a77a35 62%,#f3d99a 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  color:transparent !important;
+  opacity:.82 !important;
+  text-shadow:0 8px 24px rgba(184,151,90,.12) !important;
+}
+
+.logo span{
+  background:linear-gradient(135deg,#e8dec7 0%,#b8975a 52%,#efe3c8 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  color:transparent !important;
+  opacity:.62 !important;
+  text-shadow:none !important;
+}
+
+/* 青丸：残数バッジを各デザインの色味に合わせる */
+.stockBar .stock{
+  border:none !important;
+  color:#fff7e8 !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+
+.stockBar .stock:nth-child(1){
+  background:
+    radial-gradient(circle at 20% 20%,rgba(255,236,202,.24),transparent 34%),
+    linear-gradient(135deg,#34271e 0%,#7a684f 48%,#2a241d 100%) !important;
+}
+
+.stockBar .stock:nth-child(2){
+  background:
+    radial-gradient(circle at 18% 18%,rgba(255,238,204,.30),transparent 34%),
+    linear-gradient(135deg,#8a5e2c 0%,#d2a76c 48%,#5c3c1f 100%) !important;
+}
+
+.stockBar .stock:nth-child(3){
+  background:
+    radial-gradient(circle at 20% 20%,rgba(120,174,255,.32),transparent 36%),
+    linear-gradient(135deg,#10234c 0%,#1d5fb9 48%,#0b1023 100%) !important;
+}
+
+.stockBar .stock strong{
+  color:#ffe4a3 !important;
+  text-shadow:0 1px 10px rgba(0,0,0,.35) !important;
+}
+
+.stockBar .stock:nth-child(3) strong{
+  color:#f3d99a !important;
+}
+
+/* ホバー時に少しだけ浮く */
+.stockBar .stock{
+  transition:transform .18s ease, box-shadow .2s ease !important;
+}
+.stockBar .stock:hover{
+  transform:translateY(-2px) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+</style>
+
 </head>
 
 <body>
