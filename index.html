@@ -329,118 +329,73 @@ input::placeholder{
 </style>
 
 
+
 <style id="white-outer-black-panels-fix">
-/* 外側だけ白、操作エリアと主要BOXは黒 */
+html,
 body{
   background:#ffffff !important;
+  background-image:none !important;
+}
+
+body::before,
+body::after{
+  display:none !important;
+  content:none !important;
+}
+
+.wrap,
+.header,
+.layout,
+.leftStack,
+.rightStack{
+  background:transparent !important;
+}
+
+.card,
+.product,
+.envelopeBox,
+.serialBox,
+.customerBox,
+.stock{
+  background:#090807 !important;
+  background-image:linear-gradient(145deg,#090807,#171510) !important;
   color:#f8f4ee !important;
-  padding:20px !important;
+  border-color:rgba(212,180,122,.36) !important;
+}
+
+input,
+select,
+.qtyBox,
+.qtyBtn{
+  background:#070605 !important;
+  color:#ffffff !important;
+  border-color:rgba(212,180,122,.48) !important;
+}
+
+input:focus,
+select:focus{
+  background:#070605 !important;
+  color:#ffffff !important;
+  outline:none !important;
+  box-shadow:0 0 0 2px rgba(212,180,122,.18) !important;
+}
+
+input:-webkit-autofill{
+  -webkit-text-fill-color:#fff !important;
+  -webkit-box-shadow:0 0 0 1000px #070605 inset !important;
 }
 
 .logo{
   color:#b8975a !important;
 }
-
 .logo span{
   color:#555 !important;
 }
-
-/* 右上の残数も黒 */
-.stock{
-  background:#070605 !important;
-  color:#f8f4ee !important;
-  border-color:rgba(212,180,122,.38) !important;
-  box-shadow:0 8px 24px rgba(0,0,0,.10) !important;
-}
-
-.stock strong{
+.stock strong,
+h1,h2,label,
+.productPrice,
+.serialTitle{
   color:#d4b47a !important;
-}
-
-/* メイン枠は黒 */
-.card,
-.product,
-.envelopeBox,
-.serialBox,
-.customerBox{
-  background:linear-gradient(145deg,#090807,#171510) !important;
-  border-color:rgba(212,180,122,.30) !important;
-  color:#f8f4ee !important;
-}
-
-/* 操作するところは全部黒 */
-input,
-input:focus,
-input:active,
-select,
-select:focus,
-select:active,
-.qtyBox{
-  background:#070605 !important;
-  color:#fff !important;
-  border-color:rgba(212,180,122,.42) !important;
-  outline:none !important;
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active{
-  -webkit-text-fill-color:#fff !important;
-  box-shadow:0 0 0 1000px #070605 inset !important;
-  -webkit-box-shadow:0 0 0 1000px #070605 inset !important;
-  background-color:#070605 !important;
-  caret-color:#fff !important;
-}
-
-input::placeholder{
-  color:rgba(255,255,255,.45) !important;
-}
-
-/* 商品カード内の数量ボタンも黒 */
-.qtyBtn{
-  background:#070605 !important;
-  color:#d4b47a !important;
-  border-color:rgba(212,180,122,.55) !important;
-}
-
-/* 区切り・文字色 */
-h1,h2,
-.serialTitle,
-label,
-.productPrice{
-  color:#d4b47a !important;
-}
-
-.lead,
-.note,
-.productMeta,
-.cartItem span,
-.breakdown,
-.customerBox{
-  color:#f0e5cf !important;
-}
-
-.cartItem{
-  border-bottom-color:rgba(212,180,122,.18) !important;
-}
-
-.totalLine{
-  border-top-color:rgba(212,180,122,.25) !important;
-}
-
-/* 署名モーダルも黒 */
-.signatureModal{
-  background:#11100d !important;
-  color:#f8f4ee !important;
-}
-
-/* iPadでも外側白を維持 */
-@media(min-width:768px) and (max-width:1180px){
-  body{
-    background:#ffffff !important;
-    padding:16px !important;
-  }
 }
 </style>
 
