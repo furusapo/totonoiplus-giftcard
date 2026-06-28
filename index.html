@@ -220,6 +220,68 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 }
 </style>
 
+
+<style id="force-customer-checks-signature-style">
+.nameOnlyBox{
+  font-size:18px !important;
+}
+.nameOnlyBox strong{
+  color:#f8f4ee !important;
+  font-size:22px !important;
+}
+.agreeBox{
+  display:grid !important;
+  grid-template-columns:30px 1fr;
+  gap:14px;
+  align-items:flex-start;
+  margin-top:16px;
+  padding:18px 20px;
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(212,180,122,.28);
+  color:#f0e5cf !important;
+  line-height:1.8;
+}
+.agreeBox input{
+  width:22px !important;
+  height:22px !important;
+  min-height:22px !important;
+  accent-color:#d4b47a;
+  margin-top:4px;
+}
+.agreeBox strong{
+  color:#d4b47a !important;
+}
+.inlineSignatureBox{
+  margin-top:16px;
+}
+.inlineSignatureCanvasWrap{
+  background:#f8f4ee !important;
+  border:2px solid rgba(212,180,122,.55) !important;
+  border-radius:18px !important;
+  padding:10px !important;
+  margin-top:10px !important;
+}
+#inlineSignatureCanvas{
+  display:block !important;
+  width:100% !important;
+  height:170px !important;
+  background:#fff !important;
+  border-radius:12px !important;
+  touch-action:none !important;
+}
+.miniClearBtn{
+  margin-top:10px;
+  border:1px solid rgba(212,180,122,.45);
+  background:transparent;
+  color:#d4b47a;
+  border-radius:999px;
+  padding:10px 16px;
+  font-family:inherit;
+  cursor:pointer;
+}
+</style>
+
 </head>
 
 <body>
@@ -257,18 +319,34 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
       <div class="stepGrid">
         <div class="centerHead">
           <h1>お客様情報</h1>
-          <p class="lead">お客様の電話番号をご入力いただき、有効期限をご確認ください。</p>
+          <p class="lead">以下の内容をご確認ください。</p>
         </div>
         <div class="formWrap">
           <div class="field">
             <label>お客様電話番号 必須</label>
             <input id="phone" type="tel" placeholder="例）090-1234-5678">
           </div>
-<div class="customerBox">
-            顧客名：<strong id="autoCustomerName">電話番号入力後に自動表示</strong><br>
-            購入履歴：<strong id="autoCustomerHistory">未連携</strong><br>
-            メモ：<strong id="autoCustomerMemo">顧客台帳連携予定</strong>
-          </div>
+<div class="customerBox nameOnlyBox">
+  お名前：<strong id="autoCustomerName">電話番号入力後に自動表示</strong>
+</div>
+
+<label class="agreeBox">
+  <input id="expiryAgree" type="checkbox">
+  <span>ギフトカードの有効期限は <strong id="expiryDateText"></strong> までとなります。内容を確認しました。</span>
+</label>
+
+<label class="agreeBox">
+  <input id="reissueAgree" type="checkbox">
+  <span>ギフトカードを紛失・盗難・破損された場合、再発行はできません。内容を確認しました。</span>
+</label>
+
+<div class="inlineSignatureBox">
+  <label>お客様署名 必須</label>
+  <div class="inlineSignatureCanvasWrap">
+    <canvas id="inlineSignatureCanvas"></canvas>
+  </div>
+  <button class="miniClearBtn" id="clearInlineSignatureBtn" type="button">署名を書き直す</button>
+</div>
         </div>
         <div class="actions">
           <button class="btn btnGhost" type="button" onclick="goStep(1)">戻る</button>
@@ -367,6 +445,7 @@ let stockBase={1:50,2:50,3:50};
 let customerData=[];
 let lastChangedDesign=null;
 let hasSignature=false;
+let hasInlineSignature=false;
 
 function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
 function getExpireDateText(){
@@ -380,6 +459,44 @@ function updateExpireDateText(){
 }
 function formatSerial(n){return 'TG-'+String(n).padStart(4,'0')}
 function getEntries(){return Object.entries(cart).map(([design,count])=>({design:Number(design),count:Number(count)})).filter(x=>x.count>0)}
+
+
+function setupInlineSignatureCanvas(){
+  const canvas=document.getElementById('inlineSignatureCanvas');
+  if(!canvas) return;
+  const rect=canvas.getBoundingClientRect();
+  const ratio=window.devicePixelRatio||1;
+  canvas.width=Math.floor(rect.width*ratio);
+  canvas.height=Math.floor(rect.height*ratio);
+  const ctx=canvas.getContext('2d');
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+  ctx.fillStyle='#fff';
+  ctx.fillRect(0,0,rect.width,rect.height);
+  ctx.strokeStyle='#111';
+  ctx.lineWidth=3.2;
+  ctx.lineCap='round';
+  ctx.lineJoin='round';
+  hasInlineSignature=false;
+  let drawing=false;
+  function pos(e){
+    const r=canvas.getBoundingClientRect();
+    const t=e.touches?e.touches[0]:e;
+    return {x:t.clientX-r.left,y:t.clientY-r.top};
+  }
+  function start(e){e.preventDefault();drawing=true;hasInlineSignature=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)}
+  function move(e){if(!drawing)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()}
+  function end(e){if(!drawing)return;e.preventDefault();drawing=false}
+  canvas.onmousedown=start;
+  canvas.onmousemove=move;
+  canvas.onmouseup=end;
+  canvas.onmouseleave=end;
+  canvas.ontouchstart=start;
+  canvas.ontouchmove=move;
+  canvas.ontouchend=end;
+}
+document.addEventListener('click',e=>{
+  if(e.target && e.target.id==='clearInlineSignatureBtn') setupInlineSignatureCanvas();
+});
 
 function renderDots(){
   const dots=document.getElementById('dots');
@@ -460,6 +577,14 @@ document.getElementById('toConfirmBtn').onclick=()=>{
     alert('有効期限の確認にチェックを入れてください');
     return;
   }
+  if(!document.getElementById('reissueAgree').checked){
+    alert('再発行不可の確認にチェックを入れてください');
+    return;
+  }
+  if(!hasInlineSignature){
+    alert('お客様署名を入力してください');
+    return;
+  }
   update();
   goStep(3);
 };
@@ -500,7 +625,7 @@ document.getElementById('submitBtn').onclick=()=>{
     issueDate:today.toLocaleDateString('ja-JP'),
     expireDate:ex.toLocaleDateString('ja-JP'),
     requests:getEntries(),
-    signatureImage:document.getElementById('signatureCanvas').toDataURL('image/png'),
+    signatureImage:document.getElementById('inlineSignatureCanvas').toDataURL('image/png'),
     signatureAt:new Date().toISOString()
   };
 
@@ -586,6 +711,7 @@ document.getElementById('phone').addEventListener('input',e=>{
 renderDots();
 renderProducts();
 updateExpireDateText();
+setTimeout(setupInlineSignatureCanvas,100);
 update();
 loadStock();
 </script>
