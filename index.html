@@ -1137,14 +1137,8 @@ label,
 
 <script id="apple-like-motion-js">
 function bumpAppleUI(){
-  ["cartList","grandTotal","serialPreviewList"].forEach(id=>{
-    const el=document.getElementById(id);
-    if(!el) return;
-    el.classList.remove("bump");
-    void el.offsetWidth;
-    el.classList.add("bump");
-  });
-
+  // 右側の注文内容・金額・シリアル番号は落ち着かせる
+  // 数量表示だけ、軽く反応させる
   document.querySelectorAll(".qtyNum").forEach(el=>{
     el.classList.remove("bump");
     void el.offsetWidth;
