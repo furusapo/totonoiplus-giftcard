@@ -282,6 +282,57 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 }
 </style>
 
+
+<style id="step2-final-fix-style">
+.nameOnlyBox strong{color:#f8f4ee!important;font-size:22px!important}
+.agreeBox{
+  display:grid!important;
+  grid-template-columns:30px 1fr;
+  gap:14px;
+  align-items:flex-start;
+  margin-top:16px;
+  padding:18px 20px;
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(212,180,122,.28);
+  color:#f0e5cf!important;
+  line-height:1.8;
+}
+.agreeBox input{
+  width:22px!important;
+  height:22px!important;
+  min-height:22px!important;
+  accent-color:#d4b47a;
+  margin-top:4px;
+}
+.agreeBox strong{color:#d4b47a!important}
+.inlineSignatureBox{margin-top:16px}
+.inlineSignatureCanvasWrap{
+  background:#f8f4ee;
+  border:2px solid rgba(212,180,122,.55);
+  border-radius:18px;
+  padding:10px;
+  margin-top:10px;
+}
+#inlineSignatureCanvas{
+  display:block;
+  width:100%;
+  height:170px;
+  background:#fff;
+  border-radius:12px;
+  touch-action:none;
+}
+.miniClearBtn{
+  margin-top:10px;
+  border:1px solid rgba(212,180,122,.45);
+  background:transparent;
+  color:#d4b47a;
+  border-radius:999px;
+  padding:10px 16px;
+  font-family:inherit;
+}
+</style>
+
 </head>
 
 <body>
@@ -321,33 +372,36 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
           <h1>お客様情報</h1>
           <p class="lead">以下の内容をご確認ください。</p>
         </div>
+
         <div class="formWrap">
           <div class="field">
             <label>お客様電話番号 必須</label>
             <input id="phone" type="tel" placeholder="例）090-1234-5678">
           </div>
-<div class="customerBox nameOnlyBox">
-  お名前：<strong id="autoCustomerName">電話番号入力後に自動表示</strong>
-</div>
 
-<label class="agreeBox">
-  <input id="expiryAgree" type="checkbox">
-  <span>ギフトカードの有効期限は <strong id="expiryDateText"></strong> までとなります。内容を確認しました。</span>
-</label>
+          <div class="customerBox nameOnlyBox">
+            お名前：<strong id="autoCustomerName">電話番号入力後に自動表示</strong>
+          </div>
 
-<label class="agreeBox">
-  <input id="reissueAgree" type="checkbox">
-  <span>ギフトカードを紛失・盗難・破損された場合、再発行はできません。内容を確認しました。</span>
-</label>
+          <label class="agreeBox">
+            <input id="expiryAgree" type="checkbox">
+            <span>ギフトカードの有効期限は <strong id="expiryText"></strong> までとなります。内容を確認しました。</span>
+          </label>
 
-<div class="inlineSignatureBox">
-  <label>お客様署名 必須</label>
-  <div class="inlineSignatureCanvasWrap">
-    <canvas id="inlineSignatureCanvas"></canvas>
-  </div>
-  <button class="miniClearBtn" id="clearInlineSignatureBtn" type="button">署名を書き直す</button>
-</div>
+          <label class="agreeBox">
+            <input id="reissueAgree" type="checkbox">
+            <span>ギフトカードを紛失・盗難・破損された場合、再発行はできません。内容を確認しました。</span>
+          </label>
+
+          <div class="inlineSignatureBox">
+            <label>お客様署名 必須</label>
+            <div class="inlineSignatureCanvasWrap">
+              <canvas id="inlineSignatureCanvas"></canvas>
+            </div>
+            <button class="miniClearBtn" id="clearInlineSignatureBtn" type="button">署名を書き直す</button>
+          </div>
         </div>
+
         <div class="actions">
           <button class="btn btnGhost" type="button" onclick="goStep(1)">戻る</button>
           <button class="btn btnPrimary" type="button" id="toConfirmBtn">次へ</button>
@@ -509,6 +563,7 @@ function goStep(n){
   step=n;
   document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));
   renderDots();
+  if(step===2)setTimeout(setupInlineSignatureCanvas,100);
   if(step===4)setTimeout(setupSignatureCanvas,80);
   if(step===5)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
 }
