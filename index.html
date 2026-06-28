@@ -466,6 +466,154 @@ h2{
 }
 </style>
 
+
+<style id="apple-like-motion">
+/* Apple Storeっぽい、触った時の心地よさ */
+.product,
+.qtyBtn,
+.issueBtn,
+.stock,
+.card{
+  transition:
+    transform .18s ease,
+    box-shadow .22s ease,
+    border-color .22s ease,
+    background .22s ease,
+    opacity .22s ease !important;
+}
+
+.product:hover{
+  transform:translateY(-3px) scale(1.01) !important;
+  box-shadow:0 18px 42px rgba(0,0,0,.32), 0 0 0 1px rgba(212,180,122,.18) inset !important;
+}
+
+.product.selected{
+  transform:translateY(-3px) scale(1.015) !important;
+  border-color:rgba(212,180,122,.88) !important;
+  box-shadow:
+    0 20px 54px rgba(0,0,0,.38),
+    0 0 28px rgba(212,180,122,.20),
+    0 0 0 2px rgba(212,180,122,.22) inset !important;
+}
+
+.product.selected::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:20px;
+  border:1px solid rgba(212,180,122,.42);
+  pointer-events:none;
+  animation:softGlow 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes softGlow{
+  from{box-shadow:0 0 10px rgba(212,180,122,.12)}
+  to{box-shadow:0 0 26px rgba(212,180,122,.30)}
+}
+
+.qtyBtn:active,
+.issueBtn:active{
+  transform:scale(.96) !important;
+}
+
+.qtyNum.bump,
+.totalPrice.bump,
+.cartList.bump,
+.serialList.bump{
+  animation:bumpValue .28s ease;
+}
+
+@keyframes bumpValue{
+  0%{transform:scale(1);opacity:.65}
+  45%{transform:scale(1.08);opacity:1}
+  100%{transform:scale(1);opacity:1}
+}
+
+.issueBtn.loading{
+  pointer-events:none;
+  opacity:.86;
+  position:relative;
+  overflow:hidden;
+}
+
+.issueBtn.loading::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
+  transform:translateX(-100%);
+  animation:loadingShine 1.15s infinite;
+}
+
+@keyframes loadingShine{
+  to{transform:translateX(100%)}
+}
+
+.successOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(10px);
+  z-index:10000;
+}
+
+.successCard{
+  width:min(560px,90vw);
+  min-height:320px;
+  border-radius:28px;
+  background:linear-gradient(145deg,#090807,#171510);
+  border:1px solid rgba(212,180,122,.42);
+  box-shadow:0 28px 90px rgba(0,0,0,.32);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#f8f4ee;
+  animation:successIn .38s ease both;
+}
+
+.successCheck{
+  width:104px;
+  height:104px;
+  border-radius:50%;
+  border:2px solid rgba(212,180,122,.72);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#d4b47a;
+  font-size:58px;
+  margin-bottom:22px;
+  box-shadow:0 0 36px rgba(212,180,122,.22);
+  animation:checkPop .48s ease .12s both;
+}
+
+.successTitle{
+  font-family:"Noto Serif JP","Yu Mincho",serif;
+  color:#d4b47a;
+  font-size:26px;
+  margin-bottom:10px;
+}
+
+.successText{
+  color:#f0e5cf;
+  font-size:15px;
+}
+
+@keyframes successIn{
+  from{opacity:0;transform:translateY(16px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+@keyframes checkPop{
+  from{opacity:0;transform:scale(.72) rotate(-8deg)}
+  to{opacity:1;transform:scale(1) rotate(0)}
+}
+</style>
+
 </head>
 
 <body>
@@ -805,14 +953,19 @@ document.getElementById('submitSignatureBtn').addEventListener('click',()=>{
     signatureAt:new Date().toISOString()
   };
 
+  setIssueLoading(true);
+
   const callbackName='giftCallback_'+Date.now();
   window[callbackName]=res=>{
-    alert('署名を確認し、スプレッドシートへ保存しました');
+    showSuccessOverlay();
     delete window[callbackName];
     script.remove();
     closeSignature();
-    cart={1:0,2:0,3:0};
-    update();
+    setIssueLoading(false);
+    showSuccessOverlay(()=>{
+      cart={1:0,2:0,3:0};
+      update();
+    });
   };
 
   const script=document.createElement('script');
@@ -971,6 +1124,63 @@ label,
   font-weight:600 !important;
 }
 </style>
+
+
+<div class="successOverlay" id="successOverlay">
+  <div class="successCard">
+    <div class="successCheck">✓</div>
+    <div class="successTitle">ギフトカードを発行しました</div>
+    <div class="successText">ご利用ありがとうございます。</div>
+  </div>
+</div>
+
+
+<script id="apple-like-motion-js">
+function bumpAppleUI(){
+  ["cartList","grandTotal","serialPreviewList"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.classList.remove("bump");
+    void el.offsetWidth;
+    el.classList.add("bump");
+  });
+
+  document.querySelectorAll(".qtyNum").forEach(el=>{
+    el.classList.remove("bump");
+    void el.offsetWidth;
+    el.classList.add("bump");
+  });
+}
+
+if(typeof update === "function" && !window.__appleUpdateWrapped){
+  const originalUpdate = update;
+  window.update = function(){
+    originalUpdate();
+    bumpAppleUI();
+  };
+  window.__appleUpdateWrapped = true;
+}
+
+function setIssueLoading(isLoading){
+  const btn=document.getElementById("generateBtn");
+  if(!btn) return;
+  btn.classList.toggle("loading", isLoading);
+  btn.textContent = isLoading ? "発行しています…" : "カードを発行する";
+}
+
+function showSuccessOverlay(after){
+  const overlay=document.getElementById("successOverlay");
+  if(!overlay){
+    if(after) after();
+    return;
+  }
+  overlay.style.display="flex";
+  setTimeout(()=>{
+    overlay.style.display="none";
+    if(after) after();
+  }, 2200);
+}
+</script>
 
 </body>
 </html>
