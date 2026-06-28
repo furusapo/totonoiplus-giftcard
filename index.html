@@ -924,5 +924,53 @@ loadStock();
 }
 </style>
 
+
+<style id="force-mincho-labels">
+/* 青丸部分：太い角ゴシックを明朝に強制変更 */
+.productName,
+.stock,
+.stock strong,
+label,
+.envelopeBox label,
+.serialTitle,
+.badge,
+.cartItem strong,
+.qtyNum,
+.issueBtn,
+.sigBtn{
+  font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif !important;
+  font-weight:600 !important;
+  letter-spacing:.02em !important;
+}
+
+/* Design名は少し上品に */
+.productName{
+  font-size:16px !important;
+  font-weight:600 !important;
+}
+
+/* 右上残数 */
+.stock,
+.stock strong{
+  font-weight:600 !important;
+}
+
+/* ラベル類 */
+label,
+.serialTitle{
+  font-weight:600 !important;
+}
+
+/* 枚数の0枚だけは読みやすく少しだけ太め */
+.qtyNum{
+  font-weight:600 !important;
+}
+
+/* ボタン文字も明朝へ */
+.issueBtn{
+  font-weight:600 !important;
+}
+</style>
+
 </body>
 </html>
