@@ -421,6 +421,51 @@ h1,h2,label,
 }
 </style>
 
+
+<style id="serif-typography-fix">
+/* 角ゴシックBっぽい太字を明朝系へ統一 */
+body,
+input,
+select,
+button,
+.productName,
+.qtyNum,
+.stock,
+.cartItem,
+.breakdown,
+.customerBox,
+.lead,
+.note,
+label,
+.issueBtn,
+.sigBtn{
+  font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif !important;
+}
+
+/* 太すぎるゴシック感を抑える */
+.productName,
+.qtyNum,
+.stock,
+label,
+.issueBtn,
+.sigBtn,
+.badge,
+.serialTitle{
+  font-weight:700 !important;
+}
+
+/* 数字・価格も明朝寄せ */
+.productPrice,
+.totalPrice,
+.serialItem,
+.logo,
+.logo span,
+h1,
+h2{
+  font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif !important;
+}
+</style>
+
 </head>
 
 <body>
