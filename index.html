@@ -747,6 +747,7 @@ let stockBase={1:50,2:50,3:50};
 let customerData=[];
 let pendingPayload=null;
 let hasSignature=false;
+let lastChangedDesign=null;
 
 function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
 function formatSerial(n){return 'TG-'+String(n).padStart(4,'0')}
@@ -778,6 +779,7 @@ function renderProducts(){
       e.preventDefault();
       e.stopPropagation();
       const d=Number(btn.dataset.design);
+      lastChangedDesign=d;
       cart[d]=(cart[d]||0)+1;
       update();
     });
@@ -788,6 +790,7 @@ function renderProducts(){
       e.preventDefault();
       e.stopPropagation();
       const d=Number(btn.dataset.design);
+      lastChangedDesign=d;
       cart[d]=Math.max(0,(cart[d]||0)-1);
       update();
     });
@@ -797,6 +800,7 @@ function renderProducts(){
     card.addEventListener('click',e=>{
       if(e.target.closest('button')) return;
       const d=Number(card.dataset.design);
+      lastChangedDesign=d;
       cart[d]=(cart[d]||0)+1;
       update();
     });
@@ -1137,13 +1141,16 @@ label,
 
 <script id="apple-like-motion-js">
 function bumpAppleUI(){
-  // 右側の注文内容・金額・シリアル番号は落ち着かせる
-  // 数量表示だけ、軽く反応させる
-  document.querySelectorAll(".qtyNum").forEach(el=>{
-    el.classList.remove("bump");
-    void el.offsetWidth;
-    el.classList.add("bump");
-  });
+  if(!lastChangedDesign) return;
+  const card=document.querySelector(`.product[data-design="${lastChangedDesign}"]`);
+  const el=card?.querySelector(".qtyNum");
+  if(!el) return;
+
+  el.classList.remove("bump");
+  void el.offsetWidth;
+  el.classList.add("bump");
+
+  lastChangedDesign=null;
 }
 
 if(typeof update === "function" && !window.__appleUpdateWrapped){
