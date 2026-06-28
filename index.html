@@ -122,6 +122,37 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
   .envelopeBox{grid-template-columns:1fr}
 }
 </style>
+
+<style id="customer-expiry-agree-style">
+.agreeBox{
+  display:grid !important;
+  grid-template-columns:28px 1fr;
+  gap:12px;
+  align-items:flex-start;
+  margin-top:18px;
+  padding:16px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(212,180,122,.24);
+  color:#f0e5cf !important;
+  line-height:1.8;
+  cursor:pointer;
+}
+
+.agreeBox input{
+  width:22px !important;
+  height:22px !important;
+  min-height:22px !important;
+  margin-top:4px;
+  accent-color:#d4b47a;
+}
+
+.agreeBox strong{
+  color:#d4b47a;
+  font-weight:600;
+}
+</style>
+
 </head>
 
 <body>
@@ -159,21 +190,14 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
       <div class="stepGrid">
         <div class="centerHead">
           <h1>お客様情報</h1>
-          <p class="lead">電話番号と発行担当者を入力してください。</p>
+          <p class="lead">お客様の電話番号をご入力いただき、有効期限をご確認ください。</p>
         </div>
         <div class="formWrap">
           <div class="field">
             <label>お客様電話番号 必須</label>
             <input id="phone" type="tel" placeholder="例）090-1234-5678">
           </div>
-          <div class="field">
-            <label>発行担当者</label>
-            <select id="staff">
-              <option value="">スタッフを選択してください</option>
-              <option>土屋</option><option>四ツ谷</option><option>絹果</option><option>ユミ・専務</option><option>高橋</option><option>佐藤</option><option>望</option><option>東江</option><option>渡邊</option><option>柳瀬</option><option>琴音</option><option>高田</option><option>細川</option>
-            </select>
-          </div>
-          <div class="customerBox">
+<div class="customerBox">
             顧客名：<strong id="autoCustomerName">電話番号入力後に自動表示</strong><br>
             購入履歴：<strong id="autoCustomerHistory">未連携</strong><br>
             メモ：<strong id="autoCustomerMemo">顧客台帳連携予定</strong>
@@ -232,8 +256,8 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
     <section class="screen" data-step="4">
       <div class="stepGrid">
         <div class="centerHead">
-          <h1>発行内容の確認サイン</h1>
-          <p class="lead">ギフトカードの発行内容・金額・有効期限を確認しました。下の枠内にご署名をお願いします。</p>
+          <h1>お客様署名</h1>
+          <p class="lead">有効期限と発行内容をご確認のうえ、下の枠内にご署名をお願いします。</p>
         </div>
         <div class="signatureWrap">
           <div class="signatureCanvasWrap">
@@ -278,6 +302,15 @@ let lastChangedDesign=null;
 let hasSignature=false;
 
 function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
+function getExpireDateText(){
+  const d=new Date();
+  d.setFullYear(d.getFullYear()+1);
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+}
+function updateExpireDateText(){
+  const el=document.getElementById('expiryDateText');
+  if(el) el.textContent=getExpireDateText();
+}
 function formatSerial(n){return 'TG-'+String(n).padStart(4,'0')}
 function getEntries(){return Object.entries(cart).map(([design,count])=>({design:Number(design),count:Number(count)})).filter(x=>x.count>0)}
 
@@ -293,7 +326,7 @@ function goStep(n){
   document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));
   renderDots();
   if(step===4)setTimeout(setupSignatureCanvas,80);
-  if(step===5)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('staff').value='';document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
+  if(step===5)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
 }
 
 function renderProducts(){
@@ -351,7 +384,18 @@ function update(){
 }
 
 document.getElementById('toCustomerBtn').onclick=()=>{if(!getEntries().length){alert('ギフトカードを選択してください');return}goStep(2)};
-document.getElementById('toConfirmBtn').onclick=()=>{if(!document.getElementById('phone').value.trim()){alert('お客様電話番号を入力してください');return}if(!document.getElementById('staff').value){alert('発行担当者を選択してください');return}update();goStep(3)};
+document.getElementById('toConfirmBtn').onclick=()=>{
+  if(!document.getElementById('phone').value.trim()){
+    alert('お客様電話番号を入力してください');
+    return;
+  }
+  if(!document.getElementById('expiryAgree').checked){
+    alert('有効期限の確認にチェックを入れてください');
+    return;
+  }
+  update();
+  goStep(3);
+};
 document.getElementById('envelopeCount').onchange=update;
 
 function setupSignatureCanvas(){
@@ -385,7 +429,7 @@ document.getElementById('submitBtn').onclick=()=>{
   const ex=new Date(today);ex.setFullYear(ex.getFullYear()+1);
   const payload={
     phone:document.getElementById('phone').value.trim(),
-    staff:document.getElementById('staff').value,
+    staff:'お客様確認済み',
     issueDate:today.toLocaleDateString('ja-JP'),
     expireDate:ex.toLocaleDateString('ja-JP'),
     requests:getEntries(),
@@ -474,6 +518,7 @@ document.getElementById('phone').addEventListener('input',e=>{
 
 renderDots();
 renderProducts();
+updateExpireDateText();
 update();
 loadStock();
 </script>
