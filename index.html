@@ -330,6 +330,7 @@ input::placeholder{
 
 
 
+
 <style id="white-outer-black-panels-fix">
 html,
 body{
@@ -337,10 +338,8 @@ body{
   background-image:none !important;
 }
 
-body::before,
-body::after{
-  display:none !important;
-  content:none !important;
+body{
+  color:#f8f4ee !important;
 }
 
 .wrap,
@@ -380,22 +379,45 @@ select:focus{
   box-shadow:0 0 0 2px rgba(212,180,122,.18) !important;
 }
 
-input:-webkit-autofill{
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
   -webkit-text-fill-color:#fff !important;
   -webkit-box-shadow:0 0 0 1000px #070605 inset !important;
+  box-shadow:0 0 0 1000px #070605 inset !important;
 }
 
-.logo{
-  color:#b8975a !important;
-}
-.logo span{
-  color:#555 !important;
-}
 .stock strong,
 h1,h2,label,
 .productPrice,
 .serialTitle{
   color:#d4b47a !important;
+}
+</style>
+
+<style id="subtle-logo-fix">
+.logo{
+  color:rgba(184,151,90,.22) !important;
+  text-shadow:none !important;
+}
+
+.logo span{
+  color:rgba(80,80,80,.28) !important;
+  text-shadow:none !important;
+}
+
+.header{
+  opacity:1 !important;
+}
+
+@media(min-width:768px) and (max-width:1180px){
+  .logo{
+    color:rgba(184,151,90,.20) !important;
+  }
+  .logo span{
+    color:rgba(80,80,80,.25) !important;
+  }
 }
 </style>
 
