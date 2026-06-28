@@ -7,775 +7,122 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#d4b47a;
-  --gold2:#b8975a;
-  --black:#090807;
-  --black2:#171510;
-  --cream:#f8f4ee;
-  --muted:#d8c8aa;
-  --line:rgba(212,180,122,.34);
-}
-html,body{min-height:100%;background:#fff;color:var(--cream);font-family:"Noto Serif JP","Yu Mincho","Hiragino Mincho ProN",serif}
-body{padding:20px;overflow:auto}
-.wrap{max-width:1120px;margin:0 auto;min-height:calc(100vh - 40px);display:grid;grid-template-rows:auto 1fr;gap:18px}
-.header{display:flex;align-items:center;justify-content:space-between;gap:18px}
-.logo{font-size:34px;letter-spacing:.14em;color:rgba(184,151,90,.16);line-height:1}
-.logo span{display:block;font-size:13px;letter-spacing:.22em;color:rgba(80,80,80,.18);margin-top:10px}
-.stockBar{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.stock{background:linear-gradient(145deg,var(--black),var(--black2));border:1px solid var(--line);border-radius:999px;padding:10px 16px;color:var(--cream);font-size:13px}
-.stock strong{color:var(--gold);font-size:17px;font-weight:600}
+:root{--gold:#d4b47a;--bg:#090807;--bg2:#171510;--text:#f8f4ee;--muted:#d8c8aa;--line:rgba(212,180,122,.34)}
+html,body{min-height:100%;background:#fff;font-family:"Noto Serif JP","Yu Mincho",serif;color:var(--text)}
+body{padding:18px}
+.wrap{max-width:1180px;margin:auto;display:grid;gap:16px}
+.header{display:flex;justify-content:space-between;align-items:flex-start}
+.logo{font-size:34px;letter-spacing:.14em;color:rgba(184,151,90,.16)}
+.logo span{display:block;font-size:13px;letter-spacing:.22em;color:rgba(80,80,80,.18);margin-top:8px}
+.stockBar{display:flex;gap:10px}
+.stock{background:linear-gradient(145deg,var(--bg),var(--bg2));border:1px solid var(--line);border-radius:999px;padding:10px 16px;color:#fff}
+.stock strong{color:var(--gold);font-size:18px}
 
-.app{background:linear-gradient(145deg,var(--black),var(--black2));border:1px solid var(--line);border-radius:28px;box-shadow:0 24px 70px rgba(0,0,0,.18);overflow:hidden;min-height:680px;display:grid;grid-template-rows:auto 1fr}
-.progress{padding:18px 24px;border-bottom:1px solid rgba(212,180,122,.18);display:flex;align-items:center;justify-content:space-between;gap:14px}
-.progressText{color:var(--muted);font-size:13px}
-.dots{display:flex;gap:8px}
-.dot{width:8px;height:8px;border-radius:50%;background:rgba(212,180,122,.22)}
-.dot.active{background:var(--gold);box-shadow:0 0 18px rgba(212,180,122,.35)}
-
-.screen{display:none;padding:34px;animation:screenIn .28s ease both}
-.screen.active{display:grid}
-@keyframes screenIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-.stepGrid{display:grid;grid-template-rows:auto 1fr auto;gap:22px;min-height:590px}
-.centerHead{text-align:center;max-width:760px;margin:0 auto}
-h1{color:var(--gold);font-size:32px;margin-bottom:12px;font-weight:600}
-h2{color:var(--gold);font-size:23px;margin-bottom:14px;font-weight:600}
-.lead{color:var(--muted);line-height:1.8;font-size:15px}
+.app{background:linear-gradient(145deg,var(--bg),var(--bg2));border:1px solid var(--line);border-radius:28px;min-height:720px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.18)}
+.progress{height:70px;border-bottom:1px solid rgba(212,180,122,.18);display:flex;align-items:center;justify-content:space-between;padding:0 24px;color:var(--muted)}
+.dots{display:flex;gap:8px}.dot{width:8px;height:8px;border-radius:50%;background:rgba(212,180,122,.22)}.dot.active{background:var(--gold)}
+.screen{display:none;padding:34px;min-height:650px}.screen.active{display:grid;grid-template-rows:auto 1fr auto;gap:22px;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.center{text-align:center}.center h1{font-size:34px;color:var(--gold);margin-bottom:12px}.center p{color:var(--muted);line-height:1.8}
 
 .products{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-self:center}
-.product{position:relative;border:1px solid rgba(212,180,122,.28);border-radius:22px;padding:14px;background:linear-gradient(145deg,#0a0908,#15130f);cursor:pointer;transition:.18s ease;user-select:none}
-.product:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 22px 48px rgba(0,0,0,.32)}
-.product.selected{border-color:rgba(212,180,122,.9);box-shadow:0 0 0 2px rgba(212,180,122,.2) inset,0 22px 58px rgba(0,0,0,.36)}
-.product img{width:100%;height:140px;object-fit:cover;border-radius:16px;background:#111;margin-bottom:14px}
-.badge{display:none;position:absolute;top:14px;right:14px;background:var(--gold);color:#111;border-radius:999px;padding:6px 10px;font-size:12px}
-.product.selected .badge{display:block}
-.productName{font-size:17px;color:#fff;font-weight:600}
-.productMeta{font-size:12px;color:var(--muted);margin-top:5px}
-.productPrice{color:var(--gold);font-size:24px;margin-top:8px}
-.qtyBox{display:flex;align-items:center;justify-content:space-between;margin-top:13px;background:#070605;border-radius:999px;padding:8px}
-.qtyBtn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(212,180,122,.55);background:#070605;color:var(--gold);font-size:24px;cursor:pointer;transition:.12s ease}
-.qtyBtn:active{transform:scale(.94)}
-.qtyNum{font-size:16px;color:#fff;font-weight:600}
-.qtyNum.bump{animation:bump .26s ease}
-@keyframes bump{0%{transform:scale(1);opacity:.6}45%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+.product{border:1px solid rgba(212,180,122,.32);border-radius:22px;padding:14px;background:linear-gradient(145deg,#0b0a08,#171510);cursor:pointer;transition:.18s}
+.product:hover,.product.selected{transform:translateY(-3px);border-color:rgba(212,180,122,.85);box-shadow:0 0 0 2px rgba(212,180,122,.16) inset}
+.product img{width:100%;height:135px;object-fit:cover;border-radius:16px;margin-bottom:14px}
+.productName{font-size:18px;font-weight:600}.meta{color:var(--muted);font-size:12px;margin-top:5px}.price{color:var(--gold);font-size:25px;margin-top:8px}
+.qty{display:flex;justify-content:space-between;align-items:center;background:#070605;border-radius:999px;margin-top:14px;padding:8px}
+.qty button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(212,180,122,.55);background:#070605;color:var(--gold);font-size:24px}.qtyNum{font-weight:600}
 
-.formWrap{max-width:680px;margin:0 auto;width:100%;align-self:center}
-.field{display:grid;gap:8px;margin-bottom:16px}
-label{color:var(--gold);font-size:14px}
-input,select{width:100%;min-height:56px;border-radius:14px;border:1px solid rgba(212,180,122,.42);background:#070605;color:#fff;padding:14px 16px;font-size:16px;font-family:inherit;outline:none}
-input:focus,select:focus{box-shadow:0 0 0 2px rgba(212,180,122,.18)}
-input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow:0 0 0 1000px #070605 inset!important}
-.customerBox{margin-top:16px;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.04);border-left:4px solid rgba(212,180,122,.5);color:var(--muted);line-height:1.8;font-size:14px}
-.customerBox strong{color:#fff}
+.form{max-width:720px;margin:auto;width:100%}
+.field{display:grid;gap:8px;margin-bottom:16px}label{color:var(--gold)}
+input,select{width:100%;min-height:56px;border-radius:14px;border:1px solid rgba(212,180,122,.42);background:#070605;color:#fff;padding:14px 16px;font-family:inherit;font-size:16px}
+.info,.agree,.sigBox,.box{background:rgba(255,255,255,.045);border:1px solid rgba(212,180,122,.24);border-radius:18px;padding:18px;color:var(--muted);line-height:1.8;margin-top:16px}
+.info strong,.agree strong{color:#fff}.agree{display:grid;grid-template-columns:30px 1fr;gap:14px;align-items:flex-start}.agree input{width:22px!important;height:22px!important;min-height:22px!important;accent-color:var(--gold)}
+.canvasWrap{background:#f8f4ee;border:2px solid rgba(212,180,122,.55);border-radius:18px;padding:10px;margin-top:10px}
+canvas{display:block;width:100%;height:170px;background:#fff;border-radius:12px;touch-action:none}
+.clear{margin-top:10px;border:1px solid rgba(212,180,122,.45);background:transparent;color:var(--gold);border-radius:999px;padding:10px 16px;font-family:inherit}
 
-.confirmGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-self:center}
-.confirmBox{border:1px solid rgba(212,180,122,.24);border-radius:22px;padding:20px;background:rgba(255,255,255,.035)}
-.cartList{display:grid;gap:10px}
-.cartItem{display:flex;justify-content:space-between;border-bottom:1px solid rgba(212,180,122,.16);padding:10px 0;color:#fff}
-.cartItem span{color:var(--muted)}
-.envelopeBox{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;margin-top:18px;padding:12px;border-radius:18px;background:rgba(255,255,255,.035)}
-.envelopeBox img{width:150px;border-radius:14px}
-.breakdown{border-left:4px solid rgba(212,180,122,.56);padding-left:14px;color:var(--muted);line-height:1.9;margin-top:16px}
-.serialList{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.serialItem{border:1px solid rgba(212,180,122,.45);color:var(--gold);border-radius:999px;padding:7px 12px}
-.total{display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid rgba(212,180,122,.2)}
-.totalPrice{color:var(--gold);font-size:44px;line-height:1}
-
-.signatureWrap{max-width:760px;margin:0 auto;width:100%;align-self:center}
-.signatureCanvasWrap{background:#f8f4ee;border:2px solid rgba(212,180,122,.55);border-radius:18px;padding:12px;margin-top:18px}
-#signatureCanvas{display:block;width:100%;height:285px;background:#fff;border-radius:12px;touch-action:none}
-
-.actions{display:flex;justify-content:space-between;gap:14px;align-items:center}
-.btn{min-width:170px;border:none;border-radius:15px;padding:16px 22px;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;transition:.16s ease}
-.btn:active{transform:scale(.97)}
-.btnPrimary{background:linear-gradient(135deg,#d8bd80,#96733a);color:#111}
-.btnGhost{background:transparent;color:var(--gold);border:1px solid rgba(212,180,122,.45)}
-.btnPrimary.loading{opacity:.82;pointer-events:none;position:relative;overflow:hidden}
-.btnPrimary.loading::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transform:translateX(-100%);animation:shine 1.1s infinite}
-@keyframes shine{to{transform:translateX(100%)}}
-
-.complete{place-items:center;text-align:center;min-height:590px}
-.check{width:112px;height:112px;border-radius:50%;border:2px solid rgba(212,180,122,.75);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:62px;margin-bottom:24px;box-shadow:0 0 38px rgba(212,180,122,.22);animation:checkPop .44s ease both}
-@keyframes checkPop{from{opacity:0;transform:scale(.72) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(0)}}
-.complete h1{font-size:34px}
-.complete p{color:var(--muted);font-size:16px;line-height:1.8}
-
-@media(min-width:768px) and (max-width:1180px){
-  body{padding:14px}
-  .wrap{max-width:1080px;min-height:calc(100vh - 28px)}
-  .app{min-height:640px}
-  .screen{padding:26px}
-  .stepGrid{min-height:545px}
-  .product img{height:108px}
-  h1{font-size:27px}
-  .lead{font-size:13px}
-  .totalPrice{font-size:36px}
-  #signatureCanvas{height:250px}
-}
-@media(max-width:767px){
-  .header{display:grid}
-  .products,.confirmGrid{grid-template-columns:1fr}
-  .screen{padding:20px}
-  .actions{display:grid}
-  .btn{width:100%}
-  .envelopeBox{grid-template-columns:1fr}
-}
+.confirm{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-self:center}
+.cartItem{display:flex;justify-content:space-between;border-bottom:1px solid rgba(212,180,122,.16);padding:10px 0}
+.envelope{display:grid;grid-template-columns:145px 1fr;gap:14px;align-items:center}.envelope img{width:145px}
+.serials{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.serial{border:1px solid rgba(212,180,122,.45);border-radius:999px;padding:7px 12px;color:var(--gold)}
+.breakdown{border-left:4px solid rgba(212,180,122,.55);padding-left:14px;line-height:1.9;margin-top:16px}
+.total{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid rgba(212,180,122,.22);padding-top:16px;margin-top:16px}.totalPrice{font-size:44px;color:var(--gold)}
+.actions{display:flex;justify-content:space-between;gap:14px}.btn{min-width:180px;border-radius:15px;padding:16px 22px;border:none;font-family:inherit;font-size:18px;font-weight:600}.primary{background:linear-gradient(135deg,#d8bd80,#96733a);color:#111}.ghost{background:transparent;color:var(--gold);border:1px solid rgba(212,180,122,.45)}
+.complete{place-items:center;text-align:center}.check{width:112px;height:112px;border-radius:50%;border:2px solid rgba(212,180,122,.75);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:62px;margin:auto auto 24px}
+@media(max-width:900px){.products,.confirm{grid-template-columns:1fr}.screen{padding:22px}.stockBar{flex-wrap:wrap}.envelope{grid-template-columns:1fr}}
 </style>
-
-<style id="customer-expiry-agree-style">
-.agreeBox{
-  display:grid !important;
-  grid-template-columns:28px 1fr;
-  gap:12px;
-  align-items:flex-start;
-  margin-top:18px;
-  padding:16px 18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(212,180,122,.24);
-  color:#f0e5cf !important;
-  line-height:1.8;
-  cursor:pointer;
-}
-
-.agreeBox input{
-  width:22px !important;
-  height:22px !important;
-  min-height:22px !important;
-  margin-top:4px;
-  accent-color:#d4b47a;
-}
-
-.agreeBox strong{
-  color:#d4b47a;
-  font-weight:600;
-}
-</style>
-
-
-<style id="step2-name-signature-style">
-.agreeBox{
-  display:grid !important;
-  grid-template-columns:30px 1fr;
-  gap:14px;
-  align-items:flex-start;
-  margin-top:18px;
-  padding:18px 20px;
-  border-radius:18px;
-  background:rgba(255,255,255,.045);
-  border:1px solid rgba(212,180,122,.28);
-  color:#f0e5cf !important;
-  line-height:1.8;
-  cursor:pointer;
-}
-.agreeBox input{
-  width:22px !important;
-  height:22px !important;
-  min-height:22px !important;
-  margin-top:5px;
-  accent-color:#d4b47a;
-}
-.agreeBox strong{
-  color:#d4b47a !important;
-  font-weight:600;
-}
-.inlineSignatureBox{
-  margin-top:18px;
-}
-.inlineSignatureCanvasWrap{
-  background:#f8f4ee;
-  border:2px solid rgba(212,180,122,.55);
-  border-radius:18px;
-  padding:10px;
-  margin-top:8px;
-}
-#inlineSignatureCanvas{
-  display:block;
-  width:100%;
-  height:170px;
-  background:#fff;
-  border-radius:12px;
-  touch-action:none;
-}
-.miniClearBtn{
-  margin-top:10px;
-  border:1px solid rgba(212,180,122,.45);
-  background:transparent;
-  color:#d4b47a;
-  border-radius:999px;
-  padding:10px 16px;
-  font-family:inherit;
-  cursor:pointer;
-}
-@media(min-width:768px) and (max-width:1180px){
-  #inlineSignatureCanvas{
-    height:145px;
-  }
-}
-</style>
-
-
-<style id="inline-signature-final-style">
-.agreeBox{
-  display:grid !important;
-  grid-template-columns:30px 1fr;
-  gap:14px;
-  align-items:flex-start;
-  margin-top:18px;
-  padding:18px 20px;
-  border-radius:18px;
-  background:rgba(255,255,255,.045);
-  border:1px solid rgba(212,180,122,.28);
-  color:#f0e5cf !important;
-  line-height:1.8;
-  cursor:pointer;
-}
-.agreeBox input{
-  width:22px !important;
-  height:22px !important;
-  min-height:22px !important;
-  margin-top:5px;
-  accent-color:#d4b47a;
-}
-.agreeBox strong{
-  color:#d4b47a !important;
-  font-weight:600;
-}
-.inlineSignatureBox{
-  margin-top:18px;
-}
-.inlineSignatureCanvasWrap{
-  background:#f8f4ee;
-  border:2px solid rgba(212,180,122,.55);
-  border-radius:18px;
-  padding:10px;
-  margin-top:8px;
-}
-#inlineSignatureCanvas{
-  display:block;
-  width:100%;
-  height:180px;
-  background:#fff;
-  border-radius:12px;
-  touch-action:none;
-}
-.miniClearBtn{
-  margin-top:10px;
-  border:1px solid rgba(212,180,122,.45);
-  background:transparent;
-  color:#d4b47a;
-  border-radius:999px;
-  padding:10px 16px;
-  font-family:inherit;
-  cursor:pointer;
-}
-</style>
-
-
-<style id="step-flow-repair-style">
-.products{
-  display:grid !important;
-  grid-template-columns:repeat(3,1fr) !important;
-  gap:18px !important;
-}
-.agreeBox{
-  display:grid !important;
-  grid-template-columns:30px 1fr;
-  gap:14px;
-  margin-top:18px;
-  padding:18px 20px;
-  border-radius:18px;
-  background:rgba(255,255,255,.045);
-  border:1px solid rgba(212,180,122,.28);
-  color:#f0e5cf !important;
-  line-height:1.8;
-}
-.agreeBox input{
-  width:22px !important;
-  height:22px !important;
-  min-height:22px !important;
-  accent-color:#d4b47a;
-}
-.inlineSignatureBox{margin-top:18px}
-.inlineSignatureCanvasWrap{
-  background:#f8f4ee;
-  border:2px solid rgba(212,180,122,.55);
-  border-radius:18px;
-  padding:10px;
-  margin-top:8px;
-}
-#inlineSignatureCanvas{
-  display:block;
-  width:100%;
-  height:170px;
-  background:#fff;
-  border-radius:12px;
-  touch-action:none;
-}
-.miniClearBtn{
-  margin-top:10px;
-  border:1px solid rgba(212,180,122,.45);
-  background:transparent;
-  color:#d4b47a;
-  border-radius:999px;
-  padding:10px 16px;
-  font-family:inherit;
-}
-@media(max-width:767px){
-  .products{grid-template-columns:1fr !important}
-}
-</style>
-
 </head>
-
 <body>
 <div class="wrap">
-  <header class="header">
-    <div class="logo">TOTONOI+<span>GIFT CARD SYSTEM</span></div>
-    <div class="stockBar">
-      <div class="stock">Design01 <strong id="dashStock1">50枚</strong></div>
-      <div class="stock">Design02 <strong id="dashStock2">50枚</strong></div>
-      <div class="stock">Design03 <strong id="dashStock3">50枚</strong></div>
+<header class="header">
+  <div class="logo">TOTONOI+<span>GIFT CARD SYSTEM</span></div>
+  <div class="stockBar">
+    <div class="stock">Design01 <strong id="stock1">50枚</strong></div>
+    <div class="stock">Design02 <strong id="stock2">50枚</strong></div>
+    <div class="stock">Design03 <strong id="stock3">50枚</strong></div>
+  </div>
+</header>
+
+<main class="app">
+  <div class="progress"><div id="progressText">Step 1 / 5　ギフトカードを選択</div><div class="dots" id="dots"></div></div>
+
+  <section class="screen active" data-step="1">
+    <div class="center"><h1>ギフトカードを選ぶ</h1><p>お好きなデザインをタップして、枚数を選んでください。</p></div>
+    <div class="products" id="products"></div>
+    <div class="actions"><button class="btn ghost" disabled>戻る</button><button class="btn primary" id="next1">次へ</button></div>
+  </section>
+
+  <section class="screen" data-step="2">
+    <div class="center"><h1>お客様情報</h1><p>電話番号・お名前・有効期限確認・ご署名をお願いします。</p></div>
+    <div class="form">
+      <div class="field"><label>お客様電話番号 必須</label><input id="phone" type="tel" placeholder="例）090-1234-5678"></div>
+      <div class="field"><label>お客様のお名前 必須</label><input id="customerName" type="text" placeholder="例）山田 太郎"></div>
+      <div class="info">顧客名：<strong id="autoCustomerName">電話番号入力後に自動表示</strong><br>購入履歴：<strong id="autoCustomerHistory">未連携</strong><br>メモ：<strong id="autoCustomerMemo">顧客台帳連携予定</strong></div>
+      <label class="agree"><input id="expiryAgree" type="checkbox"><span>ギフトカードの有効期限は <strong id="expiryText"></strong> までとなります。内容を確認しました。</span></label>
+      <div class="sigBox"><label>お客様署名 必須</label><div class="canvasWrap"><canvas id="signatureCanvas"></canvas></div><button class="clear" id="clearSig" type="button">署名を書き直す</button></div>
     </div>
-  </header>
+    <div class="actions"><button class="btn ghost" onclick="goStep(1)">戻る</button><button class="btn primary" id="next2">次へ</button></div>
+  </section>
 
-  <main class="app">
-    <div class="progress">
-      <div class="progressText" id="progressText">Step 1 / 5　ギフトカードを選択</div>
-      <div class="dots" id="dots"></div>
+  <section class="screen" data-step="3">
+    <div class="center"><h1>発行内容の確認</h1><p>内容に間違いがなければ発行へ進んでください。</p></div>
+    <div class="confirm">
+      <div class="box"><h2>ご注文内容</h2><div id="cartList"></div><div class="envelope"><img src="images/envelope.png"><div class="field"><label>追加封筒（発行時1枚無料）</label><select id="envelopeCount"><option value="0">追加なし</option><option value="1">1枚 (+380円)</option><option value="2">2枚 (+760円)</option><option value="3">3枚 (+1,140円)</option><option value="4">4枚 (+1,520円)</option><option value="5">5枚 (+1,900円)</option><option value="10">10枚 (+3,800円)</option></select></div></div></div>
+      <div class="box"><h2>発行予定シリアル番号</h2><div class="serials" id="serials"></div><div class="breakdown" id="breakdown"></div><div class="total"><h2>合計</h2><div class="totalPrice" id="totalPrice">¥0</div></div></div>
     </div>
+    <div class="actions"><button class="btn ghost" onclick="goStep(2)">戻る</button><button class="btn primary" id="issueBtn">カードを発行する</button></div>
+  </section>
 
-    <section class="screen active" data-step="1">
-      <div class="stepGrid">
-        <div class="centerHead">
-          <h1>ギフトカードを選ぶ</h1>
-          <p class="lead">お好きなデザインをタップして、枚数を選んでください。</p>
-        </div>
-        <div class="products" id="products"></div>
-        <div class="actions">
-          <button class="btn btnGhost" type="button" disabled style="opacity:.35">戻る</button>
-          <button class="btn btnPrimary" type="button" id="toCustomerBtn">次へ</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="screen" data-step="2">
-      <div class="stepGrid">
-        <div class="centerHead">
-          <h1>お客様情報</h1>
-          <p class="lead">電話番号・お名前をご入力いただき、有効期限をご確認のうえ、署名をお願いします。</p>
-        </div>
-
-        <div class="formWrap">
-          <div class="field">
-            <label>お客様電話番号 必須</label>
-            <input id="phone" type="tel" placeholder="例）090-1234-5678">
-          </div>
-
-          <div class="field">
-            <label>お客様のお名前 必須</label>
-            <input id="customerNameInput" type="text" placeholder="例）山田 太郎">
-          </div>
-
-          <div class="customerBox">
-            顧客名：<strong id="autoCustomerName">電話番号入力後に自動表示</strong><br>
-            購入履歴：<strong id="autoCustomerHistory">未連携</strong><br>
-            メモ：<strong id="autoCustomerMemo">顧客台帳連携予定</strong>
-          </div>
-
-          <label class="agreeBox">
-            <input id="expiryAgree" type="checkbox">
-            <span>
-              ギフトカードの有効期限は <strong id="expiryDateText">発行日から1年間</strong> までとなります。<br>
-              内容を確認しました。
-            </span>
-          </label>
-
-          <div class="inlineSignatureBox">
-            <label>お客様署名 必須</label>
-            <div class="inlineSignatureCanvasWrap">
-              <canvas id="inlineSignatureCanvas"></canvas>
-            </div>
-            <button class="miniClearBtn" id="clearInlineSignatureBtn" type="button">署名を書き直す</button>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn btnGhost" type="button" onclick="goStep(1)">戻る</button>
-          <button class="btn btnPrimary" type="button" id="toConfirmBtn">次へ</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="screen" data-step="3">
-      <div class="stepGrid">
-        <div class="centerHead">
-          <h1>発行内容の確認</h1>
-          <p class="lead">内容に間違いがなければ、発行へ進んでください。</p>
-        </div>
-        <div class="confirmGrid">
-          <div class="confirmBox">
-            <h2>ご注文内容</h2>
-            <div class="cartList" id="cartList"></div>
-            <div class="envelopeBox">
-              <img src="images/envelope.png" alt="追加封筒">
-              <div class="field" style="margin-bottom:0">
-                <label>追加封筒（発行時1枚無料）</label>
-                <select id="envelopeCount">
-                  <option value="0">追加なし</option>
-                  <option value="1">1枚 (+380円)</option>
-                  <option value="2">2枚 (+760円)</option>
-                  <option value="3">3枚 (+1,140円)</option>
-                  <option value="4">4枚 (+1,520円)</option>
-                  <option value="5">5枚 (+1,900円)</option>
-                  <option value="10">10枚 (+3,800円)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="confirmBox">
-            <h2>発行予定シリアル番号</h2>
-            <div class="serialList" id="serialPreviewList"><span class="serialItem">未選択</span></div>
-            <div class="breakdown" id="priceBreakdown">カード代：¥0<br>発行手数料：¥0<br>追加封筒：¥0</div>
-            <div class="total">
-              <h2>合計</h2>
-              <div class="totalPrice" id="grandTotal">¥0</div>
-            </div>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn btnGhost" type="button" onclick="goStep(2)">戻る</button>
-          <button class="btn btnPrimary" type="button" onclick="goStep(4)">カードを発行する</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="screen" data-step="4">
-      <div class="stepGrid">
-        <div class="centerHead">
-          <h1>発行しています</h1>
-          <p class="lead">署名と発行内容を確認しました。ギフトカードを発行しています。</p>
-        </div>
-        <div class="complete" style="min-height:360px">
-          <div class="check" style="animation:none">…</div>
-          <p>しばらくお待ちください。</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="screen complete" data-step="5">
-      <div>
-        <div class="check">✓</div>
-        <h1>ギフトカードを発行しました！</h1>
-        <p>ご利用ありがとうございます。<br>発行内容をスプレッドシートへ保存しました。</p>
-      </div>
-    </section>
-  </main>
+  <section class="screen complete" data-step="4"><div><div class="check">…</div><h1>発行しています</h1><p>しばらくお待ちください。</p></div></section>
+  <section class="screen complete" data-step="5"><div><div class="check">✓</div><h1>ギフトカードを発行しました！</h1><p>ご利用ありがとうございます。</p></div></section>
+</main>
 </div>
 
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbxrRcaJSBI8QN1KWBogbD0MK222FtVBDvlmSnRN2nsEaSwrOyv7xqxtosK_Yk6nHnx8/exec';
-const CARD_PRICE=5000;
-const ENVELOPE_PRICE=380;
-const products=[
-  {design:1,name:'Design 01',range:'TG-0001〜0050',image:'images/giftcard1.png'},
-  {design:2,name:'Design 02',range:'TG-0051〜0100',image:'images/giftcard2.png'},
-  {design:3,name:'Design 03',range:'TG-0101〜0150',image:'images/giftcard3.png'}
-];
-
-let step=1;
-let cart={1:0,2:0,3:0};
-let stockBase={1:50,2:50,3:50};
-let customerData=[];
-let lastChangedDesign=null;
-let hasSignature=false;
-let hasInlineSignature=false;
-
-function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
-function getExpireDateText(){
-  const d=new Date();
-  d.setFullYear(d.getFullYear()+1);
-  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
-}
-function updateExpireDateText(){
-  const el=document.getElementById('expiryDateText');
-  if(el) el.textContent=getExpireDateText();
-}
-function formatSerial(n){return 'TG-'+String(n).padStart(4,'0')}
-function getEntries(){return Object.entries(cart).map(([design,count])=>({design:Number(design),count:Number(count)})).filter(x=>x.count>0)}
-
-function renderDots(){
-  const dots=document.getElementById('dots');
-  dots.innerHTML=[1,2,3,4,5].map(n=>`<div class="dot ${n===step?'active':''}"></div>`).join('');
-  const labels={1:'ギフトカードを選択',2:'お客様情報',3:'発行内容の確認',4:'署名',5:'発行完了'};
-  document.getElementById('progressText').textContent=`Step ${step} / 5　${labels[step]}`;
-}
-
-function goStep(n){
-  step=n;
-  document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));
-  renderDots();
-  if(step===2)setTimeout(setupInlineSignatureCanvas,80);
-  if(step===4)setTimeout(()=>submitGiftCardIssue(),300);
-  if(step===5)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('customerNameInput').value='';document.getElementById('customerNameInput').value='';document.getElementById('expiryAgree').checked=false;hasInlineSignature=false;hasInlineSignature=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
-}
-
-function renderProducts(){
-  const root=document.getElementById('products');
-  root.innerHTML=products.map(p=>`
-    <div class="product ${cart[p.design]>0?'selected':''}" data-design="${p.design}">
-      <div class="badge">選択中</div>
-      <img src="${p.image}" alt="${p.name}">
-      <div class="productName">${p.name}</div>
-      <div class="productMeta">${p.range}</div>
-      <div class="productPrice">¥5,000</div>
-      <div class="qtyBox">
-        <button class="qtyBtn minus" type="button" data-design="${p.design}">−</button>
-        <div class="qtyNum">${cart[p.design]}枚</div>
-        <button class="qtyBtn plus" type="button" data-design="${p.design}">＋</button>
-      </div>
-    </div>
-  `).join('');
-
-  root.querySelectorAll('.plus').forEach(btn=>btn.onclick=e=>{e.stopPropagation();const d=Number(btn.dataset.design);lastChangedDesign=d;cart[d]=(cart[d]||0)+1;update()});
-  root.querySelectorAll('.minus').forEach(btn=>btn.onclick=e=>{e.stopPropagation();const d=Number(btn.dataset.design);lastChangedDesign=d;cart[d]=Math.max(0,(cart[d]||0)-1);update()});
-  root.querySelectorAll('.product').forEach(card=>card.onclick=e=>{if(e.target.closest('button'))return;const d=Number(card.dataset.design);lastChangedDesign=d;cart[d]=(cart[d]||0)+1;update()});
-
-  if(lastChangedDesign){
-    const el=root.querySelector(`.product[data-design="${lastChangedDesign}"] .qtyNum`);
-    if(el){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump')}
-    lastChangedDesign=null;
-  }
-}
-
-function updateSerialPreview(){
-  const issued={1:50-Number(stockBase[1]||50),2:50-Number(stockBase[2]||50),3:50-Number(stockBase[3]||50)};
-  const offset={1:0,2:50,3:100};
-  const list=[];
-  getEntries().forEach(({design,count})=>{
-    for(let i=0;i<count;i++){issued[design]++;list.push(formatSerial(offset[design]+issued[design]))}
-  });
-  document.getElementById('serialPreviewList').innerHTML=list.length?list.map(s=>`<span class="serialItem">${s}</span>`).join(''):'<span class="serialItem">未選択</span>';
-}
-
-function update(){
-  renderProducts();
-  const entries=getEntries();
-  const totalCount=entries.reduce((sum,x)=>sum+x.count,0);
-  document.getElementById('dashStock1').textContent=Math.max(0,stockBase[1]-(cart[1]||0))+'枚';
-  document.getElementById('dashStock2').textContent=Math.max(0,stockBase[2]-(cart[2]||0))+'枚';
-  document.getElementById('dashStock3').textContent=Math.max(0,stockBase[3]-(cart[3]||0))+'枚';
-  document.getElementById('cartList').innerHTML=entries.length?entries.map(x=>`<div class="cartItem"><div><strong>Design ${String(x.design).padStart(2,'0')}</strong><br><span>${x.count}枚</span></div><div>${yen(x.count*CARD_PRICE)}</div></div>`).join(''):'<div class="cartItem"><span>まだ選択されていません</span><div>¥0</div></div>';
-  const cardTotal=totalCount*CARD_PRICE;
-  const issueFee=totalCount>0?500:0;
-  const envelopeFee=Number(document.getElementById('envelopeCount').value||0)*ENVELOPE_PRICE;
-  document.getElementById('priceBreakdown').innerHTML=`カード代：${yen(cardTotal)}<br>発行手数料：${yen(issueFee)}<br>追加封筒：${yen(envelopeFee)}`;
-  document.getElementById('grandTotal').textContent=yen(cardTotal+issueFee+envelopeFee);
-  updateSerialPreview();
-}
-
-document.getElementById('toCustomerBtn').onclick=()=>{if(!getEntries().length){alert('ギフトカードを選択してください');return}goStep(2)};
-document.getElementById('toConfirmBtn').onclick=()=>{
-  if(!document.getElementById('phone').value.trim()){alert('お客様電話番号を入力してください');return}
-  if(!document.getElementById('customerNameInput').value.trim()){alert('お客様のお名前を入力してください');return}
-  if(!document.getElementById('expiryAgree').checked){alert('有効期限の確認にチェックを入れてください');return}
-  if(!hasInlineSignature){alert('お客様署名を入力してください');return}
-  update();
-  goStep(3);
-};
-document.getElementById('envelopeCount').onchange=update;
-
-
-function setupInlineSignatureCanvas(){
-  const canvas=document.getElementById('inlineSignatureCanvas');
-  if(!canvas) return;
-
-  const rect=canvas.getBoundingClientRect();
-  const ratio=window.devicePixelRatio||1;
-  canvas.width=Math.floor(rect.width*ratio);
-  canvas.height=Math.floor(rect.height*ratio);
-
-  const ctx=canvas.getContext('2d');
-  ctx.setTransform(ratio,0,0,ratio,0,0);
-  ctx.fillStyle='#fff';
-  ctx.fillRect(0,0,rect.width,rect.height);
-  ctx.strokeStyle='#111';
-  ctx.lineWidth=3.2;
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-
-  hasInlineSignature=false;
-  let drawing=false;
-
-  function pos(e){
-    const r=canvas.getBoundingClientRect();
-    const t=e.touches?e.touches[0]:e;
-    return {x:t.clientX-r.left,y:t.clientY-r.top};
-  }
-  function start(e){
-    e.preventDefault();
-    drawing=true;
-    hasInlineSignature=true;
-    const p=pos(e);
-    ctx.beginPath();
-    ctx.moveTo(p.x,p.y);
-  }
-  function move(e){
-    if(!drawing)return;
-    e.preventDefault();
-    const p=pos(e);
-    ctx.lineTo(p.x,p.y);
-    ctx.stroke();
-  }
-  function end(e){
-    if(!drawing)return;
-    e.preventDefault();
-    drawing=false;
-  }
-
-  canvas.onmousedown=start;
-  canvas.onmousemove=move;
-  canvas.onmouseup=end;
-  canvas.onmouseleave=end;
-  canvas.ontouchstart=start;
-  canvas.ontouchmove=move;
-  canvas.ontouchend=end;
-}
-
-document.addEventListener('click',e=>{
-  if(e.target && e.target.id==='clearInlineSignatureBtn'){
-    setupInlineSignatureCanvas();
-  }
-});
-
-function setupSignatureCanvas(){
-  const canvas=document.getElementById('signatureCanvas');
-  const rect=canvas.getBoundingClientRect();
-  const ratio=window.devicePixelRatio||1;
-  canvas.width=Math.floor(rect.width*ratio);
-  canvas.height=Math.floor(rect.height*ratio);
-  const ctx=canvas.getContext('2d');
-  ctx.setTransform(ratio,0,0,ratio,0,0);
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,rect.width,rect.height);
-  ctx.strokeStyle='#111';ctx.lineWidth=3.2;ctx.lineCap='round';ctx.lineJoin='round';
-  hasSignature=false;
-  let drawing=false;
-  function pos(e){const r=canvas.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top}}
-  function start(e){e.preventDefault();drawing=true;hasSignature=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)}
-  function move(e){if(!drawing)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()}
-  function end(e){if(!drawing)return;e.preventDefault();drawing=false}
-  canvas.onmousedown=start;canvas.onmousemove=move;canvas.onmouseup=end;canvas.onmouseleave=end;
-  canvas.ontouchstart=start;canvas.ontouchmove=move;canvas.ontouchend=end;
-}
-
-document.getElementById('clearSignatureBtn').onclick=setupSignatureCanvas;
-function submitGiftCardIssue(){
-  const canvas=document.getElementById('inlineSignatureCanvas');
-  if(!canvas || !hasInlineSignature){
-    alert('お客様署名を入力してください');
-    goStep(2);
-    return;
-  }
-
-  const today=new Date();
-  const ex=new Date(today);
-  ex.setFullYear(ex.getFullYear()+1);
-
-  const payload={
-    phone:document.getElementById('phone').value.trim(),
-    customerName:document.getElementById('customerNameInput').value.trim(),
-    staff:'お客様確認済み',
-    issueDate:today.toLocaleDateString('ja-JP'),
-    expireDate:ex.toLocaleDateString('ja-JP'),
-    requests:getEntries(),
-    signatureImage:canvas.toDataURL('image/png'),
-    signatureAt:new Date().toISOString()
-  };
-
-  const callbackName='giftCallback_'+Date.now();
-  window[callbackName]=res=>{
-    delete window[callbackName];
-    script.remove();
-    goStep(5);
-  };
-
-  const script=document.createElement('script');
-  script.src=GAS_URL+'?callback='+callbackName+'&data='+encodeURIComponent(JSON.stringify(payload));
-  document.body.appendChild(script);
-}
-
-function loadStock(){
-  const callbackName='stockCallback_'+Date.now();
-  window[callbackName]=res=>{
-    if(res&&res.result==='success'&&res.stock){
-      stockBase[1]=Number(res.stock[1]||50);
-      stockBase[2]=Number(res.stock[2]||50);
-      stockBase[3]=Number(res.stock[3]||50);
-      update();
-    }
-    delete window[callbackName];
-  };
-  const script=document.createElement('script');
-  script.src=GAS_URL+'?action=stock&callback='+callbackName;
-  document.body.appendChild(script);
-}
-
-function normalizePhone(v){return String(v||'').replace(/[^0-9]/g,'')}
-function parseCSV(text){
-  const rows=[];let row=[];let cell='';let inQuotes=false;
-  for(let i=0;i<text.length;i++){
-    const ch=text[i],next=text[i+1];
-    if(ch==='"'&&next==='"'){cell+='"';i++}
-    else if(ch==='"'){inQuotes=!inQuotes}
-    else if(ch===','&&!inQuotes){row.push(cell);cell=''}
-    else if((ch==='\\n'||ch==='\\r')&&!inQuotes){if(ch==='\\r'&&next==='\\n')i++;row.push(cell);if(row.some(v=>String(v).trim()!==''))rows.push(row);row=[];cell=''}
-    else{cell+=ch}
-  }
-  if(cell||row.length){row.push(cell);rows.push(row)}
-  const headers=rows.shift().map(h=>h.replace(/^\\uFEFF/,'').trim());
-  return rows.map(cols=>{const obj={};headers.forEach((h,i)=>obj[h]=(cols[i]||'').trim());return obj})
-}
-function getValue(obj,keys){for(const key of keys){if(obj[key]!==undefined&&obj[key]!=='')return obj[key]}return''}
-function showInitialCustomer(){
-  document.getElementById('autoCustomerName').textContent='電話番号入力後に自動表示';
-  document.getElementById('autoCustomerHistory').textContent='未連携';
-  document.getElementById('autoCustomerMemo').textContent='顧客台帳連携予定';
-}
-function showNotFound(){
-  document.getElementById('autoCustomerName').textContent='未登録';
-  document.getElementById('autoCustomerHistory').textContent='新規顧客';
-  document.getElementById('autoCustomerMemo').textContent='顧客データなし';
-}
-function showCustomer(customer){
-  const last=getValue(customer,['顧客名（姓）','姓']);
-  const first=getValue(customer,['顧客名（名）','名']);
-  const name=(last+' '+first).trim()||getValue(customer,['氏名','お名前','顧客名','名前'])||'登録あり';
-  const count=getValue(customer,['購入回数(通算)','購入回数','来店回数','利用回数'])||'0';
-  const amountRaw=getValue(customer,['利用金額(通算)','利用金額','累計利用額','購入金額'])||'0';
-  const amount=Number(String(amountRaw).replace(/[^0-9]/g,'')||0).toLocaleString('ja-JP');
-  const rank=getValue(customer,['ランク','会員ランク'])||'-';
-  const point=getValue(customer,['有効ポイント','ポイント','保有ポイント'])||'0';
-  const memo=getValue(customer,['顧客メモ','メモ','備考'])||'';
-  const member=getValue(customer,['会員/非会員','会員区分'])||'';
-  document.getElementById('autoCustomerName').textContent=name;
-  document.getElementById('autoCustomerHistory').textContent=`${member} ／ 来店 ${count}回 ／ 累計 ${amount}円`;
-  document.getElementById('autoCustomerMemo').textContent=memo?`${memo} ／ ランク：${rank} ／ ポイント：${point}`:`ランク：${rank} ／ ポイント：${point}`;
-}
-
-fetch('customers.csv?v='+Date.now()).then(r=>{if(!r.ok)throw new Error('customers.csvが読めません');return r.text()}).then(text=>{customerData=parseCSV(text)}).catch(err=>console.warn(err));
-document.getElementById('phone').addEventListener('input',e=>{
-  const inputPhone=normalizePhone(e.target.value);
-  if(inputPhone.length<10){showNotFound();return}
-  const customer=customerData.find(c=>normalizePhone(getValue(c,['電話番号','電話','携帯番号','TEL','tel','Phone']))===inputPhone);
-  customer?showCustomer(customer):showNotFound();
-});
-
-renderDots();
-renderProducts();
-updateExpireDateText();
-update();
-loadStock();
+const products=[1,2,3].map(n=>({design:n,name:`Design ${String(n).padStart(2,'0')}`,range:n===1?'TG-0001〜0050':n===2?'TG-0051〜0100':'TG-0101〜0150',image:`images/giftcard${n}.png`}));
+let step=1,cart={1:0,2:0,3:0},stockBase={1:50,2:50,3:50},customerData=[],hasSig=false;
+const yen=n=>'¥'+Number(n).toLocaleString('ja-JP');
+function expireText(){const d=new Date();d.setFullYear(d.getFullYear()+1);return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`}
+function entries(){return Object.entries(cart).map(([design,count])=>({design:+design,count:+count})).filter(x=>x.count>0)}
+function goStep(n){step=n;document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',+s.dataset.step===step));drawDots();if(step===2)setTimeout(setupSig,80);if(step===5)setTimeout(resetAll,2300)}
+function drawDots(){const labels={1:'ギフトカードを選択',2:'お客様情報',3:'発行内容の確認',4:'発行中',5:'発行完了'};progressText.textContent=`Step ${step} / 5　${labels[step]}`;dots.innerHTML=[1,2,3,4,5].map(i=>`<div class="dot ${i===step?'active':''}"></div>`).join('')}
+function renderProducts(){productsEl=products;productsDiv=productsEl.map(p=>`<div class="product ${cart[p.design]?'selected':''}" data-d="${p.design}"><img src="${p.image}"><div class="productName">${p.name}</div><div class="meta">${p.range}</div><div class="price">¥5,000</div><div class="qty"><button class="minus">−</button><span class="qtyNum">${cart[p.design]}枚</span><button class="plus">＋</button></div></div>`).join('');products.innerHTML=productsDiv;document.querySelectorAll('.product').forEach(card=>{const d=+card.dataset.d;card.onclick=e=>{if(e.target.className==='plus'||e.target.className==='minus')return;cart[d]++;update()};card.querySelector('.plus').onclick=e=>{e.stopPropagation();cart[d]++;update()};card.querySelector('.minus').onclick=e=>{e.stopPropagation();cart[d]=Math.max(0,cart[d]-1);update()}})}
+function update(){renderProducts();stock1.textContent=Math.max(0,stockBase[1]-cart[1])+'枚';stock2.textContent=Math.max(0,stockBase[2]-cart[2])+'枚';stock3.textContent=Math.max(0,stockBase[3]-cart[3])+'枚';const es=entries(),count=es.reduce((a,b)=>a+b.count,0),cardTotal=count*5000,fee=count?500:0,env=(+envelopeCount.value||0)*380;cartList.innerHTML=es.length?es.map(x=>`<div class="cartItem"><div>Design ${String(x.design).padStart(2,'0')}<br><span>${x.count}枚</span></div><div>${yen(x.count*5000)}</div></div>`).join(''):'<div class="cartItem"><span>未選択</span><div>¥0</div></div>';breakdown.innerHTML=`カード代：${yen(cardTotal)}<br>発行手数料：${yen(fee)}<br>追加封筒：${yen(env)}`;totalPrice.textContent=yen(cardTotal+fee+env);drawSerials()}
+function drawSerials(){let issued={1:50-stockBase[1],2:50-stockBase[2],3:50-stockBase[3]},off={1:0,2:50,3:100},list=[];entries().forEach(x=>{for(let i=0;i<x.count;i++){issued[x.design]++;list.push('TG-'+String(off[x.design]+issued[x.design]).padStart(4,'0'))}});serials.innerHTML=list.length?list.map(s=>`<span class="serial">${s}</span>`).join(''):'<span class="serial">未選択</span>'}
+function setupSig(){const c=signatureCanvas,r=c.getBoundingClientRect(),ratio=devicePixelRatio||1;c.width=r.width*ratio;c.height=r.height*ratio;const ctx=c.getContext('2d');ctx.setTransform(ratio,0,0,ratio,0,0);ctx.fillStyle='#fff';ctx.fillRect(0,0,r.width,r.height);ctx.strokeStyle='#111';ctx.lineWidth=3.2;ctx.lineCap='round';hasSig=false;let draw=false;const pos=e=>{const b=c.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return{x:t.clientX-b.left,y:t.clientY-b.top}};const start=e=>{e.preventDefault();draw=true;hasSig=true;let p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)};const move=e=>{if(!draw)return;e.preventDefault();let p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()};const end=e=>{if(!draw)return;e.preventDefault();draw=false};c.onmousedown=start;c.onmousemove=move;c.onmouseup=end;c.onmouseleave=end;c.ontouchstart=start;c.ontouchmove=move;c.ontouchend=end}
+clearSig.onclick=setupSig;
+next1.onclick=()=>{if(!entries().length)return alert('ギフトカードを選択してください');goStep(2)}
+next2.onclick=()=>{if(!phone.value.trim())return alert('電話番号を入力してください');if(!customerName.value.trim())return alert('お名前を入力してください');if(!expiryAgree.checked)return alert('有効期限の確認にチェックしてください');if(!hasSig)return alert('署名を入力してください');update();goStep(3)}
+envelopeCount.onchange=update;
+issueBtn.onclick=()=>{goStep(4);const today=new Date(),ex=new Date(today);ex.setFullYear(ex.getFullYear()+1);const payload={phone:phone.value.trim(),customerName:customerName.value.trim(),staff:'お客様確認済み',issueDate:today.toLocaleDateString('ja-JP'),expireDate:ex.toLocaleDateString('ja-JP'),requests:entries(),signatureImage:signatureCanvas.toDataURL('image/png'),signatureAt:new Date().toISOString()};const cb='giftCallback_'+Date.now();window[cb]=()=>{delete window[cb];script.remove();goStep(5)};const script=document.createElement('script');script.src=GAS_URL+'?callback='+cb+'&data='+encodeURIComponent(JSON.stringify(payload));document.body.appendChild(script)}
+function resetAll(){cart={1:0,2:0,3:0};phone.value='';customerName.value='';expiryAgree.checked=false;envelopeCount.value='0';hasSig=false;showInitialCustomer();update();goStep(1)}
+function showInitialCustomer(){autoCustomerName.textContent='電話番号入力後に自動表示';autoCustomerHistory.textContent='未連携';autoCustomerMemo.textContent='顧客台帳連携予定'}
+function showNotFound(){autoCustomerName.textContent='未登録';autoCustomerHistory.textContent='新規顧客';autoCustomerMemo.textContent='顧客データなし'}
+phone.addEventListener('input',()=>{if(phone.value.replace(/\\D/g,'').length<10)showInitialCustomer();else showNotFound()})
+function loadStock(){const cb='stockCallback_'+Date.now();window[cb]=res=>{if(res&&res.result==='success'&&res.stock){stockBase[1]=+res.stock[1]||50;stockBase[2]=+res.stock[2]||50;stockBase[3]=+res.stock[3]||50;update()}delete window[cb]};const script=document.createElement('script');script.src=GAS_URL+'?action=stock&callback='+cb;document.body.appendChild(script)}
+expiryText.textContent=expireText();drawDots();update();loadStock();
 </script>
 </body>
 </html>
