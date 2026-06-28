@@ -468,29 +468,16 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
         </div>
         <div class="actions">
           <button class="btn btnGhost" type="button" onclick="goStep(2)">戻る</button>
-          <button class="btn btnPrimary" type="button" onclick="goStep(4)">カードを発行する</button>
+          <button class="btn btnPrimary" type="button" onclick="submitGiftCardIssue()">カードを発行する</button>
         </div>
       </div>
     </section>
 
-    <section class="screen" data-step="4">
-      <div class="stepGrid">
-        <div class="centerHead">
-          <h1>お客様署名</h1>
-          <p class="lead">有効期限と発行内容をご確認のうえ、下の枠内にご署名をお願いします。</p>
-        </div>
-        <div class="signatureWrap">
-          <div class="signatureCanvasWrap">
-            <canvas id="signatureCanvas"></canvas>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="btn btnGhost" type="button" onclick="goStep(3)">戻る</button>
-          <div style="display:flex;gap:12px">
-            <button class="btn btnGhost" type="button" id="clearSignatureBtn">書き直す</button>
-            <button class="btn btnPrimary" type="button" id="submitBtn">署名して発行する</button>
-          </div>
-        </div>
+    <section class="screen complete" data-step="4">
+      <div>
+        <div class="check">…</div>
+        <h1>発行しています</h1>
+        <p>しばらくお待ちください。</p>
       </div>
     </section>
 
@@ -585,7 +572,7 @@ function goStep(n){
   document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));
   renderDots();
   if(step===2)setTimeout(setupInlineSignatureCanvas,100);
-  if(step===4)setTimeout(setupSignatureCanvas,80);
+  
   if(step===5)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
 }
 
