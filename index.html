@@ -548,8 +548,19 @@ function renderDots(){
   document.getElementById('progressText').textContent=`Step ${step} / 4　${labels[step]}`;
 }
 
+
+function updateExpiryDateText(){
+  const today=new Date();
+  const ex=new Date(today);
+  ex.setFullYear(ex.getFullYear()+1);
+  const text=ex.toLocaleDateString('ja-JP');
+  const el=document.getElementById('expiryDateText');
+  if(el) el.textContent=text;
+}
+
 function goStep(n){
   step=n;
+  if(n===2) updateExpiryDateText();
   document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));
   renderDots();
   if(step===2)setTimeout(setupInlineSignatureCanvas,100);
