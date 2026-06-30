@@ -650,7 +650,7 @@ document.getElementById('submitBtn').onclick=()=>{
     issueDate:today.toLocaleDateString('ja-JP'),
     expireDate:ex.toLocaleDateString('ja-JP'),
     requests:getEntries(),
-    signatureImage:document.getElementById('inlineSignatureCanvas').toDataURL('image/png'),
+    signatureImage:'',
     signatureAt:new Date().toISOString()
   };
 
@@ -664,6 +664,11 @@ document.getElementById('submitBtn').onclick=()=>{
   };
   const script=document.createElement('script');
   script.src=GAS_URL+'?callback='+callbackName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  script.onerror=()=>{
+    btn.classList.remove('loading');
+    btn.textContent='カードを発行する';
+    alert('発行データの送信に失敗しました。通信またはGASを確認してください。');
+  };
   document.body.appendChild(script);
 };
 
