@@ -82,10 +82,6 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 .total{display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid rgba(212,180,122,.2)}
 .totalPrice{color:var(--gold);font-size:44px;line-height:1}
 
-.signatureWrap{max-width:760px;margin:0 auto;width:100%;align-self:center}
-.signatureCanvasWrap{background:#f8f4ee;border:2px solid rgba(212,180,122,.55);border-radius:18px;padding:12px;margin-top:18px}
-#signatureCanvas{display:block;width:100%;height:285px;background:#fff;border-radius:12px;touch-action:none}
-
 .actions{display:flex;justify-content:space-between;gap:14px;align-items:center}
 .btn{min-width:170px;border:none;border-radius:15px;padding:16px 22px;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;transition:.16s ease}
 .btn:active{transform:scale(.97)}
@@ -111,8 +107,7 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
   h1{font-size:27px}
   .lead{font-size:13px}
   .totalPrice{font-size:36px}
-  #signatureCanvas{height:250px}
-}
+  }
 @media(max-width:767px){
   .header{display:grid}
   .products,.confirmGrid{grid-template-columns:1fr}
@@ -152,7 +147,6 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
   font-weight:600;
 }
 </style>
-
 
 <style id="logo-gradient-stock-color-fix">
 /* 赤丸：ロゴを上品な金グラデーションに */
@@ -220,7 +214,6 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 }
 </style>
 
-
 <style id="force-customer-checks-signature-style">
 .nameOnlyBox{
   font-size:18px !important;
@@ -282,7 +275,6 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 }
 </style>
 
-
 <style id="step2-final-fix-style">
 .nameOnlyBox strong{color:#f8f4ee!important;font-size:22px!important}
 .agreeBox{
@@ -333,7 +325,6 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 }
 </style>
 
-
 <style id="customer-name-subtle-fix">
 .nameOnlyBox{
   padding:12px 16px !important;
@@ -369,7 +360,7 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 
   <main class="app">
     <div class="progress">
-      <div class="progressText" id="progressText">Step 1 / 5　ギフトカードを選択</div>
+      <div class="progressText" id="progressText">Step 1 / 4　ギフトカードを選択</div>
       <div class="dots" id="dots"></div>
     </div>
 
@@ -468,7 +459,7 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
         </div>
         <div class="actions">
           <button class="btn btnGhost" type="button" onclick="goStep(2)">戻る</button>
-          <button class="btn btnPrimary" type="button" onclick="goStep(4)">カードを発行する</button>
+          <button class="btn btnPrimary" type="button" id="submitBtn">カードを発行する</button>
         </div>
       </div>
     </section>
@@ -519,7 +510,6 @@ let cart={1:0,2:0,3:0};
 let stockBase={1:50,2:50,3:50};
 let customerData=[];
 let lastChangedDesign=null;
-let hasSignature=false;
 let hasInlineSignature=false;
 
 function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
@@ -534,7 +524,6 @@ function updateExpireDateText(){
 }
 function formatSerial(n){return 'TG-'+String(n).padStart(4,'0')}
 function getEntries(){return Object.entries(cart).map(([design,count])=>({design:Number(design),count:Number(count)})).filter(x=>x.count>0)}
-
 
 function setupInlineSignatureCanvas(){
   const canvas=document.getElementById('inlineSignatureCanvas');
@@ -577,7 +566,7 @@ function renderDots(){
   const dots=document.getElementById('dots');
   dots.innerHTML=[1,2,3,4,5].map(n=>`<div class="dot ${n===step?'active':''}"></div>`).join('');
   const labels={1:'ギフトカードを選択',2:'お客様情報',3:'発行内容の確認',4:'署名',5:'発行完了'};
-  document.getElementById('progressText').textContent=`Step ${step} / 5　${labels[step]}`;
+  document.getElementById('progressText').textContent=`Step ${step} / 4　${labels[step]}`;
 }
 
 function goStep(n){
@@ -585,8 +574,8 @@ function goStep(n){
   document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));
   renderDots();
   if(step===2)setTimeout(setupInlineSignatureCanvas,100);
-  if(step===4)setTimeout(setupSignatureCanvas,80);
-  if(step===5)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
+  
+  if(step===4)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
 }
 
 function renderProducts(){
@@ -666,29 +655,8 @@ document.getElementById('toConfirmBtn').onclick=()=>{
 };
 document.getElementById('envelopeCount').onchange=update;
 
-function setupSignatureCanvas(){
-  const canvas=document.getElementById('signatureCanvas');
-  const rect=canvas.getBoundingClientRect();
-  const ratio=window.devicePixelRatio||1;
-  canvas.width=Math.floor(rect.width*ratio);
-  canvas.height=Math.floor(rect.height*ratio);
-  const ctx=canvas.getContext('2d');
-  ctx.setTransform(ratio,0,0,ratio,0,0);
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,rect.width,rect.height);
-  ctx.strokeStyle='#111';ctx.lineWidth=3.2;ctx.lineCap='round';ctx.lineJoin='round';
-  hasSignature=false;
-  let drawing=false;
-  function pos(e){const r=canvas.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top}}
-  function start(e){e.preventDefault();drawing=true;hasSignature=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)}
-  function move(e){if(!drawing)return;e.preventDefault();const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()}
-  function end(e){if(!drawing)return;e.preventDefault();drawing=false}
-  canvas.onmousedown=start;canvas.onmousemove=move;canvas.onmouseup=end;canvas.onmouseleave=end;
-  canvas.ontouchstart=start;canvas.ontouchmove=move;canvas.ontouchend=end;
-}
-
-document.getElementById('clearSignatureBtn').onclick=setupSignatureCanvas;
 document.getElementById('submitBtn').onclick=()=>{
-  if(!hasSignature){alert('署名を入力してください');return}
+  
   const btn=document.getElementById('submitBtn');
   btn.classList.add('loading');
   btn.textContent='発行しています…';
@@ -711,7 +679,7 @@ document.getElementById('submitBtn').onclick=()=>{
     script.remove();
     btn.classList.remove('loading');
     btn.textContent='署名して発行する';
-    goStep(5);
+    goStep(4);
   };
   const script=document.createElement('script');
   script.src=GAS_URL+'?callback='+callbackName+'&data='+encodeURIComponent(JSON.stringify(payload));
