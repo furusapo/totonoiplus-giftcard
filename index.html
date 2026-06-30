@@ -656,6 +656,8 @@ document.getElementById('toConfirmBtn').onclick=()=>{
 document.getElementById('envelopeCount').onchange=update;
 
 document.getElementById('submitBtn').onclick=()=>{
+  const submitBtn=document.getElementById('submitBtn');
+  if(submitBtn){submitBtn.classList.add('loading');submitBtn.textContent='発行中...';}
   
   const btn=document.getElementById('submitBtn');
   btn.classList.add('loading');
