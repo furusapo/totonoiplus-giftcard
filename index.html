@@ -397,7 +397,7 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
 
           <label class="agreeBox">
             <input id="expiryAgree" type="checkbox">
-            <span>ギフトカードの有効期限は <strong id="expiryText"></strong> までとなります。内容を確認しました。</span>
+            <span>ギフトカードの有効期限は <strong id="expiryDateText"></strong> までとなります。内容を確認しました。</span>
           </label>
 
           <label class="agreeBox">
@@ -560,6 +560,7 @@ function updateExpiryDateText(){
 
 function goStep(n){
   step=n;
+  if(n===2) updateExpiryDateText();
   if(n===2) updateExpiryDateText();
   document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));
   renderDots();
