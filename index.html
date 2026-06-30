@@ -116,6 +116,11 @@ input:-webkit-autofill{-webkit-text-fill-color:#fff!important;-webkit-box-shadow
   .btn{width:100%}
   .envelopeBox{grid-template-columns:1fr}
 }
+
+body.isCompleteStep .dots{
+  display:none !important;
+}
+
 </style>
 
 <style id="customer-expiry-agree-style">
@@ -560,6 +565,7 @@ function updateExpiryDateText(){
 
 function goStep(n){
   step=n;
+  document.body.classList.toggle('isCompleteStep', n===4);
   if(n===2) updateExpiryDateText();
   if(n===2) updateExpiryDateText();
   document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===step));
