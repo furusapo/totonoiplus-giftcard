@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>TOTONOI+ ギフトカード管理</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#f5f1ea;margin:0;padding:20px;color:#2b2b2b}
+.wrap{max-width:560px;margin:auto;background:#fff;border-radius:20px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+h1{font-size:22px;margin:0 0 18px}
+label{font-weight:700;display:block;margin-top:16px}
+input,select,textarea,button{width:100%;box-sizing:border-box;font-size:16px;padding:13px;border-radius:12px;border:1px solid #ccc;margin-top:8px}
+button{border:0;background:#222;color:#fff;font-weight:700;cursor:pointer}
+.use{background:#8a5a44;margin-top:20px}
+.card{margin-top:22px;padding:18px;border-radius:16px;background:#faf7f2;border:1px solid #e3d8cb}
+.status{font-size:22px;font-weight:800;margin-bottom:10px}
+.unused{color:#008a45}
+.used{color:#b00020}
+.row{margin-top:9px}
+.note{font-size:13px;color:#777;margin-top:18px;line-height:1.6}
+.error{color:#b00020;font-weight:700;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>TOTONOI+ ギフトカード管理</h1>
+
+  <label>シリアル番号</label>
+  <input id="serial" placeholder="例：TG-0001">
+  <button onclick="searchCard()">検索</button>
+
+  <div id="result"></div>
+
+  <p class="note">※ スタッフはスプレッドシートを直接編集せず、この画面から確認・使用処理します。</p>
+</div>
+
+<script>
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxrRcaJSBI8QN1KWBogbD0MK222FtVBDvlmSnRN2nsEaSwrOyv7xqxtosK_Yk6nHnx8/exec";
+let currentCard = null;
+
+function api(params){
+  return new Promise((resolve, reject) => {
+    const callbackName = 'jsonp_callback_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+
+    params.callback = callbackName;
+
+    window[callbackName] = function(data){
+      delete window[callbackName];
+      script.remove();
+      resolve(data);
+    };
+
+    const script = document.createElement('script');
+    script.src = GAS_URL + '?' + new URLSearchParams(params).toString();
+    script.onerror = function(){
+      delete window[callbackName];
+      script.remove();
+      reject(new Error('GASとの通信に失敗しました'));
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
+async function searchCard(){
+  const serial = document.getElementById('serial').value.trim();
+  if(!serial) return alert('シリアル番号を入力してください');
+
+  document.getElementById('result').innerHTML = '検索中...';
+
+  const res = await api({ mode:'staff_search', serial });
+
+  if(!res.ok){
+    currentCard = null;
+    document.getElementById('result').innerHTML = '<div class="error">' + (res.message || '見つかりませんでした') + '</div>';
+    return;
+  }
+
+  currentCard = res.card;
+  const used = currentCard.status === '使用済';
+
+  document.getElementById('result').innerHTML = `
+    <div class="card">
+      <div class="status ${used ? 'used':'unused'}">${currentCard.status}</div>
+      <div class="row">シリアル：${currentCard.serial}</div>
+      <div class="row">金額：${currentCard.amount || '5,000円'}</div>
+      <div class="row">発行日：${currentCard.issueDate || ''}</div>
+      <div class="row">有効期限：${currentCard.expiryDate || ''}</div>
+      <div class="row">電話番号：${currentCard.phone || ''}</div>
+
+      ${used ? `
+        <div class="row">使用日時：${currentCard.usedAt || ''}</div>
+        <div class="row">対応スタッフ：${currentCard.usedStaff || ''}</div>
+        <div class="row">メモ：${currentCard.memo || ''}</div>
+      ` : `
+        <label>対応スタッフ</label>
+        <select id="staff">
+          <option value="">選択してください</option>
+          <option>土屋</option>
+          <option>四ツ谷</option>
+          <option>絹果</option>
+          <option>ユ</option>
+          <option>佐藤</option>
+          <option>高田</option>
+          <option>高橋</option>
+        </select>
+
+        <label>メモ</label>
+        <textarea id="memo" rows="3" placeholder="例：来店時に使用"></textarea>
+
+        <button class="use" onclick="useCard()">このギフトカードを使用済みにする</button>
+      `}
+    </div>
+  `;
+}
+
+async function useCard(){
+  if(!currentCard) return alert('カード情報がありません');
+
+  const staff = document.getElementById('staff').value;
+  const memo = document.getElementById('memo').value.trim();
+
+  if(!staff) return alert('対応スタッフを選択してください');
+  if(!confirm('このギフトカードを使用済みにします。よろしいですか？')) return;
+
+  const result = document.getElementById('result');
+  result.insertAdjacentHTML('beforeend', '<p id="processing" style="font-weight:bold;color:#8a5a44;">使用処理中です...</p>');
+
+  try {
+    const res = await api({
+      mode:'staff_use',
+      serial:currentCard.serial,
+      staff,
+      memo
+    });
+
+    const processing = document.getElementById('processing');
+    if(processing) processing.remove();
+
+    if(!res.ok){
+      alert(res.message || '更新できませんでした');
+      result.insertAdjacentHTML('beforeend', '<p style="color:#b00020;font-weight:bold;">更新失敗：' + (res.message || '原因不明') + '</p>');
+      return;
+    }
+
+    alert(res.message || '使用済みにしました');
+    await searchCard();
+
+  } catch(err) {
+    const processing = document.getElementById('processing');
+    if(processing) processing.remove();
+
+    alert('通信エラー：' + err.message);
+    result.insertAdjacentHTML('beforeend', '<p style="color:#b00020;font-weight:bold;">通信エラー：' + err.message + '</p>');
+  }
+}
+</script>
+</body>
+</html>
