@@ -548,9 +548,9 @@ document.addEventListener('click',e=>{
 
 function renderDots(){
   const dots=document.getElementById('dots');
-  dots.innerHTML=[1,2,3,4,5].map(n=>`<div class="dot ${n===step?'active':''}"></div>`).join('');
-  const labels={1:'ギフトカードを選択',2:'お客様情報',3:'発行内容の確認',4:'署名',5:'発行完了'};
-  document.getElementById('progressText').textContent=`Step ${step} / 4　${labels[step]}`;
+  dots.innerHTML=[1,2,3,4].map(n=>`<div class="dot ${n===step?'active':''}"></div>`).join('');
+  const labels={1:'ギフトカードを選択',2:'お客様情報',3:'発行内容の確認',4:'発行完了'};
+  document.getElementById('progressText').textContent=`Step ${Math.min(step,4)} / 4　${labels[Math.min(step,4)] || ''}`;
 }
 
 
