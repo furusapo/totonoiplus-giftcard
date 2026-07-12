@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f3ef">
+
+  <title>TOTONOI+ ギフトカードのご案内</title>
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    html{
+      background:#f5f3ef;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      min-height:100dvh;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        Arial,
+        sans-serif;
+      background:#f5f3ef;
+      color:#282521;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    .page{
+      width:100%;
+      max-width:480px;
+      min-height:100vh;
+      min-height:100dvh;
+      margin:0 auto;
+      padding:
+        calc(28px + env(safe-area-inset-top))
+        20px
+        calc(28px + env(safe-area-inset-bottom));
+    }
+
+    .brand{
+      margin-bottom:10px;
+      color:#9b7a50;
+      text-align:center;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.2em;
+    }
+
+    h1{
+      margin:0 0 28px;
+      text-align:center;
+      font-size:25px;
+      line-height:1.45;
+      letter-spacing:.03em;
+    }
+
+    .visual{
+      position:relative;
+      width:100%;
+      aspect-ratio:1.7/1;
+      margin-bottom:28px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:16px;
+      background:
+        radial-gradient(circle at 70% 30%,rgba(255,255,255,.95),transparent 30%),
+        linear-gradient(135deg,#e4dacb,#cbb89b);
+      box-shadow:0 12px 30px rgba(77,60,41,.14);
+    }
+
+    .visual::before{
+      content:"";
+      position:absolute;
+      width:170px;
+      height:112px;
+      border-radius:10px;
+      background:linear-gradient(145deg,#d7b374,#9b7440);
+      box-shadow:0 18px 30px rgba(79,55,26,.22);
+      transform:rotate(-2deg);
+    }
+
+    .visual::after{
+      content:"";
+      position:absolute;
+      width:22px;
+      height:140px;
+      background:rgba(255,245,221,.88);
+      box-shadow:
+        -74px 52px 0 -64px rgba(255,245,221,.88),
+        74px 52px 0 -64px rgba(255,245,221,.88);
+    }
+
+    .gift-label{
+      position:relative;
+      z-index:2;
+      color:#fff;
+      text-align:center;
+      text-shadow:0 2px 8px rgba(60,38,12,.2);
+    }
+
+    .gift-label small{
+      display:block;
+      margin-bottom:7px;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.18em;
+    }
+
+    .gift-label strong{
+      display:block;
+      font-family:Georgia,serif;
+      font-size:22px;
+      font-weight:500;
+      letter-spacing:.06em;
+    }
+
+    .copy{
+      margin:0 0 22px;
+      text-align:center;
+      font-size:16px;
+      font-weight:700;
+      line-height:1.9;
+    }
+
+    .description{
+      margin:0 0 22px;
+      color:#625d56;
+      text-align:center;
+      font-size:14px;
+      line-height:1.9;
+    }
+
+    .features{
+      margin:0 0 30px;
+      padding:20px 18px;
+      list-style:none;
+      border:1px solid #e3ddd3;
+      border-radius:16px;
+      background:rgba(255,255,255,.66);
+    }
+
+    .features li{
+      position:relative;
+      padding:8px 0 8px 25px;
+      color:#47423d;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .features li::before{
+      content:"";
+      position:absolute;
+      top:17px;
+      left:5px;
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:#99744a;
+    }
+
+    .button{
+      width:100%;
+      min-height:58px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px 20px;
+      border-radius:16px;
+      background:linear-gradient(135deg,#746656,#51463b);
+      color:#fff;
+      text-decoration:none;
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:.03em;
+      box-shadow:0 10px 24px rgba(57,47,38,.2);
+      -webkit-tap-highlight-color:transparent;
+      transition:transform .15s ease,opacity .15s ease;
+    }
+
+    .button:active{
+      transform:scale(.985);
+      opacity:.9;
+    }
+
+    .note{
+      margin:18px 0 0;
+      color:#837c74;
+      text-align:center;
+      font-size:12px;
+      line-height:1.7;
+    }
+
+    @media(max-width:360px){
+      .page{
+        padding-left:16px;
+        padding-right:16px;
+      }
+
+      h1{
+        font-size:23px;
+      }
+
+      .copy{
+        font-size:15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="page">
+
+    <div class="brand">TOTONOI+</div>
+
+    <h1>ギフトカードのご案内</h1>
+
+    <section class="visual" aria-label="TOTONOI+ ギフトカード">
+      <div class="gift-label">
+        <small>TOTONOI+</small>
+        <strong>Gift Card</strong>
+      </div>
+    </section>
+
+    <p class="copy">
+      ととのいプラスのギフトカードを<br>
+      大切な方へのプレゼントに。
+    </p>
+
+    <p class="description">
+      サウナやカフェ、コワーキングなど、<br>
+      TOTONOI+の対象サービスでご利用いただけます。
+    </p>
+
+    <ul class="features">
+      <li>用途に合わせてギフトとして贈れます</li>
+      <li>有効期限内でご利用いただけます</li>
+      <li>対象店舗・サービスでご利用いただけます</li>
+    </ul>
+
+    <a class="button" href="giftcard-check.html">
+      有効期限を確認する
+    </a>
+
+    <p class="note">
+      ギフトカードに記載されている<br>
+      シリアル番号をご用意ください。
+    </p>
+
+  </main>
+
+</body>
+</html>
