@@ -19,6 +19,58 @@ button{border:0;background:#222;color:#fff;font-weight:700;cursor:pointer}
 .row{margin-top:9px}
 .note{font-size:13px;color:#777;margin-top:18px;line-height:1.6}
 .error{color:#b00020;font-weight:700;margin-top:18px}
+.correctionPanel{
+  margin-top:24px;
+  padding:18px;
+  border:2px solid #d58a28;
+  border-radius:16px;
+  background:#fffaf1;
+}
+.correctionPanel h2{
+  margin:0 0 10px;
+  color:#9a5a0a;
+  font-size:18px;
+}
+.correctionPanel p{
+  color:#74542d;
+  font-size:13px;
+  line-height:1.7;
+}
+.correctionButton{
+  background:#c97818;
+  margin-top:18px;
+}
+.correctionButton:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+.checkRow{
+  display:grid;
+  grid-template-columns:24px 1fr;
+  gap:10px;
+  align-items:flex-start;
+  margin-top:14px;
+  line-height:1.6;
+  font-size:14px;
+}
+.checkRow input{
+  width:20px;
+  height:20px;
+  margin:2px 0 0;
+  padding:0;
+}
+.countHint{
+  text-align:right;
+  font-size:12px;
+  color:#8b6d48;
+  margin-top:5px;
+}
+.auditNotice{
+  margin-top:14px;
+  color:#8b4b16;
+  font-size:12px;
+  line-height:1.7;
+}
 </style>
 </head>
 <body>
@@ -77,7 +129,7 @@ async function searchCard(){
   }
 
   currentCard = res.card;
-  const used = currentCard.status === '使用済';
+  const used = ['利用済','利用済み','使用済'].includes(currentCard.status);
 
   document.getElementById('result').innerHTML = `
     <div class="card">
@@ -92,6 +144,95 @@ async function searchCard(){
         <div class="row">使用日時：${currentCard.usedAt || ''}</div>
         <div class="row">対応スタッフ：${currentCard.usedStaff || ''}</div>
         <div class="row">メモ：${currentCard.memo || ''}</div>
+
+        <div class="correctionPanel">
+          <h2>利用済み処理の訂正</h2>
+
+          <p>
+            誤って利用済みにした場合のみ使用してください。
+            訂正内容は削除できない操作履歴として保存されます。
+          </p>
+
+          <label>理由カテゴリ 必須</label>
+          <select id="cancelReasonCategory" onchange="validateCorrectionForm()">
+            <option value="">選択してください</option>
+            <option value="操作ミス">操作ミス</option>
+            <option value="シリアル入力ミス">シリアル入力ミス</option>
+            <option value="お客様都合">お客様都合</option>
+            <option value="システム障害">システム障害</option>
+            <option value="その他">その他</option>
+          </select>
+
+          <label>訂正理由の詳細 必須</label>
+          <textarea
+            id="cancelReasonDetail"
+            rows="4"
+            minlength="20"
+            placeholder="状況・原因・正しい処理内容を20文字以上で入力してください"
+            oninput="updateReasonCount();validateCorrectionForm()"
+          ></textarea>
+          <div class="countHint" id="reasonCount">0 / 20文字以上</div>
+
+          <label>操作担当者 必須</label>
+          <select id="cancelOperator" onchange="validateCorrectionForm()">
+            <option value="">選択してください</option>
+            <option>土屋</option>
+            <option>四ツ谷</option>
+            <option>絹果</option>
+            <option>ユ</option>
+            <option>佐藤</option>
+            <option>高田</option>
+            <option>高橋</option>
+          </select>
+
+          <label>確認担当者 必須</label>
+          <select id="cancelReviewer" onchange="validateCorrectionForm()">
+            <option value="">別の社員を選択してください</option>
+            <option>土屋</option>
+            <option>四ツ谷</option>
+            <option>絹果</option>
+            <option>ユ</option>
+            <option>佐藤</option>
+            <option>高田</option>
+            <option>高橋</option>
+          </select>
+
+          <label class="checkRow">
+            <input
+              id="cancelContentConfirmed"
+              type="checkbox"
+              onchange="validateCorrectionForm()"
+            >
+            <span>
+              操作担当者と確認担当者の2名で、
+              シリアル番号・訂正理由・現在の状態を確認しました。
+            </span>
+          </label>
+
+          <label class="checkRow">
+            <input
+              id="cancelAuditConfirmed"
+              type="checkbox"
+              onchange="validateCorrectionForm()"
+            >
+            <span>
+              この訂正が操作履歴へ永久保存されることを理解しました。
+            </span>
+          </label>
+
+          <button
+            class="correctionButton"
+            id="cancelUseButton"
+            onclick="cancelCardUseV2()"
+            disabled
+          >
+            利用済みを訂正（未使用へ戻す）
+          </button>
+
+          <div class="auditNotice">
+            ※ 操作担当者と確認担当者に同じ社員は指定できません。
+          </div>
+        </div>
       ` : `
         <label>対応スタッフ</label>
         <select id="staff">
@@ -154,6 +295,158 @@ async function useCard(){
     result.insertAdjacentHTML('beforeend', '<p style="color:#b00020;font-weight:bold;">通信エラー：' + err.message + '</p>');
   }
 }
+
+function updateReasonCount(){
+  const input = document.getElementById('cancelReasonDetail');
+  const count = document.getElementById('reasonCount');
+
+  if(!input || !count) return;
+
+  count.textContent =
+    input.value.trim().length +
+    ' / 20文字以上';
+}
+
+function validateCorrectionForm(){
+  const category = document.getElementById('cancelReasonCategory');
+  const detail = document.getElementById('cancelReasonDetail');
+  const operator = document.getElementById('cancelOperator');
+  const reviewer = document.getElementById('cancelReviewer');
+  const contentConfirmed = document.getElementById('cancelContentConfirmed');
+  const auditConfirmed = document.getElementById('cancelAuditConfirmed');
+  const button = document.getElementById('cancelUseButton');
+
+  if(
+    !category ||
+    !detail ||
+    !operator ||
+    !reviewer ||
+    !contentConfirmed ||
+    !auditConfirmed ||
+    !button
+  ){
+    return;
+  }
+
+  const valid =
+    category.value !== '' &&
+    detail.value.trim().length >= 20 &&
+    operator.value !== '' &&
+    reviewer.value !== '' &&
+    operator.value !== reviewer.value &&
+    contentConfirmed.checked &&
+    auditConfirmed.checked;
+
+  button.disabled = !valid;
+}
+
+async function cancelCardUseV2(){
+  if(!currentCard){
+    alert('カード情報がありません');
+    return;
+  }
+
+  const reasonCategory =
+    document.getElementById('cancelReasonCategory').value;
+
+  const reasonDetail =
+    document.getElementById('cancelReasonDetail').value.trim();
+
+  const operator =
+    document.getElementById('cancelOperator').value;
+
+  const reviewer =
+    document.getElementById('cancelReviewer').value;
+
+  const contentConfirmed =
+    document.getElementById('cancelContentConfirmed').checked;
+
+  const auditConfirmed =
+    document.getElementById('cancelAuditConfirmed').checked;
+
+  if(!reasonCategory){
+    alert('理由カテゴリを選択してください');
+    return;
+  }
+
+  if(reasonDetail.length < 20){
+    alert('訂正理由の詳細を20文字以上で入力してください');
+    return;
+  }
+
+  if(!operator || !reviewer){
+    alert('操作担当者と確認担当者を選択してください');
+    return;
+  }
+
+  if(operator === reviewer){
+    alert('確認担当者は別の社員を選択してください');
+    return;
+  }
+
+  if(!contentConfirmed || !auditConfirmed){
+    alert('2つの確認項目にチェックしてください');
+    return;
+  }
+
+  const confirmed = confirm(
+    currentCard.serial +
+    ' を「利用済」から「未使用」へ戻します。\n\n' +
+    '操作担当：' + operator + '\n' +
+    '確認担当：' + reviewer + '\n' +
+    '理由：' + reasonCategory + '\n\n' +
+    'この操作は操作履歴へ永久保存されます。'
+  );
+
+  if(!confirmed) return;
+
+  const finalWord = prompt(
+    '最終確認として「訂正」と入力してください'
+  );
+
+  if(finalWord !== '訂正'){
+    alert('訂正処理を中止しました');
+    return;
+  }
+
+  const button = document.getElementById('cancelUseButton');
+  button.disabled = true;
+  button.textContent = '訂正処理中...';
+
+  try{
+    const res = await api({
+      mode:'staff_cancel_use_v2',
+      serial:currentCard.serial,
+      reasonCategory,
+      reasonDetail,
+      operator,
+      reviewer,
+      contentConfirmed:'true',
+      auditConfirmed:'true'
+    });
+
+    if(!res.ok){
+      alert(res.message || '訂正できませんでした');
+      button.textContent = '利用済みを訂正（未使用へ戻す）';
+      validateCorrectionForm();
+      return;
+    }
+
+    alert(
+      (res.message || '未使用へ戻しました') +
+      '\n\n履歴ID：' +
+      (res.historyId || '記録済み')
+    );
+
+    await searchCard();
+
+  }catch(error){
+    alert('通信エラー：' + error.message);
+    button.textContent = '利用済みを訂正（未使用へ戻す）';
+    validateCorrectionForm();
+  }
+}
+
 </script>
 </body>
 </html>

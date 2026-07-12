@@ -9,6 +9,7 @@ function doGet(e) {
   // スタッフ管理画面用
   if (mode === "staff_search") return staffSearch(e);
   if (mode === "staff_use") return staffUse(e);
+  if (mode === "staff_cancel_use_v2") return staffCancelUseV2(e);
 
   if (action === "stock") return getStock(e);
   if (e.parameter.data) return issueGiftCard(e);
@@ -404,6 +405,261 @@ function staffUse(e) {
   }
 }
 
+
+/**
+ * 二重チェック付き利用済み取消
+ *
+ * 必須：
+ * ・理由カテゴリ
+ * ・20文字以上の詳細理由
+ * ・操作担当
+ * ・別の確認担当
+ * ・2項目の確認同意
+ */
+function staffCancelUseV2(e) {
+  const callback = e.parameter.callback;
+  const serial = String(e.parameter.serial || "").trim().toUpperCase();
+  const reasonCategory = String(e.parameter.reasonCategory || "").trim();
+  const reasonDetail = String(e.parameter.reasonDetail || "").trim();
+  const operator = String(e.parameter.operator || "").trim();
+  const reviewer = String(e.parameter.reviewer || "").trim();
+  const contentConfirmed = String(e.parameter.contentConfirmed || "") === "true";
+  const auditConfirmed = String(e.parameter.auditConfirmed || "") === "true";
+
+  const allowedCategories = [
+    "操作ミス",
+    "シリアル入力ミス",
+    "お客様都合",
+    "システム障害",
+    "その他"
+  ];
+
+  if (!serial) {
+    return respond(callback, {
+      ok: false,
+      message: "シリアル番号がありません"
+    });
+  }
+
+  if (allowedCategories.indexOf(reasonCategory) === -1) {
+    return respond(callback, {
+      ok: false,
+      message: "訂正理由のカテゴリを選択してください"
+    });
+  }
+
+  if (reasonDetail.length < 20) {
+    return respond(callback, {
+      ok: false,
+      message: "訂正理由の詳細を20文字以上で入力してください"
+    });
+  }
+
+  if (!operator) {
+    return respond(callback, {
+      ok: false,
+      message: "操作担当者を選択してください"
+    });
+  }
+
+  if (!reviewer) {
+    return respond(callback, {
+      ok: false,
+      message: "確認担当者を選択してください"
+    });
+  }
+
+  if (operator === reviewer) {
+    return respond(callback, {
+      ok: false,
+      message: "確認担当者は操作担当者とは別の社員を選択してください"
+    });
+  }
+
+  if (!contentConfirmed || !auditConfirmed) {
+    return respond(callback, {
+      ok: false,
+      message: "2つの確認項目にチェックしてください"
+    });
+  }
+
+  const lock = LockService.getScriptLock();
+
+  try {
+    lock.waitLock(10000);
+
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName("発行履歴");
+
+    if (!sheet) {
+      throw new Error("発行履歴シートが見つかりません");
+    }
+
+    ensureStaffColumns(sheet);
+
+    const values = sheet.getDataRange().getValues();
+    const headers = values[0].map(function(value) {
+      return String(value || "").trim();
+    });
+
+    const serialCol = findHeader(
+      headers,
+      ["シリアル番号", "シリアル", "発行番号", "ギフトカード番号"]
+    );
+
+    const statusCol = findHeader(
+      headers,
+      ["状態", "ステータス", "使用状態"]
+    );
+
+    const usedAtCol = findHeader(
+      headers,
+      ["使用日時", "利用日時"]
+    );
+
+    const usedStaffCol = findHeader(
+      headers,
+      ["使用スタッフ", "利用スタッフ", "対応スタッフ"]
+    );
+
+    const memoCol = findHeader(
+      headers,
+      ["使用メモ", "利用メモ", "メモ"]
+    );
+
+    if (serialCol === -1 || statusCol === -1) {
+      throw new Error("シリアル番号または状態の列が見つかりません");
+    }
+
+    for (let i = 1; i < values.length; i++) {
+      const rowSerial = String(
+        values[i][serialCol] || ""
+      ).trim().toUpperCase();
+
+      if (rowSerial !== serial) continue;
+
+      const currentStatus = normalizeStatus(values[i][statusCol]);
+
+      if (currentStatus !== "利用済") {
+        return respond(callback, {
+          ok: false,
+          message:
+            "現在の状態は「" +
+            currentStatus +
+            "」のため、取消できません"
+        });
+      }
+
+      const originalUsedAt =
+        usedAtCol !== -1 ? values[i][usedAtCol] : "";
+
+      const originalUsedStaff =
+        usedStaffCol !== -1 ? values[i][usedStaffCol] : "";
+
+      const originalMemo =
+        memoCol !== -1 ? values[i][memoCol] : "";
+
+      const historyId = Utilities.getUuid();
+      const logSheet = ensureCancelAuditSheet_();
+
+      // 元情報を先に監査ログへ記録してから状態を変更
+      logSheet.appendRow([
+        new Date(),
+        historyId,
+        serial,
+        "利用済み取消",
+        "利用済",
+        "未使用",
+        reasonCategory,
+        reasonDetail,
+        operator,
+        reviewer,
+        originalUsedAt,
+        originalUsedStaff,
+        originalMemo,
+        "スタッフ管理画面"
+      ]);
+
+      sheet.getRange(i + 1, statusCol + 1).setValue("未使用");
+
+      if (usedAtCol !== -1) {
+        sheet.getRange(i + 1, usedAtCol + 1).clearContent();
+      }
+
+      if (usedStaffCol !== -1) {
+        sheet.getRange(i + 1, usedStaffCol + 1).clearContent();
+      }
+
+      if (memoCol !== -1) {
+        sheet.getRange(i + 1, memoCol + 1).clearContent();
+      }
+
+      SpreadsheetApp.flush();
+
+      return respond(callback, {
+        ok: true,
+        message:
+          serial +
+          " の利用済み処理を訂正し、未使用へ戻しました",
+        historyId: historyId
+      });
+    }
+
+    return respond(callback, {
+      ok: false,
+      message: "該当するギフトカードが見つかりません"
+    });
+
+  } catch (err) {
+    return respond(callback, {
+      ok: false,
+      message: err.message
+    });
+
+  } finally {
+    try {
+      lock.releaseLock();
+    } catch (ignore) {}
+  }
+}
+
+
+/**
+ * 利用済み取消の監査ログシートを取得または作成
+ */
+function ensureCancelAuditSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName("操作履歴");
+
+  const headers = [
+    "記録日時",
+    "履歴ID",
+    "シリアル番号",
+    "操作",
+    "変更前",
+    "変更後",
+    "理由カテゴリ",
+    "理由詳細",
+    "操作担当",
+    "確認担当",
+    "元の使用日時",
+    "元の使用スタッフ",
+    "元の使用メモ",
+    "接続元"
+  ];
+
+  if (!sheet) {
+    sheet = ss.insertSheet("操作履歴");
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.setFrozenRows(1);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
+    sheet.autoResizeColumns(1, headers.length);
+  }
+
+  return sheet;
+}
+
+
 function ensureStaffColumns(sheet) {
   const required = ["使用日時", "使用スタッフ", "使用メモ"];
   const lastCol = sheet.getLastColumn();
@@ -595,7 +851,7 @@ function authorizeGiftcardDrive() {
  * 保存内容：
  * ・署名.png
  * ・発行データ.json
- * ・発行記録.html
+ * ・発行記録.pdf
  */
 function saveGiftcardIssueRecord_(e) {
   try {
@@ -692,13 +948,13 @@ function saveGiftcardIssueRecord_(e) {
 
     var html = buildGiftcardIssueRecordHtml_(record, signatureImage);
 
-    var htmlBlob = Utilities.newBlob(
-      html,
-      "text/html",
-      "発行記録.html"
-    );
+    // HTMLをPDFへ変換してGoogle Driveへ保存
+    var pdfBlob = HtmlService
+      .createHtmlOutput(html)
+      .getAs(MimeType.PDF)
+      .setName("発行記録.pdf");
 
-    var htmlFile = issueFolder.createFile(htmlBlob);
+    var pdfFile = issueFolder.createFile(pdfBlob);
 
     return ContentService
       .createTextOutput(JSON.stringify({
@@ -708,7 +964,7 @@ function saveGiftcardIssueRecord_(e) {
         folderUrl: issueFolder.getUrl(),
         signatureUrl: signatureFile.getUrl(),
         jsonUrl: jsonFile.getUrl(),
-        htmlUrl: htmlFile.getUrl()
+        pdfUrl: pdfFile.getUrl()
       }))
       .setMimeType(ContentService.MimeType.JSON);
 
