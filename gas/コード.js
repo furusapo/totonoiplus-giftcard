@@ -33,6 +33,7 @@ function issueGiftCard(e) {
 
     const requests = data.requests || [];
     const now = new Date();
+    const issuedSerials = [];
 
     requests.forEach(item => {
       const design = Number(item.design);
@@ -40,6 +41,7 @@ function issueGiftCard(e) {
 
       for (let i = 0; i < count; i++) {
         const serial = getNextSerial(sheet, design);
+        issuedSerials.push(serial);
         sheet.appendRow([
           now,
           serial,
@@ -59,7 +61,8 @@ function issueGiftCard(e) {
     return respond(callback, {
       ok: true,
       result: "success",
-      message: "発行履歴に保存しました"
+      message: "発行履歴に保存しました",
+      serials: issuedSerials
     });
 
   } catch (err) {
@@ -478,6 +481,10 @@ function doPost(e) {
     giftcardAction = "";
   }
 
+  if (giftcardAction === "saveIssueRecord") {
+    return saveGiftcardIssueRecord_(e);
+  }
+
   if (giftcardAction === "savePdf") {
     return saveGiftcardPdfToDrive_(e);
   }
@@ -579,4 +586,261 @@ function authorizeGiftcardDrive() {
     : DriveApp.createFolder(folderName);
 
   Logger.log("Google Drive認証完了: " + folder.getUrl());
+}
+
+
+/**
+ * ギフトカードの発行記録をGoogle Driveへ保存する
+ *
+ * 保存内容：
+ * ・署名.png
+ * ・発行データ.json
+ * ・発行記録.html
+ */
+function saveGiftcardIssueRecord_(e) {
+  try {
+    var data = {};
+
+    if (e && e.postData && e.postData.contents) {
+      data = JSON.parse(e.postData.contents);
+    }
+
+    var serials = Array.isArray(data.serials)
+      ? data.serials.map(function(value) {
+          return String(value || "").trim().toUpperCase();
+        }).filter(String)
+      : [];
+
+    if (!serials.length) {
+      throw new Error("確定シリアル番号がありません");
+    }
+
+    var signatureImage = String(data.signatureImage || "");
+    var signatureBase64 = signatureImage.replace(
+      /^data:image\/(?:png|jpeg|jpg);base64,/i,
+      ""
+    );
+
+    if (!signatureBase64) {
+      throw new Error("署名画像がありません");
+    }
+
+    var now = new Date();
+    var timezone = Session.getScriptTimeZone() || "Asia/Tokyo";
+    var monthName = Utilities.formatDate(now, timezone, "yyyy-MM");
+    var timestamp = Utilities.formatDate(now, timezone, "yyyyMMdd_HHmmss");
+
+    var rootFolder = getOrCreateGiftcardFolder_(
+      DriveApp.getRootFolder(),
+      "ギフトカード発行記録"
+    );
+
+    var monthFolder = getOrCreateGiftcardFolder_(
+      rootFolder,
+      monthName
+    );
+
+    var firstSerial = serials[0];
+    var folderLabel = firstSerial;
+
+    if (serials.length > 1) {
+      folderLabel += "_ほか" + (serials.length - 1) + "枚";
+    }
+
+    var issueFolder = monthFolder.createFolder(
+      folderLabel + "_" + timestamp
+    );
+
+    var signatureBytes = Utilities.base64Decode(signatureBase64);
+    var signatureBlob = Utilities.newBlob(
+      signatureBytes,
+      "image/png",
+      "署名.png"
+    );
+
+    var signatureFile = issueFolder.createFile(signatureBlob);
+
+    var record = {
+      savedAt: Utilities.formatDate(
+        now,
+        timezone,
+        "yyyy/MM/dd HH:mm:ss"
+      ),
+      serials: serials,
+      phone: String(data.phone || ""),
+      staff: String(data.staff || ""),
+      issueDate: String(data.issueDate || ""),
+      expireDate: String(data.expireDate || ""),
+      requests: Array.isArray(data.requests) ? data.requests : [],
+      envelopeCount: Number(data.envelopeCount || 0),
+      cardPrice: Number(data.cardPrice || 0),
+      issueFee: Number(data.issueFee || 0),
+      envelopeFee: Number(data.envelopeFee || 0),
+      totalPrice: Number(data.totalPrice || 0),
+      signatureAt: String(data.signatureAt || ""),
+      signatureFileId: signatureFile.getId(),
+      signatureFileUrl: signatureFile.getUrl()
+    };
+
+    var jsonBlob = Utilities.newBlob(
+      JSON.stringify(record, null, 2),
+      "application/json",
+      "発行データ.json"
+    );
+
+    var jsonFile = issueFolder.createFile(jsonBlob);
+
+    var html = buildGiftcardIssueRecordHtml_(record, signatureImage);
+
+    var htmlBlob = Utilities.newBlob(
+      html,
+      "text/html",
+      "発行記録.html"
+    );
+
+    var htmlFile = issueFolder.createFile(htmlBlob);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        ok: true,
+        folderName: issueFolder.getName(),
+        folderId: issueFolder.getId(),
+        folderUrl: issueFolder.getUrl(),
+        signatureUrl: signatureFile.getUrl(),
+        jsonUrl: jsonFile.getUrl(),
+        htmlUrl: htmlFile.getUrl()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        ok: false,
+        error: String(
+          error && error.message
+            ? error.message
+            : error
+        )
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+
+/**
+ * 指定した親フォルダ内にフォルダを取得または作成する
+ */
+function getOrCreateGiftcardFolder_(parentFolder, folderName) {
+  var folders = parentFolder.getFoldersByName(folderName);
+
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+
+  return parentFolder.createFolder(folderName);
+}
+
+
+/**
+ * 発行記録確認用HTMLを作成する
+ */
+function buildGiftcardIssueRecordHtml_(record, signatureImage) {
+  var requestsHtml = (record.requests || []).map(function(item) {
+    return (
+      "<tr>" +
+        "<td>Design " +
+          escapeGiftcardHtml_(
+            String(item.design || "").padStart(2, "0")
+          ) +
+        "</td>" +
+        "<td>" +
+          escapeGiftcardHtml_(String(item.count || 0)) +
+          "枚</td>" +
+      "</tr>"
+    );
+  }).join("");
+
+  var serialHtml = (record.serials || []).map(function(serial) {
+    return "<span class=\"serial\">" +
+      escapeGiftcardHtml_(serial) +
+      "</span>";
+  }).join("");
+
+  return [
+    "<!DOCTYPE html>",
+    "<html lang=\"ja\">",
+    "<head>",
+    "<meta charset=\"UTF-8\">",
+    "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">",
+    "<title>ギフトカード発行記録</title>",
+    "<style>",
+    "body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif;background:#f5f2eb;color:#222;margin:0;padding:30px}",
+    ".sheet{max-width:760px;margin:auto;background:#fff;padding:36px;border-radius:18px;box-shadow:0 10px 40px rgba(0,0,0,.1)}",
+    "h1{margin-top:0;color:#9b773c}",
+    "h2{font-size:17px;margin-top:28px;border-bottom:1px solid #ddd;padding-bottom:8px}",
+    "table{width:100%;border-collapse:collapse}",
+    "td,th{border-bottom:1px solid #eee;padding:10px;text-align:left}",
+    ".serial{display:inline-block;margin:4px;padding:7px 12px;border:1px solid #b8975a;border-radius:999px;color:#8a642c}",
+    ".signature{max-width:100%;height:auto;border:1px solid #ccc;border-radius:10px;background:#fff}",
+    ".meta{line-height:1.9}",
+    "</style>",
+    "</head>",
+    "<body>",
+    "<div class=\"sheet\">",
+    "<h1>TOTONOI+ ギフトカード発行記録</h1>",
+    "<div class=\"meta\">",
+    "<strong>保存日時：</strong>" +
+      escapeGiftcardHtml_(record.savedAt) + "<br>",
+    "<strong>発行日：</strong>" +
+      escapeGiftcardHtml_(record.issueDate) + "<br>",
+    "<strong>有効期限：</strong>" +
+      escapeGiftcardHtml_(record.expireDate) + "<br>",
+    "<strong>電話番号：</strong>" +
+      escapeGiftcardHtml_(record.phone) + "<br>",
+    "<strong>発行担当：</strong>" +
+      escapeGiftcardHtml_(record.staff),
+    "</div>",
+    "<h2>シリアル番号</h2>",
+    "<div>" + serialHtml + "</div>",
+    "<h2>発行内容</h2>",
+    "<table>",
+    "<thead><tr><th>デザイン</th><th>枚数</th></tr></thead>",
+    "<tbody>" + requestsHtml + "</tbody>",
+    "</table>",
+    "<h2>金額</h2>",
+    "<div class=\"meta\">",
+    "カード代：" +
+      Number(record.cardPrice || 0).toLocaleString("ja-JP") +
+      "円<br>",
+    "発行手数料：" +
+      Number(record.issueFee || 0).toLocaleString("ja-JP") +
+      "円<br>",
+    "追加封筒：" +
+      Number(record.envelopeFee || 0).toLocaleString("ja-JP") +
+      "円<br>",
+    "<strong>合計：" +
+      Number(record.totalPrice || 0).toLocaleString("ja-JP") +
+      "円</strong>",
+    "</div>",
+    "<h2>お客様署名</h2>",
+    "<img class=\"signature\" src=\"" +
+      escapeGiftcardHtml_(signatureImage) +
+      "\" alt=\"お客様署名\">",
+    "</div>",
+    "</body>",
+    "</html>"
+  ].join("");
+}
+
+
+/**
+ * HTMLへ安全に文字列を埋め込む
+ */
+function escapeGiftcardHtml_(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }

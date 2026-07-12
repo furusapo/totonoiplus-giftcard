@@ -497,6 +497,34 @@ let lastChangedDesign=null;
 let hasInlineSignature=false;
 
 function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
+
+function getInlineSignatureImage(){
+  const canvas=document.getElementById('inlineSignatureCanvas');
+  return canvas ? canvas.toDataURL('image/png') : '';
+}
+
+async function saveIssueRecordToDrive(record){
+  try{
+    await fetch(GAS_URL,{
+      method:'POST',
+      mode:'no-cors',
+      headers:{
+        'Content-Type':'text/plain;charset=utf-8'
+      },
+      body:JSON.stringify({
+        action:'saveIssueRecord',
+        ...record
+      })
+    });
+
+    console.log('Google Driveへの発行記録保存を送信しました');
+    return true;
+
+  }catch(error){
+    console.error('Google Drive保存エラー',error);
+    return false;
+  }
+}
 function getExpireDateText(){
   const d=new Date();
   d.setFullYear(d.getFullYear()+1);
@@ -653,6 +681,13 @@ document.getElementById('toConfirmBtn').onclick=()=>{
 document.getElementById('envelopeCount').onchange=update;
 
 document.getElementById('submitBtn').onclick=()=>{
+  const signatureImage=getInlineSignatureImage();
+
+  if(!signatureImage){
+    alert('署名画像を取得できませんでした');
+    return;
+  }
+
   const submitBtn=document.getElementById('submitBtn');
   if(submitBtn){submitBtn.classList.add('loading');submitBtn.textContent='発行中...';}
   
@@ -668,14 +703,46 @@ document.getElementById('submitBtn').onclick=()=>{
     issueDate:today.toLocaleDateString('ja-JP'),
     expireDate:ex.toLocaleDateString('ja-JP'),
     requests:getEntries(),
-    signatureImage:'',
     signatureAt:new Date().toISOString()
   };
 
   const callbackName='giftCallback_'+Date.now();
-  window[callbackName]=res=>{
+  window[callbackName]=async res=>{
     delete window[callbackName];
     script.remove();
+
+    if(!res || res.result!=='success' || !Array.isArray(res.serials)){
+      btn.classList.remove('loading');
+      btn.textContent='カードを発行する';
+      alert(res&&res.message?res.message:'発行処理に失敗しました');
+      return;
+    }
+
+    const entries=getEntries();
+    const totalCount=entries.reduce((sum,item)=>sum+item.count,0);
+    const cardPrice=totalCount*CARD_PRICE;
+    const issueFee=totalCount>0?500:0;
+    const envelopeCount=Number(
+      document.getElementById('envelopeCount').value||0
+    );
+    const envelopeFee=envelopeCount*ENVELOPE_PRICE;
+
+    await saveIssueRecordToDrive({
+      serials:res.serials,
+      phone:payload.phone,
+      staff:payload.staff,
+      issueDate:payload.issueDate,
+      expireDate:payload.expireDate,
+      requests:payload.requests,
+      signatureImage:signatureImage,
+      signatureAt:payload.signatureAt,
+      envelopeCount:envelopeCount,
+      cardPrice:cardPrice,
+      issueFee:issueFee,
+      envelopeFee:envelopeFee,
+      totalPrice:cardPrice+issueFee+envelopeFee
+    });
+
     btn.classList.remove('loading');
     btn.textContent='カードを発行する';
     goStep(4);
