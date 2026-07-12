@@ -246,6 +246,33 @@
 }
 </style>
 
+
+<style id="gift-line-image-fix">
+.visual{
+  width:100% !important;
+  margin-bottom:28px !important;
+  overflow:hidden !important;
+  border-radius:16px !important;
+  background:none !important;
+  box-shadow:0 12px 30px rgba(77,60,41,.16) !important;
+}
+
+.visual::before,
+.visual::after,
+.gift-label{
+  display:none !important;
+  content:none !important;
+}
+
+.visual img{
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+  aspect-ratio:auto !important;
+  object-fit:contain !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -257,7 +284,7 @@
     <h1>ギフトカードのご案内</h1>
 
     <section class="visual">
-      <img src="gift.jpeg?v=20260712" alt="リボンをかけたギフトボックス">
+      <img src="gift-line.jpg?v=20260712" alt="TOTONOI+ ギフトカード販売開始">
     </section>
 
     <p class="copy">
