@@ -442,12 +442,12 @@ body.isCompleteStep .dots{
                 <label>追加封筒（発行時1枚無料）</label>
                 <select id="envelopeCount">
                   <option value="0">追加なし</option>
-                  <option value="1">1枚 (+380円)</option>
-                  <option value="2">2枚 (+760円)</option>
-                  <option value="3">3枚 (+1,140円)</option>
-                  <option value="4">4枚 (+1,520円)</option>
-                  <option value="5">5枚 (+1,900円)</option>
-                  <option value="10">10枚 (+3,800円)</option>
+                  <option value="1">1枚 (+400円)</option>
+                  <option value="2">2枚 (+800円)</option>
+                  <option value="3">3枚 (+1,200円)</option>
+                  <option value="4">4枚 (+1,600円)</option>
+                  <option value="5">5枚 (+2,000円)</option>
+                  <option value="10">10枚 (+4,000円)</option>
                 </select>
               </div>
             </div>
@@ -482,7 +482,8 @@ body.isCompleteStep .dots{
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbxrRcaJSBI8QN1KWBogbD0MK222FtVBDvlmSnRN2nsEaSwrOyv7xqxtosK_Yk6nHnx8/exec';
 const CARD_PRICE=5000;
-const ENVELOPE_PRICE=380;
+const ADDITIONAL_ENVELOPE_PRICE=400;
+const ISSUE_FEE=550;
 const products=[
   {design:1,name:'Design 01',range:'TG-0001〜0050',image:'images/giftcard1.png'},
   {design:2,name:'Design 02',range:'TG-0051〜0100',image:'images/giftcard2.png'},
@@ -497,6 +498,9 @@ let lastChangedDesign=null;
 let hasInlineSignature=false;
 
 function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
+function calculateEnvelopeFee(count){
+  return (Number(count)||0)*ADDITIONAL_ENVELOPE_PRICE;
+}
 
 function getInlineSignatureImage(){
   const canvas=document.getElementById('inlineSignatureCanvas');
@@ -650,8 +654,8 @@ function update(){
   document.getElementById('dashStock3').textContent=Math.max(0,stockBase[3]-(cart[3]||0))+'枚';
   document.getElementById('cartList').innerHTML=entries.length?entries.map(x=>`<div class="cartItem"><div><strong>Design ${String(x.design).padStart(2,'0')}</strong><br><span>${x.count}枚</span></div><div>${yen(x.count*CARD_PRICE)}</div></div>`).join(''):'<div class="cartItem"><span>まだ選択されていません</span><div>¥0</div></div>';
   const cardTotal=totalCount*CARD_PRICE;
-  const issueFee=totalCount>0?500:0;
-  const envelopeFee=Number(document.getElementById('envelopeCount').value||0)*ENVELOPE_PRICE;
+  const issueFee=totalCount>0?ISSUE_FEE:0;
+  const envelopeFee=calculateEnvelopeFee(document.getElementById('envelopeCount').value);
   document.getElementById('priceBreakdown').innerHTML=`カード代：${yen(cardTotal)}<br>発行手数料：${yen(issueFee)}<br>追加封筒：${yen(envelopeFee)}`;
   document.getElementById('grandTotal').textContent=yen(cardTotal+issueFee+envelopeFee);
   updateSerialPreview();
@@ -721,11 +725,11 @@ document.getElementById('submitBtn').onclick=()=>{
     const entries=getEntries();
     const totalCount=entries.reduce((sum,item)=>sum+item.count,0);
     const cardPrice=totalCount*CARD_PRICE;
-    const issueFee=totalCount>0?500:0;
+    const issueFee=totalCount>0?ISSUE_FEE:0;
     const envelopeCount=Number(
       document.getElementById('envelopeCount').value||0
     );
-    const envelopeFee=envelopeCount*ENVELOPE_PRICE;
+    const envelopeFee=calculateEnvelopeFee(envelopeCount);
 
     await saveIssueRecordToDrive({
       serials:res.serials,
