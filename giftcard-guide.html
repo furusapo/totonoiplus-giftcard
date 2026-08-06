@@ -17,10 +17,14 @@
     .hero-content { margin-top:76px; }.hero h1 { font-weight:400; font-size:clamp(42px,5.25vw,56px); line-height:1.58; letter-spacing:.115em; margin:0; }.gold-rule { width:285px; aspect-ratio:5/1; margin:12px 0 58px 18px; background:url('assets/gold-rule.png') center/contain no-repeat; }
     .hero p { margin:0 0 0 12px; font-size:20px; line-height:1.95; letter-spacing:.075em; }
     .details { min-height:430px; padding:63px max(4vw,30px) 48px; background:url('assets/giftcard-paper.png') center/cover; }.details-top { max-width:940px; margin:0 auto 36px; display:grid; grid-template-columns:minmax(0,1fr) 170px; align-items:center; gap:32px; }.benefits { margin:0; display:grid; grid-template-columns:repeat(3,1fr); text-align:center; gap:25px; }.benefit { font-size:14px; line-height:2; letter-spacing:.1em; }.mini-rule { width:185px; aspect-ratio:5/1; margin:10px auto 0; background:url('assets/gold-rule.png') center/contain no-repeat; }
-    .store-note { width:156px; aspect-ratio:1; display:block; justify-self:end; object-fit:contain; }
+    .purchase-note { justify-self:end; width:190px; display:grid; grid-template-columns:2px 1fr; gap:15px; align-items:stretch; padding:4px 0; }
+    .purchase-note__line { background:var(--gold); }
+    .purchase-note__eyebrow { margin:0 0 9px; color:#8f753f; font-family:"Cormorant Garamond", serif; font-size:11px; letter-spacing:.15em; line-height:1.3; }
+    .purchase-note__title { margin:0 0 8px; font-size:13px; font-weight:500; line-height:1.75; letter-spacing:.055em; }
+    .purchase-note__text { margin:0; color:#6f6254; font-size:10px; line-height:1.8; letter-spacing:.025em; }
     .check-card { max-width:840px; min-height:160px; margin:0 auto; padding:28px; display:grid; place-items:center; color:#fff; border-radius:6px; background:linear-gradient(120deg,rgba(7,6,5,.22),rgba(23,16,10,.18)),url('assets/giftcard-black.png') center/cover; box-shadow:0 8px 18px rgba(67,43,24,.2); }.check-card p { margin:0 0 17px; letter-spacing:.12em; }.check-button { width:min(448px,80vw); padding:12px 20px; border:1px solid rgba(255,255,255,.86); border-radius:6px; color:#fff; background:rgba(0,0,0,.14); text-align:center; text-decoration:none; font-size:16px; letter-spacing:.12em; }.check-button small { display:block; margin-top:4px; font-size:10px; }
     .uses { display:grid; grid-template-columns:repeat(3,1fr); }.use { height:310px; display:grid; place-items:center; text-align:center; color:#fff; position:relative; isolation:isolate; background-position:center; background-size:cover; }.use::before { content:""; position:absolute; inset:0; z-index:-1; background:rgba(19,13,8,.36); }.use:nth-child(1){background-image:url('assets/sauna.png')}.use:nth-child(2){background-image:url('assets/coworking.png')}.use:nth-child(3){background-image:url('assets/drink.png')}.use h2 { font-weight:400; font-size:20px; letter-spacing:.16em; margin:0 0 9px; }.use p { margin:0; font-size:11px; line-height:1.8; letter-spacing:.08em; }
-    @media (max-width:650px){.hero{min-height:560px;aspect-ratio:auto;padding:42px 28px}.brand{font-size:27px}.hero-content{margin-top:70px}.hero h1{font-size:36px;line-height:1.55}.gold-rule{margin:18px 0 54px;width:200px}.hero p{margin-left:0;font-size:15px}.details{padding:48px 22px 36px}.details-top{grid-template-columns:1fr;gap:32px;margin-bottom:36px}.benefits{gap:19px}.benefit{font-size:11px}.mini-rule{width:100%}.store-note{justify-self:center;width:150px}.check-card{padding:26px 14px;min-height:154px}.check-button{font-size:14px}.uses{grid-template-columns:1fr}.use{height:220px}}
+    @media (max-width:650px){.hero{min-height:560px;aspect-ratio:auto;padding:42px 28px}.brand{font-size:27px}.hero-content{margin-top:70px}.hero h1{font-size:36px;line-height:1.55}.gold-rule{margin:18px 0 54px;width:200px}.hero p{margin-left:0;font-size:15px}.details{padding:48px 22px 36px}.details-top{grid-template-columns:1fr;gap:32px;margin-bottom:36px}.benefits{gap:8px}.benefit{font-size:clamp(8px,2.55vw,11px);line-height:1.9;letter-spacing:.04em}.benefit-line{display:block;white-space:nowrap}.mini-rule{width:100%;max-width:110px}.purchase-note{justify-self:center;width:min(300px,92%);grid-template-columns:2px 1fr;gap:16px}.purchase-note__eyebrow{font-size:10px}.purchase-note__title{font-size:13px}.purchase-note__text{font-size:10px}.check-card{padding:26px 14px;min-height:154px}.check-button{font-size:14px}.uses{grid-template-columns:1fr}.use{height:220px}}
   </style>
 </head>
 <body>
@@ -40,7 +44,14 @@
           <div class="benefit">有効期限内で<br>ご利用いただけます<div class="mini-rule"></div></div>
           <div class="benefit">TOTONOI+で<br>ご利用いただけます<div class="mini-rule"></div></div>
         </div>
-        <img class="store-note" src="assets/store-note.png" alt="店頭でのご購入が基本です。ご希望の方には、ご来店不要での販売も承ります。">
+        <aside class="purchase-note" aria-label="購入方法">
+          <span class="purchase-note__line" aria-hidden="true"></span>
+          <div>
+            <p class="purchase-note__eyebrow">PURCHASE INFORMATION</p>
+            <p class="purchase-note__title">店頭でのご購入が基本です</p>
+            <p class="purchase-note__text">ご希望の方には、<br>ご来店不要での販売も承ります。</p>
+          </div>
+        </aside>
       </div>
       <div class="check-card"><p>ギフトカードをお持ちの方</p><a class="check-button" href="https://furusapo.github.io/totonoiplus-giftcard/giftcard-check.html">有効期限を確認する<small>有効期限はこちらからご確認いただけます</small></a></div>
     </section>
