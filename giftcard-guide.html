@@ -25,7 +25,97 @@
     .check-card { max-width:840px; min-height:160px; margin:0 auto; padding:28px; display:grid; place-items:center; color:#fff; border-radius:6px; background:linear-gradient(120deg,rgba(7,6,5,.22),rgba(23,16,10,.18)),url('assets/giftcard-black.png') center/cover; box-shadow:0 8px 18px rgba(67,43,24,.2); }.check-card p { margin:0 0 17px; letter-spacing:.12em; }.check-button { width:min(448px,80vw); padding:12px 20px; border:1px solid rgba(255,255,255,.86); border-radius:6px; color:#fff; background:rgba(0,0,0,.14); text-align:center; text-decoration:none; font-size:16px; letter-spacing:.12em; }.check-button small { display:block; margin-top:4px; font-size:10px; }
     .uses { display:grid; grid-template-columns:repeat(3,1fr); }.use { height:310px; display:grid; place-items:center; text-align:center; color:#fff; position:relative; isolation:isolate; background-position:center; background-size:cover; }.use::before { content:""; position:absolute; inset:0; z-index:-1; background:rgba(19,13,8,.36); }.use:nth-child(1){background-image:url('assets/sauna.png')}.use:nth-child(2){background-image:url('assets/coworking.png')}.use:nth-child(3){background-image:url('assets/drink.png')}.use h2 { font-weight:400; font-size:20px; letter-spacing:.16em; margin:0 0 9px; }.use p { margin:0; font-size:11px; line-height:1.8; letter-spacing:.08em; }
     @media (max-width:650px){.hero{min-height:560px;aspect-ratio:auto;padding:42px 28px}.brand{font-size:27px}.hero-content{margin-top:70px}.hero h1{font-size:36px;line-height:1.55}.gold-rule{margin:18px 0 54px;width:200px}.hero p{margin-left:0;font-size:15px}.details{padding:48px 22px 36px}.details-top{grid-template-columns:1fr;gap:32px;margin-bottom:36px}.benefits{gap:8px}.benefit{font-size:clamp(8px,2.55vw,11px);line-height:1.9;letter-spacing:.04em}.benefit-line{display:block;white-space:nowrap}.mini-rule{width:100%;max-width:110px}.purchase-note{justify-self:center;width:min(300px,92%);grid-template-columns:2px 1fr;gap:16px}.purchase-note__eyebrow{font-size:10px}.purchase-note__title{font-size:13px}.purchase-note__text{font-size:10px}.check-card{padding:26px 14px;min-height:154px}.check-button{font-size:14px}.uses{grid-template-columns:1fr}.use{height:220px}}
-  </style>
+  
+.gift-check-image{
+  display:block;
+  width:min(900px,92vw);
+  margin:0 auto;
+  text-decoration:none;
+}
+.gift-check-image img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+@media(max-width:650px){
+  .gift-check-image{
+    width:min(420px,94vw);
+    margin:0 auto 54px;
+  }
+}
+
+
+/* ===== Smartphone layout ===== */
+@media (max-width:650px){
+  body{overflow-x:hidden;}
+
+  .hero{
+    min-height:0;
+    aspect-ratio:750/1334;
+    padding:34px 24px 28px;
+    color:#fff;
+    background:
+      linear-gradient(180deg,rgba(12,8,5,.10) 0%,rgba(12,8,5,.04) 55%,rgba(12,8,5,.16) 100%),
+      url('assets/giftcard-hero-sp.png') center center / cover no-repeat;
+  }
+  .brand{font-size:26px;}
+  .hero-content{margin-top:72px;}
+  .hero h1{font-size:clamp(30px,9vw,40px);line-height:1.55;letter-spacing:.08em;}
+  .gold-rule{width:170px;margin:12px 0 34px 0;}
+  .hero p{margin:0;font-size:13px;line-height:1.9;letter-spacing:.04em;}
+
+  .details{padding:34px 16px 34px;}
+  .details-top{grid-template-columns:1fr;gap:26px;margin-bottom:28px;}
+  .benefits{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .benefit{font-size:clamp(9px,2.8vw,11px);line-height:1.8;letter-spacing:.02em;}
+  .mini-rule{width:100%;max-width:95px;}
+
+  .purchase-note{
+    justify-self:center;
+    width:min(340px,94vw);
+    grid-template-columns:2px 1fr;
+    gap:14px;
+  }
+  .purchase-note__eyebrow{font-size:9px;}
+  .purchase-note__title{font-size:13px;}
+  .purchase-note__text{font-size:10px;}
+
+  .gift-check-image{
+    display:block;
+    width:min(360px,92vw);
+    margin:0 auto 44px;
+    border-radius:0;
+    overflow:hidden;
+  }
+  .gift-check-image img{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+
+  .uses{grid-template-columns:1fr;}
+  .use{height:220px;}
+}
+
+
+.benefit-icon{
+  display:block;
+  width:38px;
+  height:38px;
+  object-fit:contain;
+  margin:0 auto 18px;
+}
+
+@media(max-width:650px){
+  .benefit-icon{
+    width:34px;
+    height:34px;
+    margin:0 auto 14px;
+  }
+}
+
+</style>
 </head>
 <body>
   <header class="hero">
@@ -40,9 +130,9 @@
     <section class="details">
       <div class="details-top">
         <div class="benefits">
-          <div class="benefit">用途に合わせて<br>ギフトとして贈れます<div class="mini-rule"></div></div>
-          <div class="benefit">有効期限内で<br>ご利用いただけます<div class="mini-rule"></div></div>
-          <div class="benefit">TOTONOI+で<br>ご利用いただけます<div class="mini-rule"></div></div>
+          <div class="benefit"><img class="benefit-icon" src="images/icon_gift.png" alt="">用途に合わせて<br>ギフトとして贈れます<div class="mini-rule"></div></div>
+          <div class="benefit"><img class="benefit-icon" src="images/icon_cal.png" alt="">有効期限内で<br>ご利用いただけます<div class="mini-rule"></div></div>
+          <div class="benefit"><img class="benefit-icon" src="images/icon_shop.png" alt="">TOTONOI+で<br>ご利用いただけます<div class="mini-rule"></div></div>
         </div>
         <aside class="purchase-note" aria-label="購入方法">
           <span class="purchase-note__line" aria-hidden="true"></span>
@@ -53,7 +143,9 @@
           </div>
         </aside>
       </div>
-      <div class="check-card"><p>ギフトカードをお持ちの方</p><a class="check-button" href="https://furusapo.github.io/totonoiplus-giftcard/giftcard-check.html">有効期限を確認する<small>有効期限はこちらからご確認いただけます</small></a></div>
+      <a class="gift-check-image" href="giftcard-check.html">
+  <img src="images/gift_check_1.png" alt="有効期限を確認する">
+</a>
     </section>
     <section class="uses">
       <article class="use"><div><h2>サウナで</h2><p>心と身体をととのえ<br>自分らしくいられる時間を</p></div></article>
@@ -63,3 +155,43 @@
   </main>
 </body>
 </html>
+
+<style>
+/* 有効期限確認の丸画像を小さく＋周囲の余白を圧縮 */
+.gift-check-image{
+  width:min(600px,70vw) !important;
+  margin:10px auto 15px !important;
+}
+
+.gift-check-image img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* セクション全体の余白も縮める */
+.details{
+  padding-top:30px !important;
+  padding-bottom:25px !important;
+}
+
+.details-top{
+  margin-bottom:20px !important;
+}
+
+@media(max-width:650px){
+  .gift-check-image{
+    width:min(280px,72vw) !important;
+    margin:5px auto 18px !important;
+  }
+
+  .details{
+    padding-top:20px !important;
+    padding-bottom:20px !important;
+  }
+
+  .details-top{
+    margin-bottom:15px !important;
+  }
+}
+</style>
