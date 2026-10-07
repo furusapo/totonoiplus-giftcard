@@ -419,6 +419,11 @@ body.isCompleteStep .dots{
             <span>ギフトカードを紛失・盗難・破損された場合、再発行はできません。内容を確認しました。</span>
           </label>
 
+          <label class="agreeBox">
+            <input id="refundAgree" type="checkbox">
+            <span>ギフトチケット発行後は、お客様都合によるキャンセル・返金はできません。内容を確認しました。</span>
+          </label>
+
           <div class="inlineSignatureBox">
             <label>お客様署名 必須</label>
             <div class="inlineSignatureCanvasWrap">
@@ -613,7 +618,7 @@ function goStep(n){
   renderDots();
   if(step===2)setTimeout(setupInlineSignatureCanvas,100);
   
-  if(step===4)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
+  if(step===4)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('reissueAgree').checked=false;document.getElementById('refundAgree').checked=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
 }
 
 function renderProducts(){
@@ -682,6 +687,10 @@ document.getElementById('toConfirmBtn').onclick=()=>{
   }
   if(!document.getElementById('reissueAgree').checked){
     alert('再発行不可の確認にチェックを入れてください');
+    return;
+  }
+  if(!document.getElementById('refundAgree').checked){
+    alert('キャンセル・返金不可の確認にチェックを入れてください');
     return;
   }
   if(!hasInlineSignature){
