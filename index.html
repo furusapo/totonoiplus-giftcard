@@ -452,24 +452,79 @@ body.isCompleteStep .dots{
             <div class="cartList" id="cartList"></div>
             <div class="envelopeBox">
               <img src="images/envelope.png" alt="追加封筒">
-              <div class="field" style="margin-bottom:0">
-                <label>追加封筒（発行時1枚無料）</label>
-                <select id="envelopeCount">
-                  <option value="0">追加なし</option>
-                  <option value="1">1枚 (+400円)</option>
-                  <option value="2">2枚 (+800円)</option>
-                  <option value="3">3枚 (+1,200円)</option>
-                  <option value="4">4枚 (+1,600円)</option>
-                  <option value="5">5枚 (+2,000円)</option>
-                  <option value="10">10枚 (+4,000円)</option>
-                </select>
+              <div style="display:grid;gap:14px;width:100%">
+
+                <div class="field" style="margin-bottom:0">
+                  <label>
+                    追加封筒セット（封筒＋中の台紙込）
+                    <strong style="color:#d4b47a">1セット400円</strong>
+                  </label>
+                  <select id="envelopeSetCount">
+                                        <option value="0">追加なし</option>
+                    <option value="1">1セット (+400円)</option>
+                    <option value="2">2セット (+800円)</option>
+                    <option value="3">3セット (+1,200円)</option>
+                    <option value="4">4セット (+1,600円)</option>
+                    <option value="5">5セット (+2,000円)</option>
+                    <option value="6">6セット (+2,400円)</option>
+                    <option value="7">7セット (+2,800円)</option>
+                    <option value="8">8セット (+3,200円)</option>
+                    <option value="9">9セット (+3,600円)</option>
+                    <option value="10">10セット (+4,000円)</option>
+                    <option value="11">11セット (+4,400円)</option>
+                    <option value="12">12セット (+4,800円)</option>
+                    <option value="13">13セット (+5,200円)</option>
+                    <option value="14">14セット (+5,600円)</option>
+                    <option value="15">15セット (+6,000円)</option>
+                    <option value="16">16セット (+6,400円)</option>
+                    <option value="17">17セット (+6,800円)</option>
+                    <option value="18">18セット (+7,200円)</option>
+                    <option value="19">19セット (+7,600円)</option>
+                    <option value="20">20セット (+8,000円)</option>
+                  </select>
+                </div>
+
+                <div class="field" style="margin-bottom:0">
+                  <label>
+                    封筒のみ追加
+                    <strong style="color:#d4b47a">1枚300円</strong>
+                  </label>
+                  <select id="envelopeOnlyCount">
+                                        <option value="0">追加なし</option>
+                    <option value="1">1枚 (+300円)</option>
+                    <option value="2">2枚 (+600円)</option>
+                    <option value="3">3枚 (+900円)</option>
+                    <option value="4">4枚 (+1,200円)</option>
+                    <option value="5">5枚 (+1,500円)</option>
+                    <option value="6">6枚 (+1,800円)</option>
+                    <option value="7">7枚 (+2,100円)</option>
+                    <option value="8">8枚 (+2,400円)</option>
+                    <option value="9">9枚 (+2,700円)</option>
+                    <option value="10">10枚 (+3,000円)</option>
+                    <option value="11">11枚 (+3,300円)</option>
+                    <option value="12">12枚 (+3,600円)</option>
+                    <option value="13">13枚 (+3,900円)</option>
+                    <option value="14">14枚 (+4,200円)</option>
+                    <option value="15">15枚 (+4,500円)</option>
+                    <option value="16">16枚 (+4,800円)</option>
+                    <option value="17">17枚 (+5,100円)</option>
+                    <option value="18">18枚 (+5,400円)</option>
+                    <option value="19">19枚 (+5,700円)</option>
+                    <option value="20">20枚 (+6,000円)</option>
+                  </select>
+                </div>
+
+                <div style="color:#d8c8aa;font-size:13px;line-height:1.7">
+                  ※発行時は封筒セット1セット無料です。
+                </div>
+
               </div>
             </div>
           </div>
           <div class="confirmBox">
             <h2>発行予定シリアル番号</h2>
             <div class="serialList" id="serialPreviewList"><span class="serialItem">未選択</span></div>
-            <div class="breakdown" id="priceBreakdown">カード代：¥0<br>発行手数料：¥0<br>追加封筒：¥0</div>
+            <div class="breakdown" id="priceBreakdown">カード代：¥0<br>発行手数料：¥0<br>追加封筒セット：¥0<br>封筒のみ：¥0</div>
             <div class="total">
               <h2>合計</h2>
               <div class="totalPrice" id="grandTotal">¥0</div>
@@ -496,7 +551,8 @@ body.isCompleteStep .dots{
 <script>
 const GAS_URL='https://script.google.com/macros/s/AKfycbxrRcaJSBI8QN1KWBogbD0MK222FtVBDvlmSnRN2nsEaSwrOyv7xqxtosK_Yk6nHnx8/exec';
 const CARD_PRICE=5000;
-const ADDITIONAL_ENVELOPE_PRICE=400;
+const ENVELOPE_SET_PRICE=400;
+const ENVELOPE_ONLY_PRICE=300;
 const ISSUE_FEE=550;
 const products=[
   {design:1,name:'Design 01',range:'TG-0001〜0050',image:'images/giftcard1.png'},
@@ -512,8 +568,12 @@ let lastChangedDesign=null;
 let hasInlineSignature=false;
 
 function yen(n){return '¥'+Number(n).toLocaleString('ja-JP')}
-function calculateEnvelopeFee(count){
-  return (Number(count)||0)*ADDITIONAL_ENVELOPE_PRICE;
+function calculateEnvelopeSetFee(count){
+  return (Number(count)||0)*ENVELOPE_SET_PRICE;
+}
+
+function calculateEnvelopeOnlyFee(count){
+  return (Number(count)||0)*ENVELOPE_ONLY_PRICE;
 }
 
 function getInlineSignatureImage(){
@@ -618,7 +678,7 @@ function goStep(n){
   renderDots();
   if(step===2)setTimeout(setupInlineSignatureCanvas,100);
   
-  if(step===4)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('reissueAgree').checked=false;document.getElementById('refundAgree').checked=false;document.getElementById('envelopeCount').value='0';showInitialCustomer();update();goStep(1)},2600);
+  if(step===4)setTimeout(()=>{cart={1:0,2:0,3:0};document.getElementById('phone').value='';document.getElementById('expiryAgree').checked=false;document.getElementById('reissueAgree').checked=false;document.getElementById('refundAgree').checked=false;document.getElementById('envelopeSetCount').value='0';document.getElementById('envelopeOnlyCount').value='0';showInitialCustomer();update();goStep(1)},2600);
 }
 
 function renderProducts(){
@@ -669,9 +729,21 @@ function update(){
   document.getElementById('cartList').innerHTML=entries.length?entries.map(x=>`<div class="cartItem"><div><strong>Design ${String(x.design).padStart(2,'0')}</strong><br><span>${x.count}枚</span></div><div>${yen(x.count*CARD_PRICE)}</div></div>`).join(''):'<div class="cartItem"><span>まだ選択されていません</span><div>¥0</div></div>';
   const cardTotal=totalCount*CARD_PRICE;
   const issueFee=totalCount>0?ISSUE_FEE:0;
-  const envelopeFee=calculateEnvelopeFee(document.getElementById('envelopeCount').value);
-  document.getElementById('priceBreakdown').innerHTML=`カード代：${yen(cardTotal)}<br>発行手数料：${yen(issueFee)}<br>追加封筒：${yen(envelopeFee)}`;
-  document.getElementById('grandTotal').textContent=yen(cardTotal+issueFee+envelopeFee);
+  const envelopeSetCount=Number(document.getElementById('envelopeSetCount').value||0);
+  const envelopeOnlyCount=Number(document.getElementById('envelopeOnlyCount').value||0);
+
+  const envelopeSetFee=calculateEnvelopeSetFee(envelopeSetCount);
+  const envelopeOnlyFee=calculateEnvelopeOnlyFee(envelopeOnlyCount);
+  const envelopeFee=envelopeSetFee+envelopeOnlyFee;
+
+  document.getElementById('priceBreakdown').innerHTML=
+    `カード代：${yen(cardTotal)}`+
+    `<br>発行手数料：${yen(issueFee)}`+
+    `<br>追加封筒セット：${yen(envelopeSetFee)}`+
+    `<br>封筒のみ：${yen(envelopeOnlyFee)}`;
+
+  document.getElementById('grandTotal').textContent=
+    yen(cardTotal+issueFee+envelopeFee);
   updateSerialPreview();
 }
 
@@ -700,7 +772,8 @@ document.getElementById('toConfirmBtn').onclick=()=>{
   update();
   goStep(3);
 };
-document.getElementById('envelopeCount').onchange=update;
+document.getElementById('envelopeSetCount').onchange=update;
+document.getElementById('envelopeOnlyCount').onchange=update;
 
 document.getElementById('submitBtn').onclick=()=>{
   const signatureImage=getInlineSignatureImage();
@@ -744,10 +817,18 @@ document.getElementById('submitBtn').onclick=()=>{
     const totalCount=entries.reduce((sum,item)=>sum+item.count,0);
     const cardPrice=totalCount*CARD_PRICE;
     const issueFee=totalCount>0?ISSUE_FEE:0;
-    const envelopeCount=Number(
-      document.getElementById('envelopeCount').value||0
+    const envelopeSetCount=Number(
+      document.getElementById('envelopeSetCount').value||0
     );
-    const envelopeFee=calculateEnvelopeFee(envelopeCount);
+
+    const envelopeOnlyCount=Number(
+      document.getElementById('envelopeOnlyCount').value||0
+    );
+
+    const envelopeSetFee=calculateEnvelopeSetFee(envelopeSetCount);
+    const envelopeOnlyFee=calculateEnvelopeOnlyFee(envelopeOnlyCount);
+    const envelopeFee=envelopeSetFee+envelopeOnlyFee;
+    const envelopeCount=envelopeSetCount+envelopeOnlyCount;
 
     await saveIssueRecordToDrive({
       serials:res.serials,
@@ -759,8 +840,12 @@ document.getElementById('submitBtn').onclick=()=>{
       signatureImage:signatureImage,
       signatureAt:payload.signatureAt,
       envelopeCount:envelopeCount,
+      envelopeSetCount:envelopeSetCount,
+      envelopeOnlyCount:envelopeOnlyCount,
       cardPrice:cardPrice,
       issueFee:issueFee,
+      envelopeSetFee:envelopeSetFee,
+      envelopeOnlyFee:envelopeOnlyFee,
       envelopeFee:envelopeFee,
       totalPrice:cardPrice+issueFee+envelopeFee
     });
