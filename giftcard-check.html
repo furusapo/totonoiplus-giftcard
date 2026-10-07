@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TOTONOI+｜ギフトチケット 有効期限確認</title>
-<meta name="description" content="お手元のTOTONOI+ギフトチケットの有効期限を確認できます。">
+  <title>TOTONOI+｜お客様用 ギフトチケット有効期限確認</title>
+<meta name="description" content="お客様用のTOTONOI+ギフトチケット有効期限確認ページです。">
 <meta property="og:site_name" content="TOTONOI+">
 <meta property="og:type" content="website">
-<meta property="og:title" content="TOTONOI+｜ギフトチケット 有効期限確認">
-<meta property="og:description" content="お手元のTOTONOI+ギフトチケットの有効期限を確認できます。">
+<meta property="og:title" content="TOTONOI+｜お客様用 ギフトチケット有効期限確認">
+<meta property="og:description" content="お客様用のTOTONOI+ギフトチケット有効期限確認ページです。">
 <meta property="og:url" content="https://furusapo.github.io/totonoiplus-giftcard/giftcard-check.html">
 
 
@@ -16,15 +16,14 @@
 *{box-sizing:border-box}
 
 :root{
-  --green:#b98a49;
-  --green2:#8a6432;
-  --gold:#d7b174;
-  --gold2:#ead0a2;
-  --cream:#f7f3eb;
-  --paper:#fffdf9;
-  --ink:#26302c;
-  --muted:#756f66;
-  --line:#e4d9c8;
+  --black:#080808;
+  --black2:#17130e;
+  --black3:#221c14;
+  --gold:#d4b47a;
+  --gold2:#b58b4f;
+  --cream:#f7f0e4;
+  --muted:#c8bca8;
+  --line:rgba(212,180,122,.32);
 }
 
 html,body{
@@ -34,10 +33,10 @@ html,body{
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN",Arial,sans-serif;
-  color:var(--ink);
+  color:var(--cream);
   background:
-    radial-gradient(circle at 15% 10%,rgba(184,149,93,.10),transparent 34%),
-    linear-gradient(145deg,#fbf9f5 0%,#efe8dc 100%);
+    radial-gradient(circle at 50% 0%,rgba(212,180,122,.10),transparent 35%),
+    linear-gradient(145deg,#050505 0%,#17130e 100%);
 }
 
 .wrap{
@@ -51,13 +50,16 @@ body{
 .customerCard{
   width:100%;
   max-width:500px;
-  background:rgba(255,253,249,.97);
-  border:1px solid rgba(184,149,93,.34);
-  border-radius:30px;
-  padding:34px 32px 30px;
-  box-shadow:0 24px 70px rgba(69,53,33,.13);
   position:relative;
   overflow:hidden;
+  padding:34px 32px 30px;
+  border:1px solid var(--line);
+  border-radius:30px;
+  background:
+    linear-gradient(145deg,#111 0%,#1b1712 100%);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.55),
+    0 0 0 1px rgba(255,255,255,.02) inset;
 }
 
 .customerCard::before{
@@ -66,115 +68,121 @@ body{
   top:0;
   left:0;
   right:0;
-  height:5px;
-  background:linear-gradient(90deg,var(--green),var(--gold),var(--green));
+  height:4px;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    var(--gold),
+    #f1d7a7,
+    var(--gold),
+    transparent
+  );
 }
 
 .customerType{
   display:flex;
   justify-content:center;
-  margin-bottom:22px;
+  margin-bottom:24px;
 }
 
 .customerBadge{
   display:inline-flex;
   align-items:center;
-  gap:8px;
-  padding:8px 16px;
+  padding:8px 17px;
+  border:1px solid rgba(212,180,122,.45);
   border-radius:999px;
-  color:#8a6432;
-  background:#f7ecd9;
-  border:1px solid #e5cfab;
-  font-size:12px;
+  background:rgba(212,180,122,.08);
+  color:var(--gold);
+  font-size:11px;
   font-weight:800;
-  letter-spacing:.08em;
+  letter-spacing:.11em;
 }
 
 .brand{
+  margin-bottom:10px;
   text-align:center;
   color:var(--gold);
   font-family:Georgia,"Times New Roman",serif;
-  font-size:16px;
+  font-size:17px;
   font-weight:700;
-  letter-spacing:.24em;
-  margin-bottom:9px;
+  letter-spacing:.25em;
 }
 
 .eyebrow{
+  margin-bottom:9px;
   text-align:center;
-  color:#9a8769;
+  color:#9e8b6b;
   font-size:10px;
   font-weight:700;
-  letter-spacing:.22em;
-  margin-bottom:8px;
+  letter-spacing:.24em;
 }
 
 h1{
   margin:0;
+  color:#fffaf0;
   text-align:center;
-  color:#8a6432;
   font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
   font-size:28px;
-  font-weight:600;
-  line-height:1.5;
-  letter-spacing:.05em;
+  font-weight:500;
+  line-height:1.55;
+  letter-spacing:.06em;
 }
 
 .lead{
-  margin:14px 0 28px;
-  text-align:center;
+  margin:15px 0 28px;
   color:var(--muted);
+  text-align:center;
   font-size:14px;
   line-height:1.9;
 }
 
 .inputArea{
   padding:22px;
-  border-radius:22px;
-  background:#f8f5ef;
-  border:1px solid var(--line);
+  border:1px solid rgba(212,180,122,.20);
+  border-radius:20px;
+  background:rgba(255,255,255,.035);
 }
 
 label{
   display:block;
   margin-bottom:9px;
-  color:#514a41;
+  color:#d9cdbb;
   font-size:13px;
-  font-weight:800;
+  font-weight:700;
 }
 
 input{
   width:100%;
   padding:17px 15px;
-  border:1px solid #d7cbb9;
-  border-radius:14px;
+  border:1px solid rgba(212,180,122,.42);
+  border-radius:13px;
   outline:none;
-  background:#fff;
-  color:#262626;
+  background:#f9f6f0;
+  color:#15120e;
   font-size:19px;
-  font-weight:700;
-  letter-spacing:.10em;
+  font-weight:800;
+  letter-spacing:.12em;
   text-align:center;
   transition:.2s ease;
 }
 
 input:focus{
   border-color:var(--gold);
-  box-shadow:0 0 0 4px rgba(184,149,93,.12);
+  box-shadow:0 0 0 4px rgba(212,180,122,.12);
 }
 
 button{
   width:100%;
   margin-top:14px;
   padding:16px;
-  border:0;
-  border-radius:14px;
+  border:1px solid #e3c58f;
+  border-radius:13px;
   cursor:pointer;
-  color:#fff;
-  background:linear-gradient(135deg,#d7b174,#8a6432);
-  box-shadow:0 8px 20px rgba(137,100,50,.18);
+  background:linear-gradient(135deg,#d7ba83,#a97e42);
+  color:#17110a;
+  box-shadow:0 10px 26px rgba(181,139,79,.20);
   font-size:15px;
-  font-weight:800;
+  font-weight:900;
   letter-spacing:.06em;
 }
 
@@ -186,14 +194,14 @@ button:active{
   display:none;
   margin-top:22px;
   padding:20px;
-  border-radius:20px;
-  background:#fff;
-  border:1px solid var(--line);
+  border:1px solid rgba(212,180,122,.28);
+  border-radius:18px;
+  background:#15120e;
 }
 
 .result h2{
   margin:0 0 13px;
-  color:#8a6432;
+  color:var(--gold);
   font-size:18px;
 }
 
@@ -202,7 +210,7 @@ button:active{
   justify-content:space-between;
   gap:18px;
   padding:11px 0;
-  border-bottom:1px solid #eee6db;
+  border-bottom:1px solid rgba(212,180,122,.13);
 }
 
 .row:last-child{
@@ -210,27 +218,27 @@ button:active{
 }
 
 .k{
-  color:#847c70;
+  color:#a99d8b;
   font-size:13px;
 }
 
 .v{
-  color:#302d29;
+  color:#fff8eb;
   font-weight:800;
   text-align:right;
 }
 
 .ok{
-  color:#8a6432;
+  color:#87d5a2;
 }
 
 .used{
-  color:#b3261e;
+  color:#ff998e;
 }
 
 .note{
   margin:21px 0 0;
-  color:#8b8378;
+  color:#8e8373;
   text-align:center;
   font-size:11px;
   line-height:1.8;
@@ -262,7 +270,7 @@ button:active{
 
       <div class="customerType">
         <div class="customerBadge">
-          CUSTOMER　｜　お客様用ページ
+          FOR GUESTS　｜　お客様用
         </div>
       </div>
 
