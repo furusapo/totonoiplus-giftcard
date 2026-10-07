@@ -262,19 +262,44 @@ button:active{
     padding:18px;
   }
 }
+
+/* customer-logo:start */
+.customerLogo{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:18px;
+}
+.customerLogo img{
+  display:block;
+  width:120px;
+  max-width:100%;
+  height:auto;
+  max-height:64px;
+  object-fit:contain;
+  object-position:right center;
+}
+@media(max-width:560px){
+  .customerLogo img{
+    width:110px;
+    max-height:58px;
+  }
+}
+/* customer-logo:end */
 </style>
 </head>
 <body>
   <div class="wrap">
     <div class="customerCard">
 
+      <div id="customerLogo" class="customerLogo">
+        <img src="images/totonoi+_logo.png?v=1791373490522376000" alt="TOTONOI+" decoding="async">
+      </div>
+
       <div class="customerType">
         <div class="customerBadge">
           FOR GUESTS　｜　お客様用
         </div>
       </div>
-
-      <div class="brand">TOTONOI+</div>
       <div class="eyebrow">GIFT TICKET</div>
 
       <h1>
