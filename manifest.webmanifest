@@ -1,0 +1,9 @@
+{
+  "name": "TOTONOI+ ギフトチケット",
+  "short_name": "TOTONOI+",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}
