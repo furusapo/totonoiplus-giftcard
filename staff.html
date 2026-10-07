@@ -13,45 +13,248 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#f5f1ea;margin:0;padding:20px;color:#2b2b2b}
-.wrap{max-width:560px;margin:auto;background:#fff;border-radius:20px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-h1{font-size:22px;margin:0 0 18px}
-label{font-weight:700;display:block;margin-top:16px}
-input,select,textarea,button{width:100%;box-sizing:border-box;font-size:16px;padding:13px;border-radius:12px;border:1px solid #ccc;margin-top:8px}
-button{border:0;background:#222;color:#fff;font-weight:700;cursor:pointer}
-.use{background:#8a5a44;margin-top:20px}
-.card{margin-top:22px;padding:18px;border-radius:16px;background:#faf7f2;border:1px solid #e3d8cb}
-.status{font-size:22px;font-weight:800;margin-bottom:10px}
-.unused{color:#008a45}
-.used{color:#b00020}
-.row{margin-top:9px}
-.note{font-size:13px;color:#777;margin-top:18px;line-height:1.6}
-.error{color:#b00020;font-weight:700;margin-top:18px}
-.correctionPanel{
-  margin-top:24px;
-  padding:18px;
-  border:2px solid #d58a28;
-  border-radius:16px;
-  background:#fffaf1;
+*{box-sizing:border-box}
+
+:root{
+  --staff-dark:#111a16;
+  --staff-green:#19372c;
+  --staff-green2:#234d3e;
+  --staff-orange:#d9832f;
+  --staff-orange2:#b96922;
+  --staff-paper:#f4f1ea;
+  --staff-card:#ffffff;
+  --staff-line:#d9d4c9;
+  --staff-text:#252a27;
+  --danger:#a94838;
 }
+
+html,body{
+  margin:0;
+  min-height:100%;
+}
+
+body{
+  margin:0;
+  padding:28px 18px 48px;
+  background:
+    linear-gradient(145deg,#0e1713,#1b2922);
+  color:var(--staff-text);
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN",sans-serif;
+}
+
+.wrap{
+  width:100%;
+  max-width:720px;
+  margin:0 auto;
+  overflow:hidden;
+  border-radius:26px;
+  background:var(--staff-paper);
+  box-shadow:0 28px 80px rgba(0,0,0,.32);
+}
+
+.staffHeader{
+  padding:26px 28px 25px;
+  color:#fff;
+  background:
+    linear-gradient(135deg,#10231c 0%,#244b3c 100%);
+  border-bottom:4px solid var(--staff-orange);
+}
+
+.staffHeaderTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:18px;
+}
+
+.staffBrand{
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.18em;
+  color:#e8ddc8;
+}
+
+.staffBadge{
+  padding:8px 13px;
+  border-radius:8px;
+  background:var(--staff-orange);
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.12em;
+}
+
+.staffHeader h1{
+  margin:0;
+  font-size:27px;
+  line-height:1.35;
+  letter-spacing:.03em;
+}
+
+.staffLead{
+  margin:9px 0 0;
+  color:#d4dfd9;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.staffBody{
+  padding:26px 28px 30px;
+}
+
+.searchPanel{
+  padding:22px;
+  border:1px solid #d6d0c4;
+  border-radius:18px;
+  background:#fff;
+}
+
+.searchTitle{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:4px;
+  color:var(--staff-green);
+  font-size:15px;
+  font-weight:900;
+}
+
+.searchTitle::before{
+  content:"";
+  width:7px;
+  height:22px;
+  border-radius:4px;
+  background:var(--staff-orange);
+}
+
+label{
+  display:block;
+  margin-top:16px;
+  color:#424944;
+  font-size:13px;
+  font-weight:800;
+}
+
+input,select,textarea,button{
+  width:100%;
+  box-sizing:border-box;
+  margin-top:8px;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #c9c7c0;
+  background:#fff;
+  font-size:16px;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  outline:none;
+  border-color:#779583;
+  box-shadow:0 0 0 3px rgba(35,77,62,.10);
+}
+
+button{
+  border:0;
+  cursor:pointer;
+  color:#fff;
+  background:var(--staff-green);
+  font-weight:800;
+}
+
+.searchButton{
+  margin-top:14px;
+  background:linear-gradient(135deg,var(--staff-green),var(--staff-green2));
+}
+
+.use{
+  margin-top:20px;
+  background:linear-gradient(135deg,#a75c2e,#874422);
+}
+
+.card{
+  margin-top:22px;
+  padding:22px;
+  border-radius:18px;
+  background:var(--staff-card);
+  border:1px solid var(--staff-line);
+  box-shadow:0 8px 24px rgba(38,43,39,.06);
+}
+
+.status{
+  display:inline-block;
+  margin-bottom:14px;
+  padding:7px 12px;
+  border-radius:8px;
+  font-size:15px;
+  font-weight:900;
+}
+
+.unused{
+  color:#0b6f3d;
+  background:#e7f5ed;
+}
+
+.used{
+  color:#9d3429;
+  background:#fbe9e6;
+}
+
+.row{
+  margin-top:8px;
+  padding:9px 0;
+  border-bottom:1px solid #ece8df;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.note{
+  margin:18px 2px 0;
+  color:#6b716d;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.error{
+  margin-top:18px;
+  padding:14px;
+  border-radius:10px;
+  color:#9d3429;
+  background:#fbe9e6;
+  font-weight:800;
+}
+
+.correctionPanel{
+  margin-top:25px;
+  padding:20px;
+  border:2px solid var(--staff-orange);
+  border-radius:16px;
+  background:#fff7ed;
+}
+
 .correctionPanel h2{
   margin:0 0 10px;
-  color:#9a5a0a;
+  color:#975015;
   font-size:18px;
 }
+
 .correctionPanel p{
   color:#74542d;
   font-size:13px;
   line-height:1.7;
 }
+
 .correctionButton{
-  background:#c97818;
   margin-top:18px;
+  background:linear-gradient(135deg,var(--staff-orange),var(--staff-orange2));
 }
+
 .correctionButton:disabled{
-  opacity:.45;
+  opacity:.42;
   cursor:not-allowed;
 }
+
 .checkRow{
   display:grid;
   grid-template-columns:24px 1fr;
@@ -61,37 +264,122 @@ button{border:0;background:#222;color:#fff;font-weight:700;cursor:pointer}
   line-height:1.6;
   font-size:14px;
 }
+
 .checkRow input{
   width:20px;
   height:20px;
   margin:2px 0 0;
   padding:0;
 }
+
 .countHint{
+  margin-top:5px;
+  color:#8b6d48;
   text-align:right;
   font-size:12px;
-  color:#8b6d48;
-  margin-top:5px;
 }
+
 .auditNotice{
   margin-top:14px;
   color:#8b4b16;
   font-size:12px;
   line-height:1.7;
 }
+
+.staffWarning{
+  display:flex;
+  gap:9px;
+  align-items:flex-start;
+  margin-top:18px;
+  padding:13px 14px;
+  border-radius:11px;
+  color:#71502d;
+  background:#f2e9dc;
+  font-size:12px;
+  line-height:1.7;
+}
+
+@media(max-width:600px){
+  body{
+    padding:0;
+    background:var(--staff-dark);
+  }
+
+  .wrap{
+    min-height:100vh;
+    border-radius:0;
+  }
+
+  .staffHeader{
+    padding:23px 20px;
+  }
+
+  .staffHeader h1{
+    font-size:24px;
+  }
+
+  .staffBody{
+    padding:20px 16px 28px;
+  }
+
+  .searchPanel{
+    padding:18px;
+  }
+
+  .card{
+    padding:18px;
+  }
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>TOTONOI+ ギフトカード管理</h1>
 
-  <label>シリアル番号</label>
-  <input id="serial" placeholder="例：TG-00001">
-  <button onclick="searchCard()">検索</button>
+  <header class="staffHeader">
+    <div class="staffHeaderTop">
+      <div class="staffBrand">TOTONOI+</div>
+      <div class="staffBadge">STAFF ONLY</div>
+    </div>
 
-  <div id="result"></div>
+    <h1>ギフトチケット管理</h1>
 
-  <p class="note">※ スタッフはスプレッドシートを直接編集せず、この画面から確認・使用処理します。</p>
+    <p class="staffLead">
+      利用確認・利用処理・訂正対応を行う<br>
+      スタッフ専用の業務画面です。
+    </p>
+  </header>
+
+  <div class="staffBody">
+
+    <div class="searchPanel">
+      <div class="searchTitle">ギフトチケットを検索</div>
+
+      <label for="serial">管理番号</label>
+      <input
+        id="serial"
+        placeholder="例：TG-00001"
+        autocomplete="off"
+      >
+
+      <button
+        class="searchButton"
+        onclick="searchCard()"
+      >
+        チケットを検索する
+      </button>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="staffWarning">
+      <strong>スタッフ専用：</strong>
+      <span>
+        スプレッドシートを直接編集せず、
+        この管理画面から利用確認・処理を行ってください。
+      </span>
+    </div>
+
+  </div>
 </div>
 
 <script>

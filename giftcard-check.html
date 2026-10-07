@@ -13,37 +13,288 @@
 
 
   <style>
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;background:#f7f4ef;color:#2b2b2b}
-    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .card{width:100%;max-width:440px;background:#fff;border-radius:24px;padding:28px;box-shadow:0 18px 45px rgba(0,0,0,.12)}
-    .brand{text-align:center;font-size:13px;letter-spacing:.16em;color:#9a7b52;font-weight:700;margin-bottom:8px}
-    h1{text-align:center;font-size:24px;margin:0 0 10px}
-    .lead{text-align:center;color:#666;font-size:14px;line-height:1.7;margin-bottom:24px}
-    label{display:block;font-weight:700;margin-bottom:8px}
-    input{width:100%;box-sizing:border-box;padding:15px 16px;border:1px solid #ddd;border-radius:14px;font-size:18px;letter-spacing:.08em;text-align:center}
-    button{width:100%;border:0;border-radius:16px;padding:15px 16px;margin-top:16px;background:linear-gradient(135deg,#b9925a,#8b6837);color:white;font-weight:800;font-size:16px;cursor:pointer}
-    .result{margin-top:20px;padding:18px;border-radius:18px;background:#faf7f1;border:1px solid #eadfce;display:none}
-    .result h2{font-size:18px;margin:0 0 12px}
-    .row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid #e7dccb}
-    .row:last-child{border-bottom:0}
-    .k{color:#777}.v{font-weight:800;text-align:right}
-    .ok{color:#167a3a}.used{color:#b3261e}.note{font-size:12px;color:#777;line-height:1.7;margin-top:18px;text-align:center}
-  </style>
+*{box-sizing:border-box}
+
+:root{
+  --green:#173d32;
+  --green2:#245746;
+  --gold:#b8955d;
+  --gold2:#d5bd91;
+  --cream:#f7f3eb;
+  --paper:#fffdf9;
+  --ink:#26302c;
+  --muted:#756f66;
+  --line:#e4d9c8;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Kaku Gothic ProN",Arial,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 15% 10%,rgba(184,149,93,.10),transparent 34%),
+    linear-gradient(145deg,#fbf9f5 0%,#efe8dc 100%);
+}
+
+.wrap{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:34px 20px;
+}
+
+.customerCard{
+  width:100%;
+  max-width:500px;
+  background:rgba(255,253,249,.97);
+  border:1px solid rgba(184,149,93,.34);
+  border-radius:30px;
+  padding:34px 32px 30px;
+  box-shadow:0 24px 70px rgba(69,53,33,.13);
+  position:relative;
+  overflow:hidden;
+}
+
+.customerCard::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:5px;
+  background:linear-gradient(90deg,var(--green),var(--gold),var(--green));
+}
+
+.customerType{
+  display:flex;
+  justify-content:center;
+  margin-bottom:22px;
+}
+
+.customerBadge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 16px;
+  border-radius:999px;
+  color:var(--green);
+  background:#eef4f0;
+  border:1px solid #cddfd5;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.brand{
+  text-align:center;
+  color:var(--gold);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:16px;
+  font-weight:700;
+  letter-spacing:.24em;
+  margin-bottom:9px;
+}
+
+.eyebrow{
+  text-align:center;
+  color:#9a8769;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.22em;
+  margin-bottom:8px;
+}
+
+h1{
+  margin:0;
+  text-align:center;
+  color:var(--green);
+  font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  font-size:28px;
+  font-weight:600;
+  line-height:1.5;
+  letter-spacing:.05em;
+}
+
+.lead{
+  margin:14px 0 28px;
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.9;
+}
+
+.inputArea{
+  padding:22px;
+  border-radius:22px;
+  background:#f8f5ef;
+  border:1px solid var(--line);
+}
+
+label{
+  display:block;
+  margin-bottom:9px;
+  color:#514a41;
+  font-size:13px;
+  font-weight:800;
+}
+
+input{
+  width:100%;
+  padding:17px 15px;
+  border:1px solid #d7cbb9;
+  border-radius:14px;
+  outline:none;
+  background:#fff;
+  color:#262626;
+  font-size:19px;
+  font-weight:700;
+  letter-spacing:.10em;
+  text-align:center;
+  transition:.2s ease;
+}
+
+input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 4px rgba(184,149,93,.12);
+}
+
+button{
+  width:100%;
+  margin-top:14px;
+  padding:16px;
+  border:0;
+  border-radius:14px;
+  cursor:pointer;
+  color:#fff;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  box-shadow:0 8px 20px rgba(23,61,50,.18);
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.06em;
+}
+
+button:active{
+  transform:translateY(1px);
+}
+
+.result{
+  display:none;
+  margin-top:22px;
+  padding:20px;
+  border-radius:20px;
+  background:#fff;
+  border:1px solid var(--line);
+}
+
+.result h2{
+  margin:0 0 13px;
+  color:var(--green);
+  font-size:18px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  padding:11px 0;
+  border-bottom:1px solid #eee6db;
+}
+
+.row:last-child{
+  border-bottom:0;
+}
+
+.k{
+  color:#847c70;
+  font-size:13px;
+}
+
+.v{
+  color:#302d29;
+  font-weight:800;
+  text-align:right;
+}
+
+.ok{
+  color:#167a3a;
+}
+
+.used{
+  color:#b3261e;
+}
+
+.note{
+  margin:21px 0 0;
+  color:#8b8378;
+  text-align:center;
+  font-size:11px;
+  line-height:1.8;
+}
+
+@media(max-width:560px){
+  .wrap{
+    padding:18px 14px;
+  }
+
+  .customerCard{
+    padding:28px 20px 24px;
+    border-radius:24px;
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .inputArea{
+    padding:18px;
+  }
+}
+</style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
-      <div class="brand">TOTONOI+</div>
-      <h1>ギフトカード有効期限確認</h1>
-      <p class="lead">ギフトカードに記載されている<br>シリアル番号を入力してください。</p>
+    <div class="customerCard">
 
-      <label for="serial">シリアル番号</label>
-      <input id="serial" placeholder="例：TG-00001" autocomplete="off">
-      <button onclick="checkSerial()">確認する</button>
+      <div class="customerType">
+        <div class="customerBadge">
+          CUSTOMER　｜　お客様用ページ
+        </div>
+      </div>
+
+      <div class="brand">TOTONOI+</div>
+      <div class="eyebrow">GIFT TICKET</div>
+
+      <h1>
+        ギフトチケット<br>
+        有効期限確認
+      </h1>
+
+      <p class="lead">
+        お手元のギフトチケットに記載されている<br>
+        管理番号をご入力ください。
+      </p>
+
+      <div class="inputArea">
+        <label for="serial">ギフトチケット管理番号</label>
+        <input
+          id="serial"
+          placeholder="例：TG-00001"
+          autocomplete="off"
+        >
+        <button onclick="checkSerial()">有効期限を確認する</button>
+      </div>
 
       <div id="result" class="result"></div>
 
-      <p class="note">番号が確認できない場合は、店舗スタッフまでお問い合わせください。</p>
+      <p class="note">
+        管理番号が確認できない場合は、店舗スタッフまでお問い合わせください。
+      </p>
+
     </div>
   </div>
 
