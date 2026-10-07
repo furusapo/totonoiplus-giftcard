@@ -17,7 +17,7 @@ function doGet(e) {
   return respond(callback, {
     ok: true,
     result: "success",
-    message: "ギフトカードAPIが実行中です"
+    message: "ギフトチケットAPIが実行中です"
   });
 }
 
@@ -184,7 +184,7 @@ function checkGiftCard(e) {
 
   return respond(callback, {
     found: false,
-    message: "該当するギフトカードが見つかりません"
+    message: "該当するギフトチケットが見つかりません"
   });
 }
 
@@ -235,7 +235,7 @@ function useGiftCard(e) {
       if (currentStatus !== "未使用") {
         return respond(callback, {
           ok: false,
-          message: "このギフトカードはすでに「" + currentStatus + "」です"
+          message: "このギフトチケットはすでに「" + currentStatus + "」です"
         });
       }
 
@@ -253,7 +253,7 @@ function useGiftCard(e) {
 
   return respond(callback, {
     ok: false,
-    message: "該当するギフトカードが見つかりません"
+    message: "該当するギフトチケットが見つかりません"
   });
 }
 
@@ -317,7 +317,7 @@ function staffSearch(e) {
 
     return respond(callback, {
       ok: false,
-      message: "該当するギフトカードが見つかりません"
+      message: "該当するギフトチケットが見つかりません"
     });
 
   } catch (err) {
@@ -376,7 +376,7 @@ function staffUse(e) {
         if (currentStatus !== "未使用") {
           return respond(callback, {
             ok: false,
-            message: "このギフトカードはすでに「" + currentStatus + "」です"
+            message: "このギフトチケットはすでに「" + currentStatus + "」です"
           });
         }
 
@@ -394,7 +394,7 @@ function staffUse(e) {
 
     return respond(callback, {
       ok: false,
-      message: "該当するギフトカードが見つかりません"
+      message: "該当するギフトチケットが見つかりません"
     });
 
   } catch (err) {
@@ -607,7 +607,7 @@ function staffCancelUseV2(e) {
 
     return respond(callback, {
       ok: false,
-      message: "該当するギフトカードが見つかりません"
+      message: "該当するギフトチケットが見つかりません"
     });
 
   } catch (err) {
@@ -1028,7 +1028,7 @@ function buildGiftcardIssueRecordHtml_(record, signatureImage) {
     "<head>",
     "<meta charset=\"UTF-8\">",
     "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">",
-    "<title>ギフトカード発行記録</title>",
+    "<title>ギフトチケット発行記録</title>",
     "<style>",
     "body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Kaku Gothic ProN',sans-serif;background:#f5f2eb;color:#222;margin:0;padding:30px}",
     ".sheet{max-width:760px;margin:auto;background:#fff;padding:36px;border-radius:18px;box-shadow:0 10px 40px rgba(0,0,0,.1)}",
@@ -1043,7 +1043,7 @@ function buildGiftcardIssueRecordHtml_(record, signatureImage) {
     "</head>",
     "<body>",
     "<div class=\"sheet\">",
-    "<h1>TOTONOI+ ギフトカード発行記録</h1>",
+    "<h1>TOTONOI+ ギフトチケット発行記録</h1>",
     "<div class=\"meta\">",
     "<strong>保存日時：</strong>" +
       escapeGiftcardHtml_(record.savedAt) + "<br>",
@@ -1065,7 +1065,7 @@ function buildGiftcardIssueRecordHtml_(record, signatureImage) {
     "</table>",
     "<h2>金額</h2>",
     "<div class=\"meta\">",
-    "カード代：" +
+    "チケット代：" +
       Number(record.cardPrice || 0).toLocaleString("ja-JP") +
       "円<br>",
     "発行手数料：" +

@@ -372,7 +372,7 @@ body.isCompleteStep .dots{
 <body>
 <div class="wrap">
   <header class="header">
-    <div class="logo">TOTONOI+<span>GIFT CARD SYSTEM</span></div>
+    <div class="logo">TOTONOI+<span>GIFT TICKET SYSTEM</span></div>
     <div class="stockBar">
       <div class="stock">Design01 <strong id="dashStock1">50枚</strong></div>
       <div class="stock">Design02 <strong id="dashStock2">50枚</strong></div>
@@ -382,14 +382,14 @@ body.isCompleteStep .dots{
 
   <main class="app">
     <div class="progress">
-      <div class="progressText" id="progressText">Step 1 / 4　ギフトカードを選択</div>
+      <div class="progressText" id="progressText">Step 1 / 4　ギフトチケットを選択</div>
       <div class="dots" id="dots"></div>
     </div>
 
     <section class="screen active" data-step="1">
       <div class="stepGrid">
         <div class="centerHead">
-          <h1>ギフトカードを選ぶ</h1>
+          <h1>ギフトチケットを選ぶ</h1>
           <p class="lead">お好きなデザインをタップして、枚数を選んでください。</p>
         </div>
         <div class="products" id="products"></div>
@@ -419,12 +419,12 @@ body.isCompleteStep .dots{
 
           <label class="agreeBox">
             <input id="expiryAgree" type="checkbox">
-            <span>ギフトカードの有効期限は <strong id="expiryDateText"></strong> までとなります。内容を確認しました。</span>
+            <span>ギフトチケットの有効期限は <strong id="expiryDateText"></strong> までとなります。内容を確認しました。</span>
           </label>
 
           <label class="agreeBox">
             <input id="reissueAgree" type="checkbox">
-            <span>ギフトカードを紛失・盗難・破損された場合、再発行はできません。内容を確認しました。</span>
+            <span>ギフトチケットを紛失・盗難・破損された場合、再発行はできません。内容を確認しました。</span>
           </label>
 
           <label class="agreeBox">
@@ -532,7 +532,7 @@ body.isCompleteStep .dots{
           <div class="confirmBox">
             <h2>発行予定シリアル番号</h2>
             <div class="serialList" id="serialPreviewList"><span class="serialItem">未選択</span></div>
-            <div class="breakdown" id="priceBreakdown">カード代：¥0<br>発行手数料：¥0<br>追加封筒セット：¥0<br>封筒のみ：¥0</div>
+            <div class="breakdown" id="priceBreakdown">チケット代：¥0<br>発行手数料：¥0<br>追加封筒セット：¥0<br>封筒のみ：¥0</div>
             <div class="total">
               <h2>合計</h2>
               <div class="totalPrice" id="grandTotal">¥0</div>
@@ -541,7 +541,7 @@ body.isCompleteStep .dots{
         </div>
         <div class="actions">
           <button class="btn btnGhost" type="button" onclick="goStep(2)">戻る</button>
-          <button class="btn btnPrimary" type="button" id="submitBtn">カードを発行する</button>
+          <button class="btn btnPrimary" type="button" id="submitBtn">ギフトチケットを発行する</button>
         </div>
       </div>
     </section>
@@ -549,7 +549,7 @@ body.isCompleteStep .dots{
     <section class="screen complete" data-step="4">
       <div>
         <div class="check">✓</div>
-        <h1>ギフトカードを発行しました！</h1>
+        <h1>ギフトチケットを発行しました！</h1>
         <p>ご利用ありがとうございます。</p>
       </div>
     </section>
@@ -663,7 +663,7 @@ document.addEventListener('click',e=>{
 function renderDots(){
   const dots=document.getElementById('dots');
   dots.innerHTML=[1,2,3,4].map(n=>`<div class="dot ${n===step?'active':''}"></div>`).join('');
-  const labels={1:'ギフトカードを選択',2:'お客様情報',3:'発行内容の確認',4:'発行完了'};
+  const labels={1:'ギフトチケットを選択',2:'お客様情報',3:'発行内容の確認',4:'発行完了'};
   document.getElementById('progressText').textContent=`Step ${Math.min(step,4)} / 4　${labels[Math.min(step,4)] || ''}`;
 }
 
@@ -745,7 +745,7 @@ function update(){
   const envelopeFee=envelopeSetFee+envelopeOnlyFee;
 
   document.getElementById('priceBreakdown').innerHTML=
-    `カード代：${yen(cardTotal)}`+
+    `チケット代：${yen(cardTotal)}`+
     `<br>発行手数料：${yen(issueFee)}`+
     `<br>追加封筒セット：${yen(envelopeSetFee)}`+
     `<br>封筒のみ：${yen(envelopeOnlyFee)}`;
@@ -755,7 +755,7 @@ function update(){
   updateSerialPreview();
 }
 
-document.getElementById('toCustomerBtn').onclick=()=>{if(!getEntries().length){alert('ギフトカードを選択してください');return}goStep(2)};
+document.getElementById('toCustomerBtn').onclick=()=>{if(!getEntries().length){alert('ギフトチケットを選択してください');return}goStep(2)};
 document.getElementById('toConfirmBtn').onclick=()=>{
   if(!document.getElementById('phone').value.trim()){
     alert('お客様電話番号を入力してください');
@@ -816,7 +816,7 @@ document.getElementById('submitBtn').onclick=()=>{
 
     if(!res || res.result!=='success' || !Array.isArray(res.serials)){
       btn.classList.remove('loading');
-      btn.textContent='カードを発行する';
+      btn.textContent='ギフトチケットを発行する';
       alert(res&&res.message?res.message:'発行処理に失敗しました');
       return;
     }
@@ -859,14 +859,14 @@ document.getElementById('submitBtn').onclick=()=>{
     });
 
     btn.classList.remove('loading');
-    btn.textContent='カードを発行する';
+    btn.textContent='ギフトチケットを発行する';
     goStep(4);
   };
   const script=document.createElement('script');
   script.src=GAS_URL+'?callback='+callbackName+'&data='+encodeURIComponent(JSON.stringify(payload));
   script.onerror=()=>{
     btn.classList.remove('loading');
-    btn.textContent='カードを発行する';
+    btn.textContent='ギフトチケットを発行する';
     alert('発行データの送信に失敗しました。通信またはGASを確認してください。');
   };
   document.body.appendChild(script);

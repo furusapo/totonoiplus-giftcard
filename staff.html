@@ -545,20 +545,20 @@ async function searchCard(){
         <label>メモ</label>
         <textarea id="memo" rows="3" placeholder="例：来店時に使用"></textarea>
 
-        <button class="use" onclick="useCard()">このギフトカードを使用済みにする</button>
+        <button class="use" onclick="useCard()">このギフトチケットを使用済みにする</button>
       `}
     </div>
   `;
 }
 
 async function useCard(){
-  if(!currentCard) return alert('カード情報がありません');
+  if(!currentCard) return alert('ギフトチケット情報がありません');
 
   const staff = document.getElementById('staff').value;
   const memo = document.getElementById('memo').value.trim();
 
   if(!staff) return alert('対応スタッフを選択してください');
-  if(!confirm('このギフトカードを使用済みにします。よろしいですか？')) return;
+  if(!confirm('このギフトチケットを使用済みにします。よろしいですか？')) return;
 
   const result = document.getElementById('result');
   result.insertAdjacentHTML('beforeend', '<p id="processing" style="font-weight:bold;color:#8a5a44;">使用処理中です...</p>');
@@ -638,7 +638,7 @@ function validateCorrectionForm(){
 
 async function cancelCardUseV2(){
   if(!currentCard){
-    alert('カード情報がありません');
+    alert('ギフトチケット情報がありません');
     return;
   }
 
