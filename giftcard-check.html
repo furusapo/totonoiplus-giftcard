@@ -285,6 +285,54 @@ button:active{
   }
 }
 /* customer-logo:end */
+
+/* guest-refinement:start */
+.customerBadge .guestLabel{
+  color:#fff;
+}
+.customerType{
+  margin-bottom:14px;
+}
+.eyebrow{
+  margin-bottom:5px;
+}
+.customerCard h1{
+  line-height:1.3;
+}
+.lead{
+  margin:10px 0 20px;
+  line-height:1.65;
+}
+.customerCard::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:4px;
+  pointer-events:none;
+  background:linear-gradient(
+    90deg,transparent,var(--gold),#f1d7a7,var(--gold),transparent
+  );
+}
+.inputArea > button{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  background:linear-gradient(110deg,#f1d796 0%,#dbb96f 48%,#b58b4f 100%);
+  border-color:#f0d69e;
+}
+.buttonArrow{
+  flex-shrink:0;
+  font-size:20px;
+  font-weight:400;
+  line-height:1;
+}
+.note{
+  color:#c8c3b8;
+}
+/* guest-refinement:end */
 </style>
 </head>
 <body>
@@ -297,7 +345,7 @@ button:active{
 
       <div class="customerType">
         <div class="customerBadge">
-          FOR GUESTS　｜　お客様用
+          FOR GUESTS　｜　<span class="guestLabel">お客様用</span>
         </div>
       </div>
       <div class="eyebrow">GIFT TICKET</div>
@@ -318,13 +366,13 @@ button:active{
           placeholder="例：TG-00001"
           autocomplete="off"
         >
-        <button onclick="checkSerial()">有効期限を確認する</button>
+        <button onclick="checkSerial()"><span>有効期限を確認する</span><span class="buttonArrow" aria-hidden="true">＞</span></button>
       </div>
 
       <div id="result" class="result"></div>
 
       <p class="note">
-        管理番号が確認できない場合は、店舗スタッフまでお問い合わせください。
+        ※ 管理番号がご不明な場合は、店舗スタッフまでお問い合わせください。
       </p>
 
     </div>
