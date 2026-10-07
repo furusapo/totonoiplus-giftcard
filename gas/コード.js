@@ -84,12 +84,12 @@ function getNextSerial(sheet, design) {
 
   for (let i = 1; i < values.length; i++) {
     const serial = String(values[i][1] || "").trim();
-    const m = serial.match(/^TG-(\d{4})$/);
+    const m = serial.match(/^TG-(\d{4,5})$/);
     if (m) used.add(Number(m[1]));
   }
 
   for (let n = min; n <= max; n++) {
-    if (!used.has(n)) return "TG-" + String(n).padStart(4, "0");
+    if (!used.has(n)) return "TG-" + String(n).padStart(5, "0");
   }
 
   throw new Error("デザイン" + design + "の在庫がありません");
@@ -113,7 +113,7 @@ function getStock(e) {
 
   for (let i = 1; i < values.length; i++) {
     const serial = String(values[i][1] || "").trim();
-    const m = serial.match(/^TG-(\d{4})$/);
+    const m = serial.match(/^TG-(\d{4,5})$/);
     if (!m) continue;
 
     const num = Number(m[1]);

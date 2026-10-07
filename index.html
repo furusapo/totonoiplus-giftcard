@@ -555,9 +555,9 @@ const ENVELOPE_SET_PRICE=400;
 const ENVELOPE_ONLY_PRICE=300;
 const ISSUE_FEE=550;
 const products=[
-  {design:1,name:'Design 01',range:'TG-0001〜0050',image:'images/giftcard1.png'},
-  {design:2,name:'Design 02',range:'TG-0051〜0100',image:'images/giftcard2.png'},
-  {design:3,name:'Design 03',range:'TG-0101〜0150',image:'images/giftcard3.png'}
+  {design:1,name:'Design 01',range:'TG-00001〜00050',image:'images/giftcard1.png'},
+  {design:2,name:'Design 02',range:'TG-00051〜00100',image:'images/giftcard2.png'},
+  {design:3,name:'Design 03',range:'TG-00101〜00150',image:'images/giftcard3.png'}
 ];
 
 let step=1;
@@ -612,7 +612,7 @@ function updateExpireDateText(){
   const el=document.getElementById('expiryDateText');
   if(el) el.textContent=getExpireDateText();
 }
-function formatSerial(n){return 'TG-'+String(n).padStart(4,'0')}
+function formatSerial(n){return 'TG-'+String(n).padStart(5,'0')}
 function getEntries(){return Object.entries(cart).map(([design,count])=>({design:Number(design),count:Number(count)})).filter(x=>x.count>0)}
 
 function setupInlineSignatureCanvas(){
