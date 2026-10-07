@@ -132,7 +132,7 @@ h1{
   margin:15px 0 28px;
   color:var(--muted);
   text-align:center;
-  font-size:14px;
+  font-size:calc(14px - 1pt);
   line-height:1.9;
 }
 
@@ -320,15 +320,18 @@ button:active{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:12px;
+  gap:10px;
   background:linear-gradient(110deg,#f1d796 0%,#dbb96f 48%,#b58b4f 100%);
   border-color:#f0d69e;
 }
 .buttonArrow{
-  flex-shrink:0;
-  font-size:20px;
-  font-weight:400;
-  line-height:1;
+  display:block;
+  flex:0 0 7px;
+  width:7px;
+  height:7px;
+  border-top:1.25px solid currentColor;
+  border-right:1.25px solid currentColor;
+  transform:rotate(45deg);
 }
 .note{
   color:#c8c3b8;
@@ -367,7 +370,7 @@ button:active{
           placeholder="例：TG-00001"
           autocomplete="off"
         >
-        <button onclick="checkSerial()"><span>有効期限を確認する</span><span class="buttonArrow" aria-hidden="true">＞</span></button>
+        <button onclick="checkSerial()"><span>有効期限を確認する</span><span class="buttonArrow" aria-hidden="true"></span></button>
       </div>
 
       <div id="result" class="result"></div>
