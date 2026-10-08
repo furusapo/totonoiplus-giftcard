@@ -367,6 +367,40 @@ body.isCompleteStep .dots{
 <meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="./manifest.webmanifest">
 
+
+<style id="step3-image-icon-style">
+.step3Head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.step3HeadIcon{
+  width:54px;
+  height:54px;
+  flex:0 0 54px;
+}
+
+.step3HeadIcon img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+}
+
+.step3HeadText h2{
+  margin:0 !important;
+}
+
+.step3HeadSub{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:11px;
+  letter-spacing:.18em;
+}
+</style>
+
 </head>
 
 <body>
@@ -456,7 +490,15 @@ body.isCompleteStep .dots{
         </div>
         <div class="confirmGrid">
           <div class="confirmBox">
-            <h2>ご注文内容</h2>
+            <div class="step3Head">
+              <div class="step3HeadIcon">
+                <img src="images/ui/order-cart.png" alt="">
+              </div>
+              <div class="step3HeadText">
+                <h2>ご注文内容</h2>
+                <div class="step3HeadSub">ORDER DETAILS</div>
+              </div>
+            </div>
             <div class="cartList" id="cartList"></div>
             <div class="envelopeBox">
               <img src="images/envelope.png" alt="追加封筒">
@@ -530,7 +572,15 @@ body.isCompleteStep .dots{
             </div>
           </div>
           <div class="confirmBox">
-            <h2>発行予定シリアル番号</h2>
+            <div class="step3Head">
+              <div class="step3HeadIcon">
+                <img src="images/ui/serial-key.png" alt="">
+              </div>
+              <div class="step3HeadText">
+                <h2>発行予定シリアル番号</h2>
+                <div class="step3HeadSub">SERIAL NUMBER</div>
+              </div>
+            </div>
             <div class="serialList" id="serialPreviewList"><span class="serialItem">未選択</span></div>
             <div class="breakdown" id="priceBreakdown">チケット代：¥0<br>発行手数料：¥0<br>追加封筒セット：¥0<br>封筒のみ：¥0</div>
             <div class="total">
