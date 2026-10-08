@@ -809,6 +809,39 @@ body.isCompleteStep .dots{
 }
 </style>
 
+
+<style id="envelope-box-gold-bg-style">
+.envelopeBox{
+  position: relative !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(rgba(18,13,10,.68), rgba(18,13,10,.68)),
+    url("images/ui/card-bg-gold.png") center center / cover no-repeat !important;
+  border: 1px solid rgba(212,180,122,.18) !important;
+  border-radius: 24px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,244,220,.05),
+    inset 0 0 28px rgba(212,180,122,.04) !important;
+}
+
+.envelopeBox::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  background:
+    linear-gradient(135deg, rgba(255,228,170,.06) 0%, transparent 22%, transparent 76%, rgba(255,214,128,.05) 100%),
+    radial-gradient(circle at 86% 20%, rgba(255,214,120,.08), transparent 24%);
+  opacity:.9;
+}
+
+.envelopeBox > *{
+  position:relative;
+  z-index:1;
+}
+</style>
+
 </head>
 
 <body>
