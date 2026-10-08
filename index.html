@@ -935,6 +935,22 @@ body.isCompleteStep .dots{
 }
 </style>
 
+
+<style id="step1-heading-vertical-position-fix">
+/* Step1のタイトル＋説明文だけを下へ。
+   商品カードの位置には影響させない */
+.screen[data-step="1"] .centerHead{
+  transform: translateY(78px) !important;
+}
+
+/* iPad幅でも同じバランス */
+@media (min-width:768px) and (max-width:1180px){
+  .screen[data-step="1"] .centerHead{
+    transform: translateY(68px) !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
