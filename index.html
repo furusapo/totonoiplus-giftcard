@@ -401,6 +401,103 @@ body.isCompleteStep .dots{
 }
 </style>
 
+
+<style id="step3-total-card-style">
+.total.totalCard{
+  position:relative;
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:flex-end !important;
+  gap:20px !important;
+  margin-top:22px !important;
+  padding:20px 24px !important;
+  border:1px solid rgba(212,180,122,.52) !important;
+  border-radius:18px !important;
+  background:
+    linear-gradient(145deg, rgba(212,180,122,.08), rgba(255,255,255,.015)),
+    linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.04)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.03),
+    inset 0 0 28px rgba(212,180,122,.05) !important;
+  overflow:hidden;
+  border-top:none !important;
+}
+
+.total.totalCard::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 18% 28%, rgba(212,180,122,.10), transparent 34%),
+    linear-gradient(120deg, transparent 0%, rgba(212,180,122,.03) 28%, transparent 58%);
+  pointer-events:none;
+}
+
+.total.totalCard::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:12px;
+  border:1px solid rgba(212,180,122,.14);
+  pointer-events:none;
+}
+
+.total.totalCard .totalLabelWrap{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-end;
+}
+
+.total.totalCard .totalLabelWrap h2{
+  margin:0 !important;
+  color:var(--gold) !important;
+  font-size:16px !important;
+  line-height:1.1 !important;
+  font-weight:600 !important;
+}
+
+.total.totalCard .totalSub{
+  margin-top:6px !important;
+  color:var(--muted) !important;
+  font-size:11px !important;
+  line-height:1 !important;
+  letter-spacing:.18em !important;
+}
+
+.total.totalCard .totalPrice{
+  position:relative;
+  z-index:1;
+  margin:0 !important;
+  color:var(--gold) !important;
+  font-size:62px !important;
+  line-height:1 !important;
+  letter-spacing:.01em !important;
+  text-align:right !important;
+  white-space:nowrap !important;
+}
+
+@media(min-width:768px) and (max-width:1180px){
+  .total.totalCard{
+    padding:18px 20px !important;
+  }
+  .total.totalCard .totalPrice{
+    font-size:54px !important;
+  }
+}
+
+@media(max-width:767px){
+  .total.totalCard{
+    padding:18px 18px !important;
+  }
+  .total.totalCard .totalPrice{
+    font-size:42px !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -583,8 +680,11 @@ body.isCompleteStep .dots{
             </div>
             <div class="serialList" id="serialPreviewList"><span class="serialItem">未選択</span></div>
             <div class="breakdown" id="priceBreakdown">チケット代：¥0<br>発行手数料：¥0<br>追加封筒セット：¥0<br>封筒のみ：¥0</div>
-            <div class="total">
-              <h2>合計</h2>
+            <div class="total totalCard">
+              <div class="totalLabelWrap">
+                <h2>合計</h2>
+                <div class="totalSub">TOTAL</div>
+              </div>
               <div class="totalPrice" id="grandTotal">¥0</div>
             </div>
           </div>
