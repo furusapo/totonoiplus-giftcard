@@ -498,6 +498,80 @@ body.isCompleteStep .dots{
 }
 </style>
 
+
+<style id="step3-card-bg-image-style">
+.confirmBox{
+  position:relative !important;
+  overflow:hidden !important;
+  background:
+    linear-gradient(145deg, rgba(8,7,6,.84), rgba(18,14,11,.88)),
+    url("images/ui/card-bg-gold.png") center center / cover no-repeat !important;
+  border:1px solid rgba(212,180,122,.26) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.02),
+    inset 0 0 28px rgba(212,180,122,.04) !important;
+}
+
+.confirmBox::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(135deg, rgba(255,220,140,.08) 0%, transparent 22%, transparent 72%, rgba(255,220,140,.06) 100%),
+    radial-gradient(circle at 14% 18%, rgba(255,210,120,.10), transparent 26%),
+    radial-gradient(circle at 85% 18%, rgba(255,210,120,.08), transparent 24%),
+    radial-gradient(circle at 18% 84%, rgba(255,210,120,.06), transparent 24%),
+    radial-gradient(circle at 84% 82%, rgba(255,210,120,.08), transparent 24%);
+  mix-blend-mode:screen;
+  opacity:.9;
+}
+
+.confirmBox > *{
+  position:relative;
+  z-index:1;
+}
+
+.total.totalCard{
+  position:relative !important;
+  overflow:hidden !important;
+  background:
+    linear-gradient(145deg, rgba(18,14,11,.55), rgba(18,14,11,.42)),
+    url("images/ui/card-bg-gold.png") center center / cover no-repeat !important;
+  border:1px solid rgba(212,180,122,.52) !important;
+  border-radius:18px !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.03),
+    inset 0 0 24px rgba(212,180,122,.05) !important;
+}
+
+.total.totalCard::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(255,220,140,.08) 0%, transparent 22%, transparent 78%, rgba(255,220,140,.08) 100%),
+    linear-gradient(180deg, rgba(255,220,140,.05) 0%, transparent 20%, transparent 80%, rgba(255,220,140,.05) 100%);
+  opacity:.9;
+}
+
+.total.totalCard::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:12px;
+  border:1px solid rgba(212,180,122,.14);
+  pointer-events:none;
+}
+
+.total.totalCard .totalLabelWrap,
+.total.totalCard .totalPrice{
+  position:relative;
+  z-index:1;
+}
+</style>
+
 </head>
 
 <body>
