@@ -891,6 +891,45 @@ body.isCompleteStep .dots{
 }
 </style>
 
+
+<style id="checkbox-row-gold-border-override">
+/* チェック項目3行の枠をはっきりしたゴールドに */
+.gold-lux-row{
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1.5px solid transparent !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(rgba(24,18,13,.90), rgba(24,18,13,.90)) padding-box,
+    linear-gradient(135deg,
+      #6d4a16 0%,
+      #b88429 20%,
+      #f2d68a 42%,
+      #fff2c4 52%,
+      #d9a54a 66%,
+      #9c6f1f 82%,
+      #654211 100%
+    ) border-box !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,244,214,.05),
+    0 0 0 1px rgba(255,214,120,.04) !important;
+}
+
+/* 前のキラ演出を消す */
+.gold-lux-row::before,
+.gold-lux-row::after{
+  content: none !important;
+  animation: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* チェックボックス周りも少しだけ整える */
+.gold-lux-row input[type="checkbox"]{
+  accent-color: #d4b47a !important;
+}
+</style>
+
 </head>
 
 <body>
