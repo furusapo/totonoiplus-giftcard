@@ -1235,7 +1235,7 @@ function goStep(n){
 function renderProducts(){
   const root=document.getElementById('products');
   root.innerHTML=products.map(p=>`
-    <div class="product ${cart[p.design]>0?'selected':''}" data-design="${p.design}">
+    <div class="product gold-lux-card ${cart[p.design]>0?'selected is-selected':''}" data-design="${p.design}">
       <div class="badge">選択中</div>
       <img src="${p.image}" alt="${p.name}">
       <div class="productName">${p.name}</div>
