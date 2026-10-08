@@ -572,6 +572,139 @@ body.isCompleteStep .dots{
 }
 </style>
 
+
+<style id="subtle-gold-gradient-border-style">
+:root{
+  --lux-fill: rgba(20,15,11,.72);
+  --lux-fill-card: rgba(18,13,10,.70);
+  --lux-gold-1: rgba(108,72,18,.72);
+  --lux-gold-2: rgba(205,157,73,.95);
+  --lux-gold-3: rgba(255,234,181,.98);
+  --lux-gold-4: rgba(168,113,27,.92);
+  --lux-gold-5: rgba(88,58,14,.76);
+}
+
+.gold-lux-row,
+.gold-lux-card{
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid transparent !important;
+  background:
+    linear-gradient(var(--lux-fill), var(--lux-fill)) padding-box,
+    linear-gradient(135deg,
+      var(--lux-gold-1) 0%,
+      var(--lux-gold-2) 16%,
+      var(--lux-gold-3) 32%,
+      var(--lux-gold-4) 50%,
+      var(--lux-gold-3) 68%,
+      var(--lux-gold-2) 84%,
+      var(--lux-gold-5) 100%
+    ) border-box !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,247,220,.06),
+    0 0 0 1px rgba(255,210,120,.04) !important;
+  isolation: isolate;
+}
+
+.gold-lux-card{
+  background:
+    linear-gradient(var(--lux-fill-card), var(--lux-fill-card)) padding-box,
+    linear-gradient(135deg,
+      var(--lux-gold-1) 0%,
+      var(--lux-gold-2) 16%,
+      var(--lux-gold-3) 32%,
+      var(--lux-gold-4) 50%,
+      var(--lux-gold-3) 68%,
+      var(--lux-gold-2) 84%,
+      var(--lux-gold-5) 100%
+    ) border-box !important;
+}
+
+.gold-lux-row::after,
+.gold-lux-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 16px 16px, rgba(255,235,175,.95) 0 1.5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 16px) 16px, rgba(255,235,175,.92) 0 1.5px, transparent 5px),
+    radial-gradient(circle at 16px calc(100% - 16px), rgba(255,235,175,.78) 0 1.5px, transparent 5px),
+    radial-gradient(circle at calc(100% - 16px) calc(100% - 16px), rgba(255,235,175,.84) 0 1.5px, transparent 5px),
+    linear-gradient(112deg,
+      transparent 34%,
+      rgba(255,238,190,.00) 42%,
+      rgba(255,238,190,.22) 49%,
+      rgba(255,248,220,.35) 50%,
+      rgba(255,238,190,.22) 51%,
+      rgba(255,238,190,.00) 58%,
+      transparent 66%);
+  background-repeat:no-repeat;
+  background-size:auto,auto,auto,auto,230% 100%;
+  background-position:
+    0 0,
+    100% 0,
+    0 100%,
+    100% 100%,
+    -180% 0;
+  opacity:.92;
+  animation: goldBorderSweep 8s ease-in-out infinite;
+}
+
+.gold-lux-row::before,
+.gold-lux-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(255,240,205,.06), transparent 22%, transparent 78%, rgba(255,214,128,.05));
+  opacity:.95;
+}
+
+.gold-lux-card.is-selected{
+  box-shadow:
+    inset 0 1px 0 rgba(255,247,220,.08),
+    0 0 0 1px rgba(255,210,120,.06),
+    0 0 18px rgba(255,194,90,.12) !important;
+}
+
+.gold-lux-card.is-selected::before{
+  background:
+    linear-gradient(180deg, rgba(255,241,210,.08), transparent 24%, transparent 76%, rgba(255,214,128,.07)),
+    radial-gradient(circle at 0% 100%, rgba(255,204,102,.10), transparent 28%);
+}
+
+@keyframes goldBorderSweep{
+  0%,14%{
+    background-position:
+      0 0,
+      100% 0,
+      0 100%,
+      100% 100%,
+      -180% 0;
+  }
+  46%,56%{
+    background-position:
+      0 0,
+      100% 0,
+      0 100%,
+      100% 100%,
+      25% 0;
+  }
+  100%{
+    background-position:
+      0 0,
+      100% 0,
+      0 100%,
+      100% 100%,
+      220% 0;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -1169,5 +1302,45 @@ setTimeout(setupInlineSignatureCanvas,100);
 update();
 loadStock();
 </script>
+
+<script id="subtle-gold-gradient-border-script">
+document.addEventListener('DOMContentLoaded', () => {
+  function pickBox(start, minW=250, minH=40, maxH=900){
+    let el = start;
+    while (el && el !== document.body){
+      const r = el.getBoundingClientRect();
+      if (r.width >= minW && r.height >= minH && r.height <= maxH){
+        return el;
+      }
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  // 利用規約の3行
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    const row = pickBox(cb, 500, 40, 160);
+    if (row) row.classList.add('gold-lux-row');
+  });
+
+  // Design 01 / 02 / 03 のカード
+  document.querySelectorAll('body *').forEach(el => {
+    const txt = (el.textContent || '').trim();
+    if (/^Design\s*0[1-9]/.test(txt)) {
+      const card = pickBox(el, 260, 220, 900);
+      if (card) card.classList.add('gold-lux-card');
+    }
+  });
+
+  // 選択中カードだけ少し強め
+  document.querySelectorAll('.gold-lux-card').forEach(card => {
+    const txt = (card.textContent || '').trim();
+    if (txt.includes('選択中') || /(^|\s)1枚(\s|$)/.test(txt)) {
+      card.classList.add('is-selected');
+    }
+  });
+});
+</script>
+
 </body>
 </html>
