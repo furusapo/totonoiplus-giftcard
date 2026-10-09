@@ -951,6 +951,297 @@ body.isCompleteStep .dots{
 }
 </style>
 
+
+<style id="ipad-primary-layout-fix">
+
+/*
+  iPad Safari / iPadOS 専用
+  横向きiPadでもPCレイアウトにならないようにする
+*/
+@supports (-webkit-touch-callout: none) {
+
+  @media (min-width:768px) and (max-width:1400px) {
+
+    html,
+    body{
+      width:100% !important;
+      min-height:100% !important;
+      background:#ffffff !important;
+      overflow-x:hidden !important;
+    }
+
+    body{
+      margin:0 !important;
+      padding:
+        max(10px, env(safe-area-inset-top))
+        12px
+        max(10px, env(safe-area-inset-bottom))
+        12px !important;
+    }
+
+    /* ===== 白い上部ヘッダー ===== */
+    .wrap{
+      width:100% !important;
+      max-width:none !important;
+      margin:0 auto !important;
+      min-height:calc(100svh - 20px) !important;
+      display:grid !important;
+      grid-template-rows:auto 1fr !important;
+      gap:10px !important;
+      background:#ffffff !important;
+    }
+
+    .header{
+      width:100% !important;
+      min-height:64px !important;
+      padding:2px 6px 8px !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      gap:18px !important;
+      background:#ffffff !important;
+      position:relative !important;
+      z-index:20 !important;
+    }
+
+    .logo{
+      font-size:30px !important;
+      line-height:1 !important;
+      flex-shrink:0 !important;
+    }
+
+    .logo span{
+      font-size:11px !important;
+      margin-top:8px !important;
+    }
+
+    .stockBar{
+      display:flex !important;
+      flex-wrap:nowrap !important;
+      justify-content:flex-end !important;
+      gap:9px !important;
+    }
+
+    .stock{
+      padding:9px 14px !important;
+      font-size:12px !important;
+      white-space:nowrap !important;
+    }
+
+    .stock strong{
+      font-size:16px !important;
+    }
+
+
+    /* ===== 黒いアプリ部分 ===== */
+    .app{
+      width:100% !important;
+      min-height:0 !important;
+      height:calc(100svh - 94px) !important;
+      border-radius:26px !important;
+      overflow:hidden !important;
+      display:grid !important;
+      grid-template-rows:auto 1fr !important;
+    }
+
+    .progress{
+      min-height:58px !important;
+      padding:15px 22px !important;
+    }
+
+    .progressText{
+      font-size:13px !important;
+    }
+
+
+    /* ===== 各画面 ===== */
+    .screen{
+      min-height:0 !important;
+      padding:22px 26px 24px !important;
+      overflow:hidden !important;
+    }
+
+    .screen.active{
+      display:grid !important;
+    }
+
+    .stepGrid{
+      min-height:0 !important;
+      height:100% !important;
+      gap:14px !important;
+    }
+
+
+    /* ========================================
+       STEP 1
+       ======================================== */
+
+    .screen[data-step="1"] .stepGrid{
+      grid-template-rows:
+        148px
+        minmax(0,1fr)
+        66px !important;
+      gap:14px !important;
+    }
+
+    /*
+      以前入れた78px / 68pxの移動を完全解除
+    */
+    .screen[data-step="1"] .centerHead{
+      transform:none !important;
+      margin:0 auto !important;
+      padding:0 20px 12px !important;
+      width:100% !important;
+      max-width:760px !important;
+
+      display:flex !important;
+      flex-direction:column !important;
+      justify-content:flex-end !important;
+      align-items:center !important;
+
+      text-align:center !important;
+      align-self:stretch !important;
+    }
+
+    .screen[data-step="1"] .centerHead h1{
+      margin:0 0 14px !important;
+      font-size:29px !important;
+      line-height:1.25 !important;
+      white-space:nowrap !important;
+    }
+
+    .screen[data-step="1"] .centerHead .lead{
+      margin:0 !important;
+      font-size:13px !important;
+      line-height:1.65 !important;
+      white-space:normal !important;
+      position:static !important;
+      transform:none !important;
+    }
+
+
+    /* ===== 3枚の商品カード ===== */
+    .screen[data-step="1"] .products{
+      width:100% !important;
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      gap:18px !important;
+
+      align-self:start !important;
+      align-items:stretch !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    .screen[data-step="1"] .product{
+      min-width:0 !important;
+      padding:12px !important;
+      border-radius:22px !important;
+    }
+
+    .screen[data-step="1"] .product img{
+      display:block !important;
+      width:100% !important;
+      height:128px !important;
+      object-fit:cover !important;
+      margin-bottom:12px !important;
+    }
+
+    .screen[data-step="1"] .productName{
+      font-size:17px !important;
+    }
+
+    .screen[data-step="1"] .productMeta{
+      font-size:11px !important;
+      margin-top:4px !important;
+    }
+
+    .screen[data-step="1"] .productPrice{
+      font-size:23px !important;
+      margin-top:7px !important;
+    }
+
+    .screen[data-step="1"] .qtyBox{
+      margin-top:11px !important;
+      padding:7px !important;
+    }
+
+    .screen[data-step="1"] .qtyBtn{
+      width:38px !important;
+      height:38px !important;
+      font-size:23px !important;
+    }
+
+    .screen[data-step="1"] .qtyNum{
+      font-size:15px !important;
+    }
+
+    .screen[data-step="1"] .badge{
+      top:12px !important;
+      right:12px !important;
+      padding:5px 9px !important;
+      font-size:11px !important;
+    }
+
+
+    /* ===== 戻る / 次へ ===== */
+    .screen[data-step="1"] .actions{
+      width:100% !important;
+      display:flex !important;
+      justify-content:space-between !important;
+      align-items:end !important;
+      margin:0 !important;
+    }
+
+    .screen[data-step="1"] .btn{
+      min-width:150px !important;
+      padding:14px 20px !important;
+      font-size:15px !important;
+    }
+
+
+    /* 他StepでもiPadで横幅が暴れないように */
+    .formWrap{
+      max-width:680px !important;
+    }
+
+    .confirmGrid{
+      min-width:0 !important;
+      gap:16px !important;
+    }
+
+    .confirmBox{
+      min-width:0 !important;
+    }
+  }
+}
+
+
+/*
+  iPad Proなどで -webkit-touch-callout 判定が変わった場合の保険。
+  タッチ端末 + 1400px以下だけ適用。
+*/
+@media
+  (min-width:768px)
+  and (max-width:1400px)
+  and (pointer:coarse){
+
+  html,
+  body{
+    background:#ffffff !important;
+  }
+
+  .header{
+    background:#ffffff !important;
+  }
+
+  .screen[data-step="1"] .centerHead{
+    transform:none !important;
+  }
+}
+
+</style>
+
 </head>
 
 <body>
