@@ -1158,6 +1158,45 @@ body.isCompleteStep .dots{
 
 </style>
 
+
+<style id="signature-gold-gradient-frame-style">
+/* 署名欄の外枠をゴールドグラデーションに */
+.inlineSignatureCanvasWrap{
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 12px !important;
+  border: 1.5px solid transparent !important;
+  border-radius: 24px !important;
+  background:
+    linear-gradient(#f8f8f8, #f8f8f8) padding-box,
+    linear-gradient(135deg,
+      #6d4a16 0%,
+      #b88429 18%,
+      #f2d68a 40%,
+      #fff2c4 52%,
+      #d9a54a 66%,
+      #9c6f1f 82%,
+      #654211 100%
+    ) border-box !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,244,214,.32),
+    0 0 0 1px rgba(255,214,120,.05) !important;
+}
+
+/* 中の白い署名面 */
+.inlineSignatureCanvasWrap canvas{
+  display:block !important;
+  width:100% !important;
+  background:#ffffff !important;
+  border-radius:18px !important;
+}
+
+/* 署名欄全体の余白を少し整える */
+.inlineSignatureBox{
+  margin-top: 18px !important;
+}
+</style>
+
 </head>
 
 <body>
