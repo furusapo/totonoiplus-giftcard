@@ -1239,6 +1239,58 @@ body.isCompleteStep .dots{
 
 </style>
 
+
+<style id="agreement-gold-gradient-final">
+
+/*
+  利用規約3項目
+  太さは今まで通り細い1px
+  外枠だけゴールドグラデーション
+*/
+.agreeBox,
+.agreeBox.gold-lux-row{
+  border:1px solid transparent !important;
+  border-radius:18px !important;
+
+  background:
+    linear-gradient(
+      rgba(255,255,255,.04),
+      rgba(255,255,255,.04)
+    ) padding-box,
+
+    linear-gradient(
+      135deg,
+      #72501b 0%,
+      #b68128 18%,
+      #e8c56e 35%,
+      #fff0b4 50%,
+      #d5a247 65%,
+      #9d6b1c 82%,
+      #60400e 100%
+    ) border-box !important;
+
+  box-shadow:none !important;
+}
+
+/* 過去に入れた光・アニメーションは完全に無効化 */
+.agreeBox::before,
+.agreeBox::after,
+.agreeBox.gold-lux-row::before,
+.agreeBox.gold-lux-row::after{
+  content:none !important;
+  display:none !important;
+  animation:none !important;
+  background:none !important;
+  box-shadow:none !important;
+}
+
+/* チェックボックスは現状維持 */
+.agreeBox input[type="checkbox"]{
+  accent-color:#d4b47a !important;
+}
+
+</style>
+
 </head>
 
 <body>
