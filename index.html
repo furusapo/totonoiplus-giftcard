@@ -1159,42 +1159,84 @@ body.isCompleteStep .dots{
 </style>
 
 
+
+
+
 <style id="signature-gold-gradient-frame-style">
-/* 署名欄の外枠をゴールドグラデーションに */
-.inlineSignatureCanvasWrap{
-  position: relative !important;
-  overflow: hidden !important;
-  padding: 12px !important;
-  border: 1.5px solid transparent !important;
-  border-radius: 24px !important;
-  background:
-    linear-gradient(#f8f8f8, #f8f8f8) padding-box,
-    linear-gradient(135deg,
-      #6d4a16 0%,
-      #b88429 18%,
-      #f2d68a 40%,
-      #fff2c4 52%,
-      #d9a54a 66%,
-      #9c6f1f 82%,
-      #654211 100%
-    ) border-box !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,244,214,.32),
-    0 0 0 1px rgba(255,214,120,.05) !important;
+
+/* ===== 署名欄・確定版 ===== */
+
+.inlineSignatureBox{
+  margin-top:18px !important;
 }
 
-/* 中の白い署名面 */
-.inlineSignatureCanvasWrap canvas{
+/*
+  外周：はっきり見えるゴールドグラデーション
+  内側：白
+*/
+.inlineSignatureCanvasWrap{
+  position:relative !important;
+  overflow:hidden !important;
+
+  margin-top:10px !important;
+  padding:10px !important;
+
+  border:3px solid transparent !important;
+  border-radius:24px !important;
+
+  background:
+    linear-gradient(#f8f4ee,#f8f4ee) padding-box,
+    linear-gradient(
+      135deg,
+      #7a4d09 0%,
+      #c88b1e 14%,
+      #f4d77d 30%,
+      #fff5c9 43%,
+      #dba53c 57%,
+      #fff0a3 70%,
+      #b97812 84%,
+      #704406 100%
+    ) border-box !important;
+
+  box-shadow:
+    0 0 0 1px rgba(255,214,120,.12),
+    0 4px 14px rgba(0,0,0,.16),
+    inset 0 1px 0 rgba(255,255,255,.45) !important;
+}
+
+
+/* 実際に署名する白い部分 */
+#inlineSignatureCanvas{
   display:block !important;
   width:100% !important;
+  height:170px !important;
+
   background:#ffffff !important;
-  border-radius:18px !important;
+
+  border:0 !important;
+  border-radius:14px !important;
+
+  touch-action:none !important;
 }
 
-/* 署名欄全体の余白を少し整える */
-.inlineSignatureBox{
-  margin-top: 18px !important;
+
+/* iPadでも枠の太さを維持 */
+@media
+  (min-width:768px)
+  and (max-width:1400px)
+  and (pointer:coarse){
+
+  .inlineSignatureCanvasWrap{
+    border-width:3px !important;
+    padding:10px !important;
+    border-radius:22px !important;
+  }
+
+  #inlineSignatureCanvas{
+    border-radius:13px !important;
+  }
 }
+
 </style>
 
 </head>
