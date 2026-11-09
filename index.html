@@ -1317,12 +1317,44 @@ body.isCompleteStep .dots{
 
 </style>
 
+
+<style id="logo-image-integration">
+.header .logo{
+  position:relative!important;
+  display:block!important;
+  width:244px!important;
+  height:76px!important;
+  flex:0 0 244px!important;
+  overflow:hidden!important;
+  opacity:1!important;
+  background:none!important;
+  line-height:0!important;
+  font-size:0!important;
+  text-shadow:none!important;
+}
+.header .logo img{
+  position:absolute;
+  top:50%;
+  left:50%;
+  display:block;
+  width:100%;
+  max-width:none;
+  height:auto;
+  transform:translate(-50%,-50%) scale(1.95);
+}
+@media(min-width:768px) and (max-width:1400px) and (pointer:coarse){
+  .header .logo{width:224px!important;height:70px!important;flex-basis:224px!important}
+}
+@media(max-width:767px){
+  .header .logo{width:190px!important;height:60px!important;flex-basis:190px!important}
+}
+</style>
 </head>
 
 <body>
 <div class="wrap">
   <header class="header">
-    <div class="logo">TOTONOI+<span>GIFT TICKET SYSTEM</span></div>
+    <div class="logo"><img src="gift_logo(4).png" alt="TOTONOI+ GIFT TICKET SYSTEM"></div>
     <div class="stockBar">
       <div class="stock">Design01 <strong id="dashStock1">50枚</strong></div>
       <div class="stock">Design02 <strong id="dashStock2">50枚</strong></div>
