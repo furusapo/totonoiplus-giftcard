@@ -1318,81 +1318,62 @@ body.isCompleteStep .dots{
 </style>
 
 
-<<<<<<< HEAD
-<style id="logo-image-integration">
+<style id="step1-header-final-fix">
+/* Step1 only: header/logo/stock/radius fixes */
 .header .logo{
-  position:relative!important;
-  display:block!important;
-  width:244px!important;
-  height:76px!important;
-  flex:0 0 244px!important;
-  overflow:hidden!important;
-  opacity:1!important;
-  background:none!important;
-  line-height:0!important;
-  font-size:0!important;
-  text-shadow:none!important;
-}
-.header .logo img{
-  position:absolute;
-  top:50%;
-  left:50%;
-  display:block;
-  width:100%;
-  max-width:none;
-  height:auto;
-  transform:translate(-50%,-50%) scale(1.95);
-}
-@media(min-width:768px) and (max-width:1400px) and (pointer:coarse){
-  .header .logo{width:224px!important;height:70px!important;flex-basis:224px!important}
-}
-@media(max-width:767px){
-  .header .logo{width:190px!important;height:60px!important;flex-basis:190px!important}
-}
-</style>
-=======
-<style id="gift-system-png-logo-style">
-.header .logo{
-  flex:0 0 auto !important;
-  line-height:0 !important;
-  background:none !important;
-  color:initial !important;
-  opacity:1 !important;
-  text-shadow:none !important;
-  -webkit-background-clip:initial !important;
-  background-clip:initial !important;
-  -webkit-text-fill-color:initial !important;
-  overflow:visible !important;
-}
-
-.header .logo img{
+  position:relative !important;
   display:block !important;
   width:230px !important;
-  height:auto !important;
+  height:70px !important;
+  flex:0 0 230px !important;
+  overflow:hidden !important;
+  opacity:1 !important;
+  background:none !important;
+  line-height:0 !important;
+  font-size:0 !important;
+  text-shadow:none !important;
+  -webkit-text-fill-color:initial !important;
+}
+.header .logo img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
   object-fit:contain !important;
   object-position:left center !important;
 }
 
-@media (min-width:768px) and (max-width:1400px) and (pointer:coarse){
-  .header .logo img{
+/* Step1表示中のみ Design03 と右端の金枠の間を空ける */
+body:has(.screen[data-step="1"].active) .stockBar{
+  margin-right:14px !important;
+}
+
+/* Step1表示中のみ、内側.appの上角丸を消して二重角丸を解消 */
+body:has(.screen[data-step="1"].active) .app{
+  border-top-left-radius:0 !important;
+  border-top-right-radius:0 !important;
+}
+
+@media(min-width:768px) and (max-width:1400px) and (pointer:coarse){
+  .header .logo{
     width:215px !important;
+    height:66px !important;
+    flex-basis:215px !important;
+  }
+}
+@media(max-width:767px){
+  .header .logo{
+    width:190px !important;
+    height:60px !important;
+    flex-basis:190px !important;
   }
 }
 </style>
-
->>>>>>> 6a448f0 (Use final TOTONOI gift logo)
 </head>
 
 <body>
 <div class="wrap">
   <header class="header">
-<<<<<<< HEAD
     <div class="logo"><img src="gift_logo.png" alt="TOTONOI+ GIFT TICKET SYSTEM"></div>
-=======
-    <div class="logo">
-      <img src="gift_logo.png" alt="TOTONOI+ GIFT TICKET SYSTEM">
-    </div>
->>>>>>> 6a448f0 (Use final TOTONOI gift logo)
     <div class="stockBar">
       <div class="stock">Design01 <strong id="dashStock1">50枚</strong></div>
       <div class="stock">Design02 <strong id="dashStock2">50枚</strong></div>
