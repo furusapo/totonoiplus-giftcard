@@ -1319,14 +1319,14 @@ body.isCompleteStep .dots{
 
 
 <style id="step1-header-final-fix">
-/* Step1 only: header/logo/stock/radius fixes */
+/* Step1 header */
 .header .logo{
   position:relative !important;
   display:block !important;
-  width:230px !important;
-  height:70px !important;
-  flex:0 0 230px !important;
-  overflow:hidden !important;
+  width:360px !important;
+  height:100px !important;
+  flex:0 0 360px !important;
+  overflow:visible !important;
   opacity:1 !important;
   background:none !important;
   line-height:0 !important;
@@ -1334,20 +1334,24 @@ body.isCompleteStep .dots{
   text-shadow:none !important;
   -webkit-text-fill-color:initial !important;
 }
+
 .header .logo img{
   display:block !important;
-  width:100% !important;
-  height:100% !important;
+  width:360px !important;
+  height:100px !important;
+  max-width:none !important;
   object-fit:contain !important;
   object-position:left center !important;
+  transform:translateX(-28px) scale(1.85) !important;
+  transform-origin:left center !important;
 }
 
-/* Step1表示中のみ Design03 と右端の金枠の間を空ける */
+/* Design03 と右端の金枠の間隔 */
 body:has(.screen[data-step="1"].active) .stockBar{
   margin-right:14px !important;
 }
 
-/* Step1表示中のみ、内側.appの上角丸を消して二重角丸を解消 */
+/* Step1だけ内側の上角丸を消す */
 body:has(.screen[data-step="1"].active) .app{
   border-top-left-radius:0 !important;
   border-top-right-radius:0 !important;
@@ -1355,16 +1359,29 @@ body:has(.screen[data-step="1"].active) .app{
 
 @media(min-width:768px) and (max-width:1400px) and (pointer:coarse){
   .header .logo{
-    width:215px !important;
-    height:66px !important;
-    flex-basis:215px !important;
+    width:320px !important;
+    height:90px !important;
+    flex-basis:320px !important;
+  }
+
+  .header .logo img{
+    width:320px !important;
+    height:90px !important;
+    transform:translateX(-24px) scale(1.75) !important;
+    transform-origin:left center !important;
   }
 }
+
 @media(max-width:767px){
   .header .logo{
-    width:190px !important;
-    height:60px !important;
-    flex-basis:190px !important;
+    width:220px !important;
+    height:70px !important;
+    flex-basis:220px !important;
+  }
+
+  .header .logo img{
+    width:220px !important;
+    height:70px !important;
   }
 }
 </style>
